@@ -12,6 +12,7 @@ import configureStore from './data/configureStore';
 import {
   AUTHN_PROGRESSIVE_PROFILING,
   LOGIN_PAGE,
+  NAFATH_AUTHENTICATION_PAGE,
   PAGE_NOT_FOUND,
   PASSWORD_RESET_CONFIRM,
   RECOMMENDATIONS,
@@ -49,6 +50,7 @@ const MainApp = () => (
       <UnAuthOnlyRoute exact path={LOGIN_PAGE} render={() => <Logistration selectedPage={LOGIN_PAGE} />} />
       <UnAuthOnlyRoute exact path={REGISTER_PAGE} component={Logistration} />
       <UnAuthOnlyRoute exact path={RESET_PAGE} component={ForgotPasswordPage} />
+      <UnAuthOnlyRoute exact path={NAFATH_AUTHENTICATION_PAGE} render={() => <Logistration selectedPage={NAFATH_AUTHENTICATION_PAGE} />} />
       <Route exact path={PASSWORD_RESET_CONFIRM} component={ResetPasswordPage} />
       <Route exact path={AUTHN_PROGRESSIVE_PROFILING} component={ProgressiveProfiling} />
       <Route exact path={RECOMMENDATIONS} component={RecommendationsPage} />
