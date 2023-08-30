@@ -1,4 +1,4 @@
-import { logError, logInfo } from "@edx/frontend-platform/logging";
+import { logError } from "@edx/frontend-platform/logging";
 import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
 
 import {
@@ -9,23 +9,26 @@ import {
   HANDLE_NAFATH_USER_REGISTRATION,
   setNafathUserRegistrationSuccess,
   setCheckRequestStatusIntervelTime,
+  setUserRequestStatus,
 } from "./actions";
-import { registerRequest } from "../../register/data/service";
 import {
   authenticationAndRandomTextRequest,
   checkUserRequestStatusRequest,
+  completeNafathUserRegistration,
 } from "./service";
 
 export function* handleAuthenticateUserIdFromNafathSaga(action) {
-  debugger;
   try {
-    // const { data } = yield call(
-    //   authenticationAndRandomTextRequest,
-    //   action.payload
-    // );
-    const data = { random: "abc", transId: "ahba" };
+    const { transId, random } = yield call(
+      authenticationAndRandomTextRequest,
+      action.payload
+    );
+    let data = {};
+    data.transId = transId;
+    data.random = random;
     data.status = "WAITING";
     data.userId = action.payload;
+    data.form = 1;
     yield put(setNafathAuthnData(data));
   } catch (e) {
     logError(e);
@@ -34,27 +37,19 @@ export function* handleAuthenticateUserIdFromNafathSaga(action) {
 }
 
 export function* checkUserRequestStatusSaga(action) {
-  debugger;
   try {
-    // const { data } = yield call(
-    //   checkUserRequestStatusRequest,
-    //   action.payload
-    // );
-    const data = {
-      status: "COMPLETED",
-      person: { id: action.payload.Parameters.id, enFullName: "nafath" },
-    };
-    if (!("person" in data)) {
-      data.person = {};
-    }
-    if (data?.status != "WAITING") {
-      if (data?.status != "COMPLETED") {
-        const userData = { random: "", transId: "" };
-        userData.status = data?.status;
-        userData.userId = action.payload.Parameters.id;
-        yield put(setNafathAuthnData(userData));
+    const { status } = yield call(
+      checkUserRequestStatusRequest,
+      action.payload
+    );
+    if (status != "WAITING") {
+      if (status != "COMPLETED") {
+        yield put(setUserRequestStatus(status));
       } else {
-        debugger;
+        const data = {
+          form: 2,
+          status: status,
+        };
         yield put(setUserRequestData(data));
       }
     } else {
@@ -66,24 +61,31 @@ export function* checkUserRequestStatusSaga(action) {
   }
 }
 
-//this counter is only used in dev mode, after build it will not be required after confirmation, as this App is built in strict-mode which runs useEffects sagas twice.
 var cont = 0;
 export function* handleNafathUserRegistrationSaga(action) {
-  debugger;
   try {
     cont = cont + 1;
     if (cont == 1) {
-      const { redirectUrl, success } = yield call(
-        registerRequest,
+      // will require error handling here
+      const { error, success } = yield call(
+        completeNafathUserRegistration,
         action.payload
       );
       cont = 0;
-      yield put(
-        setNafathUserRegistrationSuccess({
-          redirectUrl,
-          success,
-        })
-      );
+
+      if (success) {
+        const { redirect_url, success } = yield call(
+          checkUserRequestStatusRequest,
+          action.payload.trans_id
+        );
+        if (success && redirect_url)
+          yield put(
+            setNafathUserRegistrationSuccess({
+              redirectUrl: redirect_url,
+              success: success,
+            })
+          );
+      }
     }
   } catch (e) {
     logError(e);

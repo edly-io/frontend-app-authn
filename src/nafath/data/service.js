@@ -1,56 +1,54 @@
 import { getConfig } from "@edx/frontend-platform";
-import { getAuthenticatedHttpClient } from "@edx/frontend-platform/auth";
+import {
+  getAuthenticatedHttpClient,
+  getHttpClient,
+} from "@edx/frontend-platform/auth";
 
 export async function authenticationAndRandomTextRequest(userId) {
   const requestConfig = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `${getConfig().OPENEDX_API_KEY}`,
-    },
-    body: {
-      Action: "SpRequest",
-      Parameters: {
-        service: "AdvancedLogin",
-        id: userId,
-      },
-    },
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    nafath_id: userId,
   };
 
-  const { data } = await getAuthenticatedHttpClient()
-    .post(`https://www.iam.gov.sa/nafath/`, requestConfig)
+  const { data } = await getHttpClient()
+    .post(`${getConfig().LMS_BASE_URL}/nafath/initiate_request`, requestConfig)
     .catch((e) => {
-      console.log(e);
       throw e;
     });
-
   return {
-    transId: data.transId,
-    transId: data.random,
+    transId: data.trans_id,
+    random: data.random,
   };
 }
 
-export async function checkUserRequestStatusRequest(data) {
+export async function checkUserRequestStatusRequest(transId) {
   const requestConfig = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `${getConfig().OPENEDX_API_KEY}`,
-    },
-    body: {
-      Action: "CheckSpRequest",
-      Parameters: {
-        transId: data.transId,
-        id: data.userId,
-        random: data.randomText,
-      },
-    },
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    trans_id: transId,
   };
 
-  const { response } = await getAuthenticatedHttpClient()
-    .post(`https://www.iam.gov.sa/nafath/`, requestConfig)
+  const { data } = await getAuthenticatedHttpClient()
+    .post(`${getConfig().LMS_BASE_URL}/nafath/check_status`, requestConfig)
+    .catch((e) => {
+      throw e;
+    });
+
+  return data;
+}
+
+export async function completeNafathUserRegistration(userRegistrationPayload) {
+  const requestConfig = {
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    trans_id: userRegistrationPayload.trans_id,
+    user_data: userRegistrationPayload.user_data,
+  };
+
+  const { data } = await getHttpClient()
+    .post(`${getConfig().LMS_BASE_URL}/nafath/register_user`, requestConfig)
     .catch((e) => {
       console.log(e);
       throw e;
     });
 
-  return response;
+  return data;
 }

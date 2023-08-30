@@ -3,6 +3,7 @@ import {
   SET_USER_REQUEST_DATA,
   SET_NAFATH_USER_REGISTRATION_SUCCESS,
   SET_CHECK_REQUEST_STATUS_INTERVAL_TIME,
+  SET_USER_REQUEST_STATUS,
 } from "./actions";
 
 export const defaultState = {
@@ -13,7 +14,8 @@ export const defaultState = {
   status: "",
   success: false,
   redirectUrl: "/",
-  interval: 0,
+  interval: 1000,
+  form: 1,
 };
 
 const reducer = (state = defaultState, action = {}) => {
@@ -31,7 +33,7 @@ const reducer = (state = defaultState, action = {}) => {
       state = {
         ...state,
         status: action.payload.status,
-        person: action.payload.person,
+        form: action.payload.form,
       };
       break;
     case SET_NAFATH_USER_REGISTRATION_SUCCESS:
@@ -45,6 +47,12 @@ const reducer = (state = defaultState, action = {}) => {
       state = {
         ...state,
         interval: action.payload,
+      };
+      break;
+    case SET_USER_REQUEST_STATUS:
+      state = {
+        ...state,
+        status: action.payload,
       };
       break;
     default:

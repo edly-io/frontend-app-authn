@@ -9,6 +9,7 @@ export const SET_NAFATH_USER_REGISTRATION_SUCCESS =
   "SET_NAFATH_USER_REGISTRATION_SUCCESS";
 export const SET_CHECK_REQUEST_STATUS_INTERVAL_TIME =
   "SET_CHECK_REQUEST_STATUS_INTERVAL_TIME";
+export const SET_USER_REQUEST_STATUS = "SET_USER_REQUEST_STATUS";
 
 export const authenticateUserIdFromNafath = (userId) => ({
   type: AUTHENTICATE_USER_ID_FROM_NAFATH,
@@ -43,4 +44,9 @@ export const setNafathUserRegistrationSuccess = (data) => ({
 export const setCheckRequestStatusIntervelTime = (time) => ({
   type: SET_CHECK_REQUEST_STATUS_INTERVAL_TIME,
   payload: time,
+});
+
+export const setUserRequestStatus = (status) => ({
+  type: SET_USER_REQUEST_STATUS,
+  payload: status,
 });

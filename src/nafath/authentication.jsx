@@ -20,37 +20,32 @@ import "../sass/_nafath_page.scss";
 const NafathAuthenticationPage = (props) => {
   const { formatMessage } = useIntl();
   const [nafathId, setNafathId] = useState("");
+  const [nafathEmail, setNafathEmail] = useState("");
+  const [registrationBtnClicked, setRegistrationBtnClicked] = useState(false);
 
   const handleNafathAuthentication = () => {
     props.authenticateUserIdFromNafath(nafathId);
   };
+  const handleNafathRegistration = () => {
+    setRegistrationBtnClicked(true);
+    const userRegistrationPayload = {
+      nafath_id: props.state.userId,
+      trans_id: props.state.transId,
+      user_data: {
+        email: nafathEmail,
+      },
+    };
+    props.handleNafathUserRegistration(userRegistrationPayload);
+  };
 
   useEffect(() => {
-    if (props.state.status === "COMPLETED") {
-      const userRegistrationPayload = {
-        country: "",
-        email: props.state.person.id + "@nafath.gov.sa",
-        name: props.state.person.enFullName,
-        next: "/",
-        password: "acaw",
-        username: props.state.person.id,
-      };
-      props.handleNafathUserRegistration(userRegistrationPayload);
-    } else if (props.state.status === "WAITING") {
+    if (props.state.status === "WAITING") {
       const interval = setInterval(() => {
-        const body = {
-          Action: "CheckSpRequest",
-          Parameters: {
-            transId: props.state.transId,
-            id: props.state.userId,
-            random: props.state.randomText,
-          },
-        };
-        props.checkUserRequestStatus(body);
+        props.checkUserRequestStatus(props.state.transId);
       }, props.state.interval);
       return () => clearInterval(interval);
     }
-  }, [props.state.status]);
+  }, [props.state.status, props.state.interval]);
 
   return (
     <>
@@ -67,60 +62,99 @@ const NafathAuthenticationPage = (props) => {
         finishAuthUrl={null}
       />
       <div className="mw-xs mt-3">
-        <Form name="nafath-form" id="nafath-form">
-          <FormGroup
-            name="nafathId"
-            value={nafathId}
-            handleChange={(e) => {
-              setNafathId(e.target.value);
-              return nafathId;
-            }}
-            floatingLabel={formatMessage(
-              messages["nafath.user.identity.label"]
-            )}
-          />
-          {props.state.randomText && (
+        {props.state.form == 1 && (
+          <Form name="nafath-form1" id="nafath-form1">
             <FormGroup
-              value={props.state.randomText}
-              readOnly={true}
-              floatingLabel={formatMessage(messages["nafath.user.random.text"])}
-              errorMessage={
-                (props.state.status === "EXPIRED" &&
-                  formatMessage(messages["nafath.user.random.text.expired"])) ||
-                props.state.status ===
-                  ("REJECTED" &&
-                    formatMessage(
-                      messages["nafath.user.random.text.rejected"]
-                    )) ||
-                ""
-              }
+              name="nafathId"
+              value={nafathId}
+              handleChange={(e) => {
+                setNafathId(e.target.value);
+                return nafathId;
+              }}
+              floatingLabel={formatMessage(
+                messages["nafath.user.identity.label"]
+              )}
             />
-          )}
-          <StatefulButton
-            name="authenticate-nafath"
-            id="authenticate-nafath"
-            className={"nafath-authenticate-button"}
-            variant="brand"
-            state={
-              ((props.state.status === "WAITING" ||
-                props.state.status === "COMPLETED") &&
-                "pending") ||
-              (props.state.success && "complete") ||
-              "default"
-            }
-            labels={{
-              default: formatMessage(messages["nafath.authenticate.button"]),
-              pending: "",
-            }}
-            disabled={
-              props.state.status === "WAITING" ||
-              props.state.status === "COMPLETED" ||
-              false
-            }
-            onClick={handleNafathAuthentication}
-            onMouseDown={(e) => e.preventDefault()}
-          />
-        </Form>
+            {props.state.randomText && (
+              <FormGroup
+                value={props.state.randomText}
+                readOnly={true}
+                floatingLabel={formatMessage(
+                  messages["nafath.user.random.text"]
+                )}
+                errorMessage={
+                  (props.state.status === "EXPIRED" &&
+                    formatMessage(
+                      messages["nafath.user.random.text.expired"]
+                    )) ||
+                  props.state.status ===
+                    ("REJECTED" &&
+                      formatMessage(
+                        messages["nafath.user.random.text.rejected"]
+                      )) ||
+                  ""
+                }
+              />
+            )}
+            <StatefulButton
+              name="authenticate-nafath"
+              id="authenticate-nafath"
+              className={"nafath-authenticate-button"}
+              variant="brand"
+              state={
+                ((props.state.status === "WAITING" ||
+                  props.state.status === "COMPLETED") &&
+                  "pending") ||
+                (props.state.success && "complete") ||
+                "default"
+              }
+              labels={{
+                default: formatMessage(messages["nafath.authenticate.button"]),
+                pending: "",
+              }}
+              disabled={
+                props.state.status === "WAITING" ||
+                props.state.status === "COMPLETED" ||
+                false
+              }
+              onClick={handleNafathAuthentication}
+              onMouseDown={(e) => e.preventDefault()}
+            />
+          </Form>
+        )}
+        {props.state.form == 2 && (
+          <Form name="nafath-form2" id="nafath-form2">
+            <FormGroup
+              name="email"
+              value={nafathEmail}
+              handleChange={(e) => {
+                setNafathEmail(e.target.value);
+                return nafathEmail;
+              }}
+              floatingLabel={formatMessage(messages["nafath.user.email.label"])}
+            />
+            <StatefulButton
+              name="complete-nafath-registration"
+              id="complete-nafath-registration"
+              className={"nafath-authenticate-button"}
+              variant="brand"
+              state={
+                (registrationBtnClicked && "pending") ||
+                (props.state.success && "complete") ||
+                "default"
+              }
+              labels={{
+                default: formatMessage(
+                  messages["complete.nafath.registration.button"]
+                ),
+                pending: "",
+              }}
+              disabled={registrationBtnClicked}
+              onClick={handleNafathRegistration}
+              onMouseDown={(e) => e.preventDefault()}
+            />
+          </Form>
+        )}
       </div>
     </>
   );

@@ -12,6 +12,11 @@ const messages = defineMessages({
     defaultMessage: "Nafath ID",
     description: "Label for user identity field to enter Nafath ID to login",
   },
+  "nafath.user.email.label": {
+    id: "nafath.user.email.label",
+    defaultMessage: "Enter Email to complete registration",
+    description: "Label for user email field to enter Nafath email to complete registration",
+  },
   "nafath.user.random.text": {
     id: "nafath.user.random.text",
     defaultMessage: "Enter this text into your Nafath App",
@@ -32,6 +37,11 @@ const messages = defineMessages({
   "nafath.authenticate.button": {
     id: "nafath.sign.in.button",
     defaultMessage: "Authenticate with Nafath App",
+    description: "Nafath sign in button label that appears on login page",
+  },
+  "complete.nafath.registration.button": {
+    id: "complete.nafath.registration.button",
+    defaultMessage: "Complete Registration",
     description: "Nafath sign in button label that appears on login page",
   },
 });
