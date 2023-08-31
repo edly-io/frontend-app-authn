@@ -16,8 +16,12 @@ export async function authenticationAndRandomTextRequest(userId) {
       requestConfig
     )
     .catch((e) => {
-      throw e;
+      const data = e.response;
+      return data;
     });
+  if ("error" in data){
+    return data;
+  }
   return {
     transId: data.trans_id,
     random: data.random,

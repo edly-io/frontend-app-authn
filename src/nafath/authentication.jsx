@@ -21,6 +21,10 @@ const NafathAuthenticationPage = (props) => {
   const { formatMessage } = useIntl();
   const [nafathId, setNafathId] = useState("");
   const [nafathEmail, setNafathEmail] = useState("");
+  const [
+    nafathIdAuthenticationBtnClicked,
+    setNafathIdAuthenticationBtnClicked,
+  ] = useState(false);
   const [registrationBtnClicked, setRegistrationBtnClicked] = useState(false);
 
   useEffect(() => {
@@ -29,7 +33,14 @@ const NafathAuthenticationPage = (props) => {
     }
   }, [props.state.registrationError]);
 
+  useEffect(() => {
+    if (props.state.authenticationError) {
+      setNafathIdAuthenticationBtnClicked(false);
+    }
+  }, [props.state.authenticationError]);
+
   const handleNafathAuthentication = () => {
+    setNafathIdAuthenticationBtnClicked(true);
     props.authenticateUserIdFromNafath(nafathId);
   };
   const handleNafathRegistration = () => {
@@ -80,6 +91,7 @@ const NafathAuthenticationPage = (props) => {
               floatingLabel={formatMessage(
                 messages["nafath.user.identity.label"]
               )}
+              errorMessage={props.state.authenticationError}
             />
             {props.state.randomText && (
               <FormGroup
@@ -108,10 +120,8 @@ const NafathAuthenticationPage = (props) => {
               className={"nafath-authenticate-button"}
               variant="brand"
               state={
-                ((props.state.status === "WAITING" ||
-                  props.state.status === "COMPLETED") &&
-                  "pending") ||
-                (props.state.success && "complete") ||
+                (nafathIdAuthenticationBtnClicked && "pending") ||
+                (props.state.status === "COMPLETED" && "complete") ||
                 "default"
               }
               labels={{

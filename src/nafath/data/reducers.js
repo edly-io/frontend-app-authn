@@ -5,6 +5,7 @@ import {
   SET_NAFATH_USER_REGISTRATION_ERROR,
   SET_CHECK_REQUEST_STATUS_INTERVAL_TIME,
   SET_USER_REQUEST_STATUS,
+  SET_NAFATH_USER_ID_AUTHENTICATION_ERROR,
 } from "./actions";
 
 export const defaultState = {
@@ -18,6 +19,7 @@ export const defaultState = {
   interval: 1000,
   form: 1,
   registrationError: "",
+  authenticationError: "",
 };
 
 const reducer = (state = defaultState, action = {}) => {
@@ -49,6 +51,12 @@ const reducer = (state = defaultState, action = {}) => {
       state = {
         ...state,
         registrationError: action.payload,
+      };
+      break;
+    case SET_NAFATH_USER_ID_AUTHENTICATION_ERROR:
+      state = {
+        ...state,
+        authenticationError: action.payload,
       };
       break;
     case SET_CHECK_REQUEST_STATUS_INTERVAL_TIME:

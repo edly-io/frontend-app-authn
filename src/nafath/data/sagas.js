@@ -11,6 +11,7 @@ import {
   setNafathUserRegistrationError,
   setCheckRequestStatusIntervelTime,
   setUserRequestStatus,
+  setNafathUserIdAuthenticationError,
 } from "./actions";
 import {
   authenticationAndRandomTextRequest,
@@ -20,17 +21,30 @@ import {
 
 export function* handleAuthenticateUserIdFromNafathSaga(action) {
   try {
-    const { transId, random } = yield call(
+    yield put(
+      setNafathUserIdAuthenticationError({
+        authenticationError: "",
+      })
+    );
+    const { transId, random, error } = yield call(
       authenticationAndRandomTextRequest,
       action.payload
     );
-    let data = {};
-    data.transId = transId;
-    data.random = random;
-    data.status = "WAITING";
-    data.userId = action.payload;
-    data.form = 1;
-    yield put(setNafathAuthnData(data));
+    if (error) {
+      yield put(
+        setNafathUserIdAuthenticationError({
+          authenticationError: error,
+        })
+      );
+    } else {
+      let data = {};
+      data.transId = transId;
+      data.random = random;
+      data.status = "WAITING";
+      data.userId = action.payload;
+      data.form = 1;
+      yield put(setNafathAuthnData(data));
+    }
   } catch (e) {
     logError(e);
     throw e;
