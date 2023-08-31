@@ -19,7 +19,7 @@ export async function authenticationAndRandomTextRequest(userId) {
       const data = e.response;
       return data;
     });
-  if ("error" in data){
+  if ("error" in data) {
     return data;
   }
   return {
@@ -28,12 +28,12 @@ export async function authenticationAndRandomTextRequest(userId) {
   };
 }
 
-export async function checkUserRequestStatusRequest(userId) {
+export async function checkUserRequestStatusRequest(payload) {
   const requestConfig = {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    nafath_id: userId,
+    nafath_id: payload.nafath_id,
+    trans_id: payload.trans_id,
   };
-
   const { data } = await getAuthenticatedHttpClient()
     .post(
       `${getConfig().LMS_BASE_URL}/nafath/api/v1/check_status`,
@@ -50,6 +50,7 @@ export async function completeNafathUserRegistration(userRegistrationPayload) {
   const requestConfig = {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     nafath_id: userRegistrationPayload.nafath_id,
+    trans_id: userRegistrationPayload.trans_id,
     user_data: userRegistrationPayload.user_data,
   };
 

@@ -58,7 +58,10 @@ const NafathAuthenticationPage = (props) => {
   useEffect(() => {
     if (props.state.status === "WAITING") {
       const interval = setInterval(() => {
-        props.checkUserRequestStatus(props.state.userId);
+        props.checkUserRequestStatus({
+          nafath_id: props.state.userId,
+          trans_id: props.state.transId,
+        });
       }, props.state.interval);
       return () => clearInterval(interval);
     }

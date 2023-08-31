@@ -53,10 +53,18 @@ export function* handleAuthenticateUserIdFromNafathSaga(action) {
 
 export function* checkUserRequestStatusSaga(action) {
   try {
-    const { status } = yield call(
+    const { redirect_url, success, status } = yield call(
       checkUserRequestStatusRequest,
       action.payload
     );
+    if (success && redirect_url) {
+      yield put(
+        setNafathUserRegistrationSuccess({
+          redirectUrl: redirect_url,
+          success: success,
+        })
+      );
+    }
     if (status != "WAITING") {
       if (status != "COMPLETED") {
         yield put(setUserRequestStatus(status));
@@ -95,15 +103,16 @@ export function* handleNafathUserRegistrationSaga(action) {
       if (success) {
         const { redirect_url, success } = yield call(
           checkUserRequestStatusRequest,
-          action.payload.nafath_id
+          action.payload
         );
-        if (success && redirect_url)
+        if (success && redirect_url) {
           yield put(
             setNafathUserRegistrationSuccess({
               redirectUrl: redirect_url,
               success: success,
             })
           );
+        }
       }
       if (error) {
         yield put(
