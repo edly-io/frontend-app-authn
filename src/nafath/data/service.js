@@ -11,7 +11,10 @@ export async function authenticationAndRandomTextRequest(userId) {
   };
 
   const { data } = await getHttpClient()
-    .post(`${getConfig().LMS_BASE_URL}/nafath/initiate_request`, requestConfig)
+    .post(
+      `${getConfig().LMS_BASE_URL}/nafath/api/v1/initiate_request`,
+      requestConfig
+    )
     .catch((e) => {
       throw e;
     });
@@ -21,14 +24,17 @@ export async function authenticationAndRandomTextRequest(userId) {
   };
 }
 
-export async function checkUserRequestStatusRequest(transId) {
+export async function checkUserRequestStatusRequest(userId) {
   const requestConfig = {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    trans_id: transId,
+    nafath_id: userId,
   };
 
   const { data } = await getAuthenticatedHttpClient()
-    .post(`${getConfig().LMS_BASE_URL}/nafath/check_status`, requestConfig)
+    .post(
+      `${getConfig().LMS_BASE_URL}/nafath/api/v1/check_status`,
+      requestConfig
+    )
     .catch((e) => {
       throw e;
     });
@@ -39,15 +45,18 @@ export async function checkUserRequestStatusRequest(transId) {
 export async function completeNafathUserRegistration(userRegistrationPayload) {
   const requestConfig = {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    trans_id: userRegistrationPayload.trans_id,
+    nafath_id: userRegistrationPayload.nafath_id,
     user_data: userRegistrationPayload.user_data,
   };
 
   const { data } = await getHttpClient()
-    .post(`${getConfig().LMS_BASE_URL}/nafath/register_user`, requestConfig)
+    .post(
+      `${getConfig().LMS_BASE_URL}/nafath/api/v1/register_user`,
+      requestConfig
+    )
     .catch((e) => {
-      console.log(e);
-      throw e;
+      const data = e.response;
+      return data;
     });
 
   return data;

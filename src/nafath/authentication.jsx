@@ -23,6 +23,12 @@ const NafathAuthenticationPage = (props) => {
   const [nafathEmail, setNafathEmail] = useState("");
   const [registrationBtnClicked, setRegistrationBtnClicked] = useState(false);
 
+  useEffect(() => {
+    if (props.state.registrationError) {
+      setRegistrationBtnClicked(false);
+    }
+  }, [props.state.registrationError]);
+
   const handleNafathAuthentication = () => {
     props.authenticateUserIdFromNafath(nafathId);
   };
@@ -41,7 +47,7 @@ const NafathAuthenticationPage = (props) => {
   useEffect(() => {
     if (props.state.status === "WAITING") {
       const interval = setInterval(() => {
-        props.checkUserRequestStatus(props.state.transId);
+        props.checkUserRequestStatus(props.state.userId);
       }, props.state.interval);
       return () => clearInterval(interval);
     }
@@ -132,6 +138,7 @@ const NafathAuthenticationPage = (props) => {
                 return nafathEmail;
               }}
               floatingLabel={formatMessage(messages["nafath.user.email.label"])}
+              errorMessage={props.state.registrationError}
             />
             <StatefulButton
               name="complete-nafath-registration"

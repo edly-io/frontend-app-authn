@@ -2,6 +2,7 @@ import {
   SET_NAFATH_AUTHN_DATA,
   SET_USER_REQUEST_DATA,
   SET_NAFATH_USER_REGISTRATION_SUCCESS,
+  SET_NAFATH_USER_REGISTRATION_ERROR,
   SET_CHECK_REQUEST_STATUS_INTERVAL_TIME,
   SET_USER_REQUEST_STATUS,
 } from "./actions";
@@ -16,6 +17,7 @@ export const defaultState = {
   redirectUrl: "/",
   interval: 1000,
   form: 1,
+  registrationError: "",
 };
 
 const reducer = (state = defaultState, action = {}) => {
@@ -41,6 +43,12 @@ const reducer = (state = defaultState, action = {}) => {
         ...state,
         success: action.payload.success,
         redirectUrl: action.payload.redirectUrl,
+      };
+      break;
+    case SET_NAFATH_USER_REGISTRATION_ERROR:
+      state = {
+        ...state,
+        registrationError: action.payload,
       };
       break;
     case SET_CHECK_REQUEST_STATUS_INTERVAL_TIME:

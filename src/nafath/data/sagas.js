@@ -8,6 +8,7 @@ import {
   setUserRequestData,
   HANDLE_NAFATH_USER_REGISTRATION,
   setNafathUserRegistrationSuccess,
+  setNafathUserRegistrationError,
   setCheckRequestStatusIntervelTime,
   setUserRequestStatus,
 } from "./actions";
@@ -64,6 +65,11 @@ export function* checkUserRequestStatusSaga(action) {
 var cont = 0;
 export function* handleNafathUserRegistrationSaga(action) {
   try {
+    yield put(
+      setNafathUserRegistrationError({
+        registrationError: "",
+      })
+    );
     cont = cont + 1;
     if (cont == 1) {
       // will require error handling here
@@ -72,11 +78,10 @@ export function* handleNafathUserRegistrationSaga(action) {
         action.payload
       );
       cont = 0;
-
       if (success) {
         const { redirect_url, success } = yield call(
           checkUserRequestStatusRequest,
-          action.payload.trans_id
+          action.payload.nafath_id
         );
         if (success && redirect_url)
           yield put(
@@ -85,6 +90,13 @@ export function* handleNafathUserRegistrationSaga(action) {
               success: success,
             })
           );
+      }
+      if (error) {
+        yield put(
+          setNafathUserRegistrationError({
+            registrationError: error,
+          })
+        );
       }
     }
   } catch (e) {
