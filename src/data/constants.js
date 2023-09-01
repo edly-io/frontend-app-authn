@@ -1,5 +1,6 @@
 // URL Paths
 export const LOGIN_PAGE = '/login';
+export const NAFATH_AUTHENTICATION_PAGE = '/nafath';
 export const REGISTER_PAGE = '/register';
 export const RESET_PAGE = '/reset';
 export const AUTHN_PROGRESSIVE_PROFILING = '/welcome';

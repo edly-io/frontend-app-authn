@@ -15,10 +15,11 @@ import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
 import { BaseComponent } from '../base-component';
-import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
+import { LOGIN_PAGE, REGISTER_PAGE, NAFATH_AUTHENTICATION_PAGE } from '../data/constants';
 import { getTpaHint, getTpaProvider, updatePathWithQueryParams } from '../data/utils';
 import { LoginPage } from '../login';
 import { RegistrationPage } from '../register';
+import { NafathAuthenticationPage } from '../nafath'
 import { backupRegistrationForm } from '../register/data/actions';
 import { clearThirdPartyAuthContextErrorMessage } from './data/actions';
 import {
@@ -70,7 +71,10 @@ const Logistration = (props) => {
       <span className="ml-2">
         {selectedPage === LOGIN_PAGE
           ? formatMessage(messages['logistration.sign.in'])
-          : formatMessage(messages['logistration.register'])}
+          : selectedPage === REGISTER_PAGE
+            ? formatMessage(messages['logistration.register'])
+            : formatMessage(messages['logistration.nafath.authentication'])
+        }
       </span>
     </div>
   );
@@ -105,27 +109,30 @@ const Logistration = (props) => {
               {institutionLogin
                 ? (
                   <Tabs defaultActiveKey="" id="controlled-tab" onSelect={handleInstitutionLogin}>
-                    <Tab title={tabTitle} eventKey={selectedPage === LOGIN_PAGE ? LOGIN_PAGE : REGISTER_PAGE} />
+                    <Tab title={tabTitle} eventKey={selectedPage === LOGIN_PAGE ? LOGIN_PAGE : selectedPage === REGISTER_PAGE ? REGISTER_PAG : NAFATH_AUTHENTICATION_PAGE} />
                   </Tabs>
                 )
                 : (!isValidTpaHint() && (
                   <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
                     <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
                     <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
+                    <Tab title={formatMessage(messages['logistration.nafath.authentication'])} eventKey={NAFATH_AUTHENTICATION_PAGE} />
                   </Tabs>
                 ))}
-              { key && (
+              {key && (
                 <Redirect to={updatePathWithQueryParams(key)} />
               )}
               <div id="main-content" className="main-content">
                 {selectedPage === LOGIN_PAGE
                   ? <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
-                  : (
-                    <RegistrationPage
-                      institutionLogin={institutionLogin}
-                      handleInstitutionLogin={handleInstitutionLogin}
-                    />
-                  )}
+                  : selectedPage === REGISTER_PAGE
+                    ? (
+                      <RegistrationPage
+                        institutionLogin={institutionLogin}
+                        handleInstitutionLogin={handleInstitutionLogin}
+                      />
+                    )
+                    : <NafathAuthenticationPage />}
               </div>
             </div>
           )}
