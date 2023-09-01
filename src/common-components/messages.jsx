@@ -13,6 +13,11 @@ const messages = defineMessages({
     defaultMessage: 'Sign in',
     description: 'Text that appears on the tab to switch between login and register',
   },
+  'logistration.nafath.authentication': {
+    id: 'logistration.nafath.authentication',
+    defaultMessage: 'Nafath',
+    description: 'Text that appears on the tab to switch between login, register and nafath',
+  },
   'logistration.register': {
     id: 'logistration.register',
     defaultMessage: 'Register',

@@ -24,6 +24,10 @@ import {
   reducer as resetPasswordReducer,
   storeName as resetPasswordStoreName,
 } from '../reset-password';
+import {
+  reducer as nafathReducer,
+  storeName as nafathStoreName,
+} from '../nafath';
 
 const createRootReducer = () => combineReducers({
   [loginStoreName]: loginReducer,
@@ -32,5 +36,6 @@ const createRootReducer = () => combineReducers({
   [forgotPasswordStoreName]: forgotPasswordReducer,
   [resetPasswordStoreName]: resetPasswordReducer,
   [authnProgressiveProfilingStoreName]: authnProgressiveProfilingReducers,
+  [nafathStoreName]: nafathReducer,
 });
 export default createRootReducer;
