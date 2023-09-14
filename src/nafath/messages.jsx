@@ -39,10 +39,37 @@ const messages = defineMessages({
     defaultMessage: "Authenticate with Nafath App",
     description: "Nafath sign in button label that appears on login page",
   },
+  "nafath.authenticate.error": {
+    id: "nafath.authenticate.error",
+    defaultMessage: "An unexpected error occur",
+    description: "Nafath sign in button label that appears on login page",
+  },
+  "nafath.registration.error": {
+    id: "nafath.registration.error",
+    defaultMessage: "Email is already registered with another account",
+    description: "Nafath email registration error message",
+  },
   "complete.nafath.registration.button": {
     id: "complete.nafath.registration.button",
     defaultMessage: "Complete Registration",
     description: "Nafath sign in button label that appears on login page",
+  },
+  // nafath id Validation messages
+  "nafathId.empty.field.error": {
+    id: "nafathId.empty.field.error",
+    defaultMessage: "Please enter the Nafath ID",
+    description: "Error message for empty nafath id field",
+  },
+  // email Validation messages
+  "email.empty.field.error": {
+    id: "email.empty.field.error",
+    defaultMessage: "Please enter the Email",
+    description: "Error message for empty email field",
+  },
+  "email.invalid.format.error": {
+    id: "email.invalid.format.error",
+    defaultMessage: "Enter a valid email address",
+    description: "Validation error for invalid email address",
   },
 });
 
