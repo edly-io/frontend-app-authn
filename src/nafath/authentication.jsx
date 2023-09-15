@@ -14,8 +14,14 @@ import {
   authenticateUserIdFromNafath,
   checkUserRequestStatus,
   handleNafathUserRegistration,
+  setNafathUserRegistrationError,
+  setNafathUserIdAuthenticationError,
 } from "./data/actions";
+import { validateEmailAddress } from "../register/data/utils";
+import { VALID_EMAIL_REGEX } from '../data/constants';
 import "../sass/_nafath_page.scss";
+
+const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
 
 const NafathAuthenticationPage = (props) => {
   const { formatMessage } = useIntl();
@@ -41,18 +47,47 @@ const NafathAuthenticationPage = (props) => {
 
   const handleNafathAuthentication = () => {
     setNafathIdAuthenticationBtnClicked(true);
-    props.authenticateUserIdFromNafath(nafathId);
+    if (!nafathId) {
+      setNafathIdAuthenticationBtnClicked(false);
+      props.setNafathUserIdAuthenticationError({
+        authenticationError: formatMessage(messages["nafathId.empty.field.error"]),
+      })
+    } else {
+      props.authenticateUserIdFromNafath(nafathId);
+    }
   };
+
   const handleNafathRegistration = () => {
     setRegistrationBtnClicked(true);
-    const userRegistrationPayload = {
-      nafath_id: props.state.userId,
-      trans_id: props.state.transId,
-      user_data: {
-        email: nafathEmail,
-      },
-    };
-    props.handleNafathUserRegistration(userRegistrationPayload);
+    if (!nafathEmail) {
+      setRegistrationBtnClicked(false);
+      props.setNafathUserRegistrationError({
+        registrationError: formatMessage(messages["email.empty.field.error"]),
+      })
+    } else if ((nafathEmail.length <= 2) || !emailRegex.test(nafathEmail)) {
+      setRegistrationBtnClicked(false);
+      props.setNafathUserRegistrationError({
+        registrationError: formatMessage(messages["email.invalid.format.error"]),
+      })
+    } else {
+      const [username, domainName] = nafathEmail.split('@');
+      const response = validateEmailAddress(nafathEmail, username, domainName);
+      if (response.hasError) {
+        setRegistrationBtnClicked(false);
+        props.setNafathUserRegistrationError({
+          registrationError: formatMessage(messages["email.invalid.format.error"]),
+        })
+      } else {
+        const userRegistrationPayload = {
+          nafath_id: props.state.userId,
+          trans_id: props.state.transId,
+          user_data: {
+            email: nafathEmail,
+          },
+        };
+        props.handleNafathUserRegistration(userRegistrationPayload);
+      }
+    }
   };
 
   useEffect(() => {
@@ -64,6 +99,9 @@ const NafathAuthenticationPage = (props) => {
         });
       }, props.state.interval);
       return () => clearInterval(interval);
+    }
+    if (props.state.status !== "WAITING") {
+      setNafathIdAuthenticationBtnClicked(false);
     }
   }, [props.state.status, props.state.interval]);
 
@@ -94,7 +132,11 @@ const NafathAuthenticationPage = (props) => {
               floatingLabel={formatMessage(
                 messages["nafath.user.identity.label"]
               )}
-              errorMessage={props.state.authenticationError}
+              errorMessage={
+                (props.state.authenticationError == "ERR001" &&
+                  formatMessage(messages["nafath.authenticate.error"])) ||
+                props.state.authenticationError
+              }
             />
             {props.state.randomText && (
               <FormGroup
@@ -151,7 +193,11 @@ const NafathAuthenticationPage = (props) => {
                 return nafathEmail;
               }}
               floatingLabel={formatMessage(messages["nafath.user.email.label"])}
-              errorMessage={props.state.registrationError}
+              errorMessage={
+                (props.state.registrationError == "ERR002" &&
+                  formatMessage(messages["nafath.registration.error"])) ||
+                props.state.registrationError
+              }
             />
             <StatefulButton
               name="complete-nafath-registration"
@@ -169,7 +215,6 @@ const NafathAuthenticationPage = (props) => {
                 ),
                 pending: "",
               }}
-              disabled={registrationBtnClicked}
               onClick={handleNafathRegistration}
               onMouseDown={(e) => e.preventDefault()}
             />
@@ -194,10 +239,14 @@ NafathAuthenticationPage.propTypes = {
   authenticateUserIdFromNafath: PropTypes.func.isRequired,
   checkUserRequestStatus: PropTypes.func.isRequired,
   handleNafathUserRegistration: PropTypes.func.isRequired,
+  setNafathUserRegistrationError: PropTypes.func.isRequired,
+  setNafathUserIdAuthenticationError: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, {
   authenticateUserIdFromNafath,
   checkUserRequestStatus,
   handleNafathUserRegistration,
+  setNafathUserRegistrationError,
+  setNafathUserIdAuthenticationError,
 })(NafathAuthenticationPage);
