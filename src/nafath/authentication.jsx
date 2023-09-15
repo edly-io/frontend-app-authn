@@ -60,7 +60,6 @@ const NafathAuthenticationPage = (props) => {
   const handleNafathRegistration = () => {
     setRegistrationBtnClicked(true);
     if (!nafathEmail) {
-      debugger;
       setRegistrationBtnClicked(false);
       props.setNafathUserRegistrationError({
         registrationError: formatMessage(messages["email.empty.field.error"]),
@@ -134,7 +133,7 @@ const NafathAuthenticationPage = (props) => {
                 messages["nafath.user.identity.label"]
               )}
               errorMessage={
-                (props.state.authenticationError == "AUEO" &&
+                (props.state.authenticationError == "ERR001" &&
                   formatMessage(messages["nafath.authenticate.error"])) ||
                 props.state.authenticationError
               }
@@ -195,7 +194,7 @@ const NafathAuthenticationPage = (props) => {
               }}
               floatingLabel={formatMessage(messages["nafath.user.email.label"])}
               errorMessage={
-                (props.state.registrationError == "EIAR" &&
+                (props.state.registrationError == "ERR002" &&
                   formatMessage(messages["nafath.registration.error"])) ||
                 props.state.registrationError
               }
