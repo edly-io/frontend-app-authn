@@ -32,7 +32,7 @@
     "url": "https://github.com/openedx/frontend-app-authn/issues"
   },
   "dependencies": {
-    "@edx/brand": "npm:@edly-io/sdaia-brand-openedx@1.0.0",
+    "@edx/brand": "npm:@edly-io/sdaia-brand-openedx@^1.0.0",
     "@edx/frontend-component-cookie-policy-banner": "2.2.2",
     "@edx/frontend-platform": "4.2.0",
     "@edx/paragon": "20.30.1",
