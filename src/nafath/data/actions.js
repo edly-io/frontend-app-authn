@@ -14,6 +14,12 @@ export const SET_NAFATH_USER_REGISTRATION_ERROR =
   "SET_NAFATH_USER_REGISTRATION_ERROR";
 export const SET_NAFATH_USER_ID_AUTHENTICATION_ERROR =
   "SET_NAFATH_USER_ID_AUTHENTICATION_ERROR";
+export const SET_NAFATH_USER_LOGIN_ERROR = "SET_NAFATH_USER_LOGIN_ERROR";
+export const EMPTY_STATE = "EMPTY_STATE";
+
+export const emptyState = () => ({
+  type: EMPTY_STATE,
+});
 
 export const authenticateUserIdFromNafath = (userId) => ({
   type: AUTHENTICATE_USER_ID_FROM_NAFATH,
@@ -53,6 +59,11 @@ export const setNafathUserRegistrationError = (error) => ({
 export const setNafathUserIdAuthenticationError = (error) => ({
   type: SET_NAFATH_USER_ID_AUTHENTICATION_ERROR,
   payload: error.authenticationError,
+});
+
+export const setNafathUserLoginError = (error) => ({
+  type: SET_NAFATH_USER_LOGIN_ERROR,
+  payload: error,
 });
 
 export const setCheckRequestStatusIntervelTime = (time) => ({

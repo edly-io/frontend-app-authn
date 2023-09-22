@@ -16,7 +16,9 @@ import {
   handleNafathUserRegistration,
   setNafathUserRegistrationError,
   setNafathUserIdAuthenticationError,
+  emptyState,
 } from "./data/actions";
+import LoginFailureMessage from "../login/LoginFailure";
 import { validateEmailAddress } from "../register/data/utils";
 import { VALID_EMAIL_REGEX } from '../data/constants';
 import "../sass/_nafath_page.scss";
@@ -32,6 +34,16 @@ const NafathAuthenticationPage = (props) => {
     setNafathIdAuthenticationBtnClicked,
   ] = useState(false);
   const [registrationBtnClicked, setRegistrationBtnClicked] = useState(false);
+
+  useEffect(() => {
+    if (props.state.loginError) {
+      setNafathId("");
+      setNafathEmail("");
+      setNafathIdAuthenticationBtnClicked(false);
+      setRegistrationBtnClicked(false);
+      props.emptyState();
+    }
+  }, [props.state.loginError]);
 
   useEffect(() => {
     if (props.state.registrationError) {
@@ -120,6 +132,7 @@ const NafathAuthenticationPage = (props) => {
         finishAuthUrl={null}
       />
       <div className="mw-xs mt-3">
+        {props.state.loginError ? <LoginFailureMessage loginError={props.state.loginError} /> : null}
         {props.state.form == 1 && (
           <Form name="nafath-form1" id="nafath-form1">
             <FormGroup
@@ -150,11 +163,10 @@ const NafathAuthenticationPage = (props) => {
                     formatMessage(
                       messages["nafath.user.random.text.expired"]
                     )) ||
-                  props.state.status ===
-                    ("REJECTED" &&
-                      formatMessage(
-                        messages["nafath.user.random.text.rejected"]
-                      )) ||
+                  (props.state.status === "REJECTED" &&
+                    formatMessage(
+                      messages["nafath.user.random.text.rejected"]
+                    )) ||
                   ""
                 }
               />
@@ -173,11 +185,6 @@ const NafathAuthenticationPage = (props) => {
                 default: formatMessage(messages["nafath.authenticate.button"]),
                 pending: "",
               }}
-              disabled={
-                props.state.status === "WAITING" ||
-                props.state.status === "COMPLETED" ||
-                false
-              }
               onClick={handleNafathAuthentication}
               onMouseDown={(e) => e.preventDefault()}
             />
@@ -194,6 +201,8 @@ const NafathAuthenticationPage = (props) => {
               }}
               floatingLabel={formatMessage(messages["nafath.user.email.label"])}
               errorMessage={
+                (props.state.registrationError == "ERR001" &&
+                  formatMessage(messages["nafath.authenticate.error"])) ||
                 (props.state.registrationError == "ERR002" &&
                   formatMessage(messages["nafath.registration.error"])) ||
                 props.state.registrationError
@@ -241,6 +250,7 @@ NafathAuthenticationPage.propTypes = {
   handleNafathUserRegistration: PropTypes.func.isRequired,
   setNafathUserRegistrationError: PropTypes.func.isRequired,
   setNafathUserIdAuthenticationError: PropTypes.func.isRequired,
+  emptyState: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, {
@@ -249,4 +259,5 @@ export default connect(mapStateToProps, {
   handleNafathUserRegistration,
   setNafathUserRegistrationError,
   setNafathUserIdAuthenticationError,
+  emptyState,
 })(NafathAuthenticationPage);

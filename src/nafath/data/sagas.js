@@ -1,3 +1,4 @@
+import { camelCaseObject } from "@edx/frontend-platform";
 import { logError } from "@edx/frontend-platform/logging";
 import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
 
@@ -12,6 +13,7 @@ import {
   setCheckRequestStatusIntervelTime,
   setUserRequestStatus,
   setNafathUserIdAuthenticationError,
+  setNafathUserLoginError,
 } from "./actions";
 import {
   authenticationAndRandomTextRequest,
@@ -53,14 +55,14 @@ export function* handleAuthenticateUserIdFromNafathSaga(action) {
 
 export function* checkUserRequestStatusSaga(action) {
   try {
-    const { redirect_url, success, status } = yield call(
+    const { redirect_url, redirectUrl, success, status } = yield call(
       checkUserRequestStatusRequest,
       action.payload
     );
-    if (success && redirect_url) {
+    if (success && (redirectUrl || redirect_url)) {
       yield put(
         setNafathUserRegistrationSuccess({
-          redirectUrl: redirect_url,
+          redirectUrl: (redirectUrl || redirect_url),
           success: success,
         })
       );
@@ -79,8 +81,22 @@ export function* checkUserRequestStatusSaga(action) {
       yield put(setCheckRequestStatusIntervelTime(3000));
     }
   } catch (e) {
-    logError(e);
-    throw e;
+    const statusCodes = [400];
+    if (e.response) {
+      const { status } = e.response.request;
+      if (statusCodes.includes(status)) {
+        yield put(setNafathUserLoginError(camelCaseObject(e.response.data)));
+        logInfo(e);
+      } else if (status === 403) {
+        yield put(setNafathUserLoginError({ errorCode: FORBIDDEN_REQUEST }));
+        logInfo(e);
+      } else {
+        yield put(
+          setNafathUserLoginError({ errorCode: INTERNAL_SERVER_ERROR })
+        );
+        logError(e);
+      }
+    }
   }
 }
 
@@ -95,21 +111,28 @@ export function* handleNafathUserRegistrationSaga(action) {
     cont = cont + 1;
     if (cont == 1) {
       // will require error handling here
-      const { error, success } = yield call(
+      const { error, successMessage } = yield call(
         completeNafathUserRegistration,
         action.payload
       );
       cont = 0;
-      if (success) {
-        const { redirect_url, success } = yield call(
+      if (successMessage) {
+        const { redirectUrl, redirect_url, success, error } = yield call(
           checkUserRequestStatusRequest,
           action.payload
         );
-        if (success && redirect_url) {
+        if (success && (redirectUrl || redirect_url)) {
           yield put(
             setNafathUserRegistrationSuccess({
-              redirectUrl: redirect_url,
+              redirectUrl: (redirectUrl || redirect_url),
               success: success,
+            })
+          );
+        }
+        else if (error) {
+          yield put(
+            setNafathUserRegistrationError({
+              registrationError: error,
             })
           );
         }
