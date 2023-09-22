@@ -163,11 +163,10 @@ const NafathAuthenticationPage = (props) => {
                     formatMessage(
                       messages["nafath.user.random.text.expired"]
                     )) ||
-                  props.state.status ===
-                    ("REJECTED" &&
-                      formatMessage(
-                        messages["nafath.user.random.text.rejected"]
-                      )) ||
+                  (props.state.status === "REJECTED" &&
+                    formatMessage(
+                      messages["nafath.user.random.text.rejected"]
+                    )) ||
                   ""
                 }
               />

@@ -121,7 +121,6 @@ export function* handleNafathUserRegistrationSaga(action) {
           checkUserRequestStatusRequest,
           action.payload
         );
-        debugger;
         if (success && (redirectUrl || redirect_url)) {
           yield put(
             setNafathUserRegistrationSuccess({
