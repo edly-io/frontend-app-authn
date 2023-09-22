@@ -6,6 +6,8 @@ import {
   SET_CHECK_REQUEST_STATUS_INTERVAL_TIME,
   SET_USER_REQUEST_STATUS,
   SET_NAFATH_USER_ID_AUTHENTICATION_ERROR,
+  SET_NAFATH_USER_LOGIN_ERROR,
+  EMPTY_STATE,
 } from "./actions";
 
 export const defaultState = {
@@ -20,10 +22,27 @@ export const defaultState = {
   form: 1,
   registrationError: "",
   authenticationError: "",
+  loginError: "",
 };
 
 const reducer = (state = defaultState, action = {}) => {
   switch (action.type) {
+    case EMPTY_STATE:
+      state = {
+        ...state,
+        userId: "",
+        transId: "",
+        randomText: "",
+        person: {},
+        status: "",
+        success: false,
+        redirectUrl: "/",
+        interval: 1000,
+        form: 1,
+        registrationError: "",
+        authenticationError: "",
+      };
+      break;
     case SET_NAFATH_AUTHN_DATA:
       state = {
         ...state,
@@ -57,6 +76,12 @@ const reducer = (state = defaultState, action = {}) => {
       state = {
         ...state,
         authenticationError: action.payload,
+      };
+      break;
+    case SET_NAFATH_USER_LOGIN_ERROR:
+      state = {
+        ...state,
+        loginError: action.payload,
       };
       break;
     case SET_CHECK_REQUEST_STATUS_INTERVAL_TIME:
