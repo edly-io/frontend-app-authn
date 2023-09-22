@@ -1,3 +1,16 @@
+$custom-accent-a: #eb7a67;
+
+$primary-400: #35517d;
+
+.bg-primary-400{
+  background-color: $primary-400 !important;
+}
+
+.text-accent-a{
+  color: $custom-accent-a !important;
+}
+
+
 // Load component based styles
 @import "_base_component.scss";
 @import "_registration.scss";
