@@ -22,6 +22,26 @@ const messages = defineMessages({
     defaultMessage: 'Public username',
     description: 'Label that appears above username field',
   },
+  'registration.national_id.label': {
+    id: 'registration.national_id.label',
+    defaultMessage: 'Saudi National Id (Optional)',
+    description: 'Label that appears above username field',
+  },
+  'registration.phone_number.label': {
+    id: 'registration.phone_number.label',
+    defaultMessage: 'Phone',
+    description: 'Label that appears above phone field',
+  },
+  'registration.date_of_birth.label': {
+    id: 'registration.date_of_birth.label',
+    defaultMessage: 'Date of birth',
+    description: 'Label that appears above date of birth field',
+  },
+  'registration.linkedin_account.label': {
+    id: 'registration.linkedin_account.label',
+    defaultMessage: 'LinkedIn Account (Optional)',
+    description: 'Label that appears above linkedin account field',
+  },
   'registration.password.label': {
     id: 'registration.password.label',
     defaultMessage: 'Password',
@@ -53,15 +73,40 @@ const messages = defineMessages({
     defaultMessage: 'This can not be changed later.',
     description: 'Part of help text for username field on registration page',
   },
+  'help.text.national_id': {
+    id: 'help.text.national_id',
+    defaultMessage: 'Saudi National Id',
+    description: 'Part of help text for username field on registration page',
+  },
+  'help.text.linkedin_account': {
+    id: 'help.text.linkedin_account',
+    defaultMessage: 'Enter you linkedin profile link',
+    description: 'Part of help text for username field on registration page',
+  },
+  'help.text.phone_number': {
+    id: 'help.text.phone_number',
+    defaultMessage: 'It can only be a number',
+    description: 'Part of help text for username field on registration page',
+  },
   'help.text.email': {
     id: 'help.text.email',
     defaultMessage: 'For account activation and important updates',
     description: 'Help text for email field on registration page',
   },
+  'help.text.date_of_birth': {
+    id: 'help.text.date_of_birth',
+    defaultMessage: 'Enter your date of birth',
+    description: 'Please Select your date of birth',
+  },
   // Form buttons
   'create.account.for.free.button': {
     id: 'create.account.for.free.button',
     defaultMessage: 'Create an account for free',
+    description: 'Label text for registration form submission button',
+  },
+  'proceed.account.creation.free.button': {
+    id: 'proceed.account.creation.free.button',
+    defaultMessage: 'Proceed account creation for free',
     description: 'Label text for registration form submission button',
   },
   'registration.other.options.heading': {
@@ -90,6 +135,21 @@ const messages = defineMessages({
     id: 'empty.email.field.error',
     defaultMessage: 'Enter your email',
     description: 'Error message for empty email field',
+  },
+  'empty.phone_number.field.error': {
+    id: 'empty.phone_number.field.error',
+    defaultMessage: 'Enter your phone number',
+    description: 'Error message for empty phone_number field',
+  },
+  'empty.date_of_birth.field.error': {
+    id: 'empty.date_of_birth.field.error',
+    defaultMessage: 'Enter your date of birth',
+    description: 'Error message for empty date of birth field',
+  },
+  'empty.gender.field.error': {
+    id: 'empty.gender.field.error',
+    defaultMessage: 'Please select your gender',
+    description: 'Error message for not selecting gender field',
   },
   'empty.username.field.error': {
     id: 'empty.username.field.error',
@@ -124,6 +184,11 @@ const messages = defineMessages({
   'name.validation.message': {
     id: 'name.validation.message',
     defaultMessage: 'Enter a valid name',
+    description: 'Validation message that appears when fullname contain URL',
+  },
+  'phone_number.validation.message': {
+    id: 'phone_number.validation.message',
+    defaultMessage: 'Enter a valid phone number',
     description: 'Validation message that appears when fullname contain URL',
   },
   'password.validation.message': {
@@ -200,6 +265,32 @@ const messages = defineMessages({
     id: 'did.you.mean.alert.text',
     defaultMessage: 'Did you mean',
     description: 'Did you mean alert suggestion',
+  },
+  // nafath sign up form headings and options
+  'personal.information.text': {
+    id: 'personal.information.text',
+    defaultMessage: 'Personal Information',
+    description: 'Nafath Sign Up Form Heading',
+  },
+  'gender.heading.text': {
+    id: 'gender.heading.text',
+    defaultMessage: 'Gender: ',
+    description: 'Nafath Sign Up Form Gender Heading',
+  },
+  'gender.option.male.text': {
+    id: 'gender.option.male.text',
+    defaultMessage: 'Male',
+    description: 'Nafath Sign Up Form Gender option male',
+  },
+  'gender.option.female.text': {
+    id: 'gender.option.female.text',
+    defaultMessage: 'Female',
+    description: 'Nafath Sign Up Form Gender option female',
+  },
+  'gender.option.other.text': {
+    id: 'gender.option.other.text',
+    defaultMessage: 'Other/Prefer Not to Say',
+    description: 'Nafath Sign Up Form Gender option other',
   },
 });
 

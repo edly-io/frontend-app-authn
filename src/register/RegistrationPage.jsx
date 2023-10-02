@@ -8,7 +8,7 @@ import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import {
   getCountryList, getLocale, useIntl,
 } from '@edx/frontend-platform/i18n';
-import { Form, Spinner, StatefulButton } from '@edx/paragon';
+import { Form, Spinner, StatefulButton, Input } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
@@ -36,6 +36,7 @@ import {
   fetchRealtimeValidations,
   registerNewUser,
   setUserPipelineDataLoaded,
+  setForm,
 } from './data/actions';
 import {
   COUNTRY_CODE_KEY,
@@ -81,6 +82,7 @@ const RegistrationPage = (props) => {
     userPipelineDataLoaded,
     validateFromBackend,
     clearBackendError,
+    signupFormSectionNumber,
   } = props;
 
   const { formatMessage } = useIntl();
@@ -101,6 +103,7 @@ const RegistrationPage = (props) => {
   const [errorCode, setErrorCode] = useState({ type: '', count: 0 });
   const [formStartTime, setFormStartTime] = useState(null);
   const [focusedField, setFocusedField] = useState(null);
+  const [datePickerClicked, setDatePickerClicked] = useState(false);
 
   const {
     providers, currentProvider, secondaryProviders, finishAuthUrl,
@@ -257,6 +260,23 @@ const RegistrationPage = (props) => {
           validateFromBackend(payload);
         }
         break;
+      case 'phone_number':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.phone_number.field.error']);
+        } else if (!value.match(/^[0-9+]+$/)) {
+          fieldError = formatMessage(messages['phone_number.validation.message']);
+        }
+        break;
+      case 'date_of_birth':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.date_of_birth.field.error']);
+        }
+        break;
+      case 'gender':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.gender.field.error']);
+        }
+        break;
       case 'email':
         if (!value) {
           fieldError = formatMessage(messages['empty.email.field.error']);
@@ -338,11 +358,19 @@ const RegistrationPage = (props) => {
     const fieldErrors = { ...errors };
     let isValid = !focusedFieldError;
     Object.keys(payload).forEach(key => {
-      if (!payload[key]) {
-        fieldErrors[key] = formatMessage(messages[`empty.${key}.field.error`]);
-      }
-      if (fieldErrors[key]) {
-        isValid = false;
+      const optional_fields = ["national_id", "linkedin_account"];
+      const ignoreForm2RequiredFieldsInPreviousForms = ["date_of_birth", "gender"]
+      if (optional_fields.includes(key) && payload[key]==''){
+        // passing optional empty fields
+      } else if (signupFormSectionNumber == 1 && ignoreForm2RequiredFieldsInPreviousForms.includes(key) && payload[key]=='') {
+        // ignoring required fields in previous forms
+      } else {
+        if (!payload[key]) {
+          fieldErrors[key] = formatMessage(messages[`empty.${key}.field.error`]);
+        }
+        if (fieldErrors[key]) {
+          isValid = false;
+        }
       }
     });
 
@@ -403,6 +431,14 @@ const RegistrationPage = (props) => {
       clearBackendError(name);
       setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
     }
+    if (name === 'phone_number') {
+      if (value.length > 50 || !value.match(/^[0-9+]+$/)) {
+        value = value.substring(0, value.length - 1);
+      }
+      if (value.startsWith(' ')) {
+        value = value.trim();
+      }
+    }
     if (name === 'username') {
       if (value.length > 30) {
         return;
@@ -424,6 +460,9 @@ const RegistrationPage = (props) => {
       password: formFields.password,
       form_field_key: name,
     };
+    if (event.target.name == "date_of_birth") {
+      setDatePickerClicked(false)
+    }
 
     setFocusedField(null);
     validateInput(name, name === 'password' ? formFields.password : value, payload, !validationApiRateLimited);
@@ -436,7 +475,9 @@ const RegistrationPage = (props) => {
     // Since we are removing the form errors from the focused field, we will
     // need to rerun the validation for focused field on form submission.
     setFocusedField(name);
-
+    if (name == "date_of_birth") {
+      setDatePickerClicked(true)
+    }
     if (name === 'username') {
       props.resetUsernameSuggestions();
       // If we added a space character to username field to display the suggestion
@@ -492,7 +533,12 @@ const RegistrationPage = (props) => {
 
     // add query params to the payload
     payload = { ...payload, ...queryParams };
-    props.registerNewUser(payload);
+    if (signupFormSectionNumber == 2) {
+      props.registerNewUser(payload);
+    }
+    else {
+      props.setForm(signupFormSectionNumber + 1)
+    }
   };
 
   const handleSubmit = (e) => {
@@ -529,6 +575,10 @@ const RegistrationPage = (props) => {
             getConfig().ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN && Object.keys(optionalFields).includes('fields')
           }
         />
+        <h2 style={{ marginBottom: "1.5rem", "text-decoration": "underline" }}>
+          {(signupFormSectionNumber==1 || signupFormSectionNumber==2) &&
+            formatMessage(messages["personal.information.text"])}
+        </h2>
         {autoSubmitRegisterForm && !errorCode.type ? (
           <div className="mw-xs mt-5 text-center">
             <Spinner animation="border" variant="primary" id="tpa-spinner" />
@@ -546,53 +596,203 @@ const RegistrationPage = (props) => {
               context={{ provider: currentProvider, errorMessage: thirdPartyAuthContext.errorMessage }}
             />
             <Form id="registration-form" name="registration-form">
-              <FormGroup
-                name="name"
-                value={formFields.name}
-                handleChange={handleOnChange}
-                handleBlur={handleOnBlur}
-                handleFocus={handleOnFocus}
-                errorMessage={errors.name}
-                helpText={[formatMessage(messages['help.text.name'])]}
-                floatingLabel={formatMessage(messages['registration.fullname.label'])}
-              />
-              <EmailField
-                name="email"
-                value={formFields.email}
-                handleChange={handleOnChange}
-                handleBlur={handleOnBlur}
-                handleFocus={handleOnFocus}
-                handleSuggestionClick={(e) => handleSuggestionClick(e, 'email')}
-                handleOnClose={handleEmailSuggestionClosed}
-                emailSuggestion={emailSuggestion}
-                errorMessage={errors.email}
-                helpText={[formatMessage(messages['help.text.email'])]}
-                floatingLabel={formatMessage(messages['registration.email.label'])}
-              />
-              <UsernameField
-                name="username"
-                spellCheck="false"
-                value={formFields.username}
-                handleBlur={handleOnBlur}
-                handleChange={handleOnChange}
-                handleFocus={handleOnFocus}
-                handleSuggestionClick={handleSuggestionClick}
-                handleUsernameSuggestionClose={handleUsernameSuggestionClosed}
-                usernameSuggestions={usernameSuggestions}
-                errorMessage={errors.username}
-                helpText={[formatMessage(messages['help.text.username.1']), formatMessage(messages['help.text.username.2'])]}
-                floatingLabel={formatMessage(messages['registration.username.label'])}
-              />
-              {!currentProvider && (
-                <PasswordField
-                  name="password"
-                  value={formFields.password}
-                  handleChange={handleOnChange}
-                  handleBlur={handleOnBlur}
-                  handleFocus={handleOnFocus}
-                  errorMessage={errors.password}
-                  floatingLabel={formatMessage(messages['registration.password.label'])}
-                />
+              {signupFormSectionNumber == 1 && (
+                <>
+                  <FormGroup
+                    name="name"
+                    value={formFields.name}
+                    handleChange={handleOnChange}
+                    handleBlur={handleOnBlur}
+                    handleFocus={handleOnFocus}
+                    errorMessage={errors.name}
+                    helpText={[formatMessage(messages['help.text.name'])]}
+                    floatingLabel={formatMessage(messages['registration.fullname.label'])}
+                  />
+                  <UsernameField
+                    name="username"
+                    spellCheck="false"
+                    value={formFields.username}
+                    handleBlur={handleOnBlur}
+                    handleChange={handleOnChange}
+                    handleFocus={handleOnFocus}
+                    handleSuggestionClick={handleSuggestionClick}
+                    handleUsernameSuggestionClose={
+                      handleUsernameSuggestionClosed
+                    }
+                    usernameSuggestions={usernameSuggestions}
+                    errorMessage={errors.username}
+                    helpText={[
+                      formatMessage(messages['help.text.username.1']),
+                      formatMessage(messages['help.text.username.2']),
+                    ]}
+                    floatingLabel={formatMessage(
+                      messages['registration.username.label']
+                    )}
+                  />
+                  <FormGroup
+                    name="national_id"
+                    value={formFields.national_id}
+                    handleBlur={handleOnBlur}
+                    handleChange={handleOnChange}
+                    handleFocus={handleOnFocus}
+                    errorMessage={errors.national_id}
+                    helpText={[
+                      formatMessage(messages['help.text.national_id']),
+                    ]}
+                    floatingLabel={formatMessage(
+                      messages['registration.national_id.label']
+                    )}
+                  />
+                  <FormGroup
+                    name="phone_number"
+                    value={formFields.phone_number}
+                    handleBlur={handleOnBlur}
+                    handleChange={handleOnChange}
+                    handleFocus={handleOnFocus}
+                    errorMessage={errors.phone_number}
+                    helpText={[
+                      formatMessage(messages['help.text.phone_number']),
+                    ]}
+                    floatingLabel={formatMessage(
+                      messages['registration.phone_number.label']
+                    )}
+                  />
+                  <EmailField
+                    name="email"
+                    value={formFields.email}
+                    handleChange={handleOnChange}
+                    handleBlur={handleOnBlur}
+                    handleFocus={handleOnFocus}
+                    handleSuggestionClick={(e) =>
+                      handleSuggestionClick(e, "email")
+                    }
+                    handleOnClose={handleEmailSuggestionClosed}
+                    emailSuggestion={emailSuggestion}
+                    errorMessage={errors.email}
+                    helpText={[formatMessage(messages['help.text.email'])]}
+                    floatingLabel={formatMessage(
+                      messages['registration.email.label']
+                    )}
+                  />
+                  {!currentProvider && (
+                    <PasswordField
+                      name="password"
+                      value={formFields.password}
+                      handleChange={handleOnChange}
+                      handleBlur={handleOnBlur}
+                      handleFocus={handleOnFocus}
+                      errorMessage={errors.password}
+                      floatingLabel={formatMessage(messages['registration.password.label'])}
+                    />
+                  )}
+                </>
+              )}
+              {signupFormSectionNumber == 2 && (
+                <>
+                  <FormGroup
+                    name="linkedin_account"
+                    value={formFields.linkedin_account}
+                    handleBlur={handleOnBlur}
+                    handleChange={handleOnChange}
+                    handleFocus={handleOnFocus}
+                    errorMessage={errors.linkedin_account}
+                    helpText={[
+                      formatMessage(messages['help.text.linkedin_account']),
+                    ]}
+                    floatingLabel={formatMessage(
+                      messages['registration.linkedin_account.label']
+                    )}
+                  />
+                  <h6>
+                    {formatMessage(
+                      messages['registration.date_of_birth.label']
+                    )}:
+                  </h6>
+                  <Input
+                    type="date"
+                    name="date_of_birth"
+                    style={{
+                      "font-weight": 400,
+                      color: formFields.date_of_birth == "" && "#707070" || "#101820",
+                      padding: "0.5625rem 1rem",
+                      display: "block",
+                      width: "98.1%",
+                      "font-size": "0.875rem",
+                      "line-height": "1.5rem",
+                      height: "2.75rem",
+                      "background-clip": "padding-box",
+                      border: !errors.date_of_birth?"1px solid #707070":"1px solid #C32D3A",
+                      "border-radius": "0.375rem",
+                      transition:
+                        "border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out",
+                      overflow: "visible",
+                      "font-family": "inherit",
+                      "box-sizing": "border-box",
+                      "margin-bottom": "1.75rem",
+                    }}
+                    value={formFields.date_of_birth}
+                    onBlur={handleOnBlur}
+                    onChange={handleOnChange}
+                    onFocus={handleOnFocus}
+                  />
+                  <p
+                    style={{
+                      "font-size": "0.75rem",
+                      "margin-top": (datePickerClicked && "-1.4rem") || "",
+                      "margin-bottom": "2rem",
+                      color: "#707070",
+                    }}
+                  >
+                    {datePickerClicked &&
+                      formatMessage(messages['help.text.date_of_birth'])}
+                  </p>
+                  <p
+                    style={{
+                      "font-size": "0.75rem",
+                      "margin-top": (errors.date_of_birth && "-1.4rem") || "",
+                      "margin-bottom": "2rem",
+                      color: "#C32D3A",
+                    }}
+                  >
+                    {!datePickerClicked &&
+                      errors.date_of_birth}
+                  </p>
+                  <Form.Group
+                    style={{ "margin-bottom": "1.75rem" }}
+                    className="d-flex align-items-center"
+                  >
+                    <Form.Label>
+                      <h3>{formatMessage(messages['gender.heading.text'])}</h3>
+                      <Form.RadioSet
+                        value={formFields.gender}
+                        onBlur={handleOnBlur}
+                        onChange={handleOnChange}
+                        onFocus={handleOnFocus}
+                        name="gender"
+                      >
+                        <Form.Radio value="m">
+                          {formatMessage(messages['gender.option.male.text'])}
+                        </Form.Radio>
+                        <Form.Radio value="f">
+                          {formatMessage(messages['gender.option.female.text'])}
+                        </Form.Radio>
+                        <Form.Radio value="o">
+                          {formatMessage(messages['gender.option.other.text'])}
+                        </Form.Radio>
+                      </Form.RadioSet>
+                    </Form.Label>
+                  </Form.Group>
+                  <p
+                    style={{
+                      "font-size": "0.75rem",
+                      "margin-top": (errors.gender && "-1.4rem") || "",
+                      "margin-bottom": "2rem",
+                      color: "#C32D3A",
+                    }}
+                  >
+                    {errors.gender}
+                  </p>
+                </>
               )}
               <ConfigurableRegistrationForm
                 countryList={countryList}
@@ -604,6 +804,18 @@ const RegistrationPage = (props) => {
                 setFocusedField={setFocusedField}
                 fieldDescriptions={fieldDescriptions}
               />
+              {/* <StatefulButton
+                id="proceed-register"
+                name="proceed-register"
+                variant="brand"
+                className="register-stateful-button-width mt-4 mb-4"
+                labels={{
+                  default: formatMessage(messages['create.account.for.free.button']),
+                  pending: '',
+                }}
+                onClick={handleSubmit}
+                onMouseDown={(e) => e.preventDefault()}
+              /> */}
               <StatefulButton
                 id="register-user"
                 name="register-user"
@@ -612,8 +824,15 @@ const RegistrationPage = (props) => {
                 className="register-stateful-button-width mt-4 mb-4"
                 state={submitState}
                 labels={{
-                  default: formatMessage(messages['create.account.for.free.button']),
-                  pending: '',
+                  default:
+                    (signupFormSectionNumber == 2 &&
+                      formatMessage(
+                        messages['create.account.for.free.button']
+                      )) ||
+                    formatMessage(
+                      messages['proceed.account.creation.free.button']
+                    ),
+                  pending: "",
                 }}
                 onClick={handleSubmit}
                 onMouseDown={(e) => e.preventDefault()}
@@ -667,6 +886,7 @@ const mapStateToProps = state => {
     thirdPartyAuthContext: thirdPartyAuthContextSelector(state),
     validationApiRateLimited: registerPageState.validationApiRateLimited,
     usernameSuggestions: registerPageState.usernameSuggestions,
+    signupFormSectionNumber: registerPageState.signupFormSectionNumber,
   };
 };
 
@@ -720,6 +940,7 @@ RegistrationPage.propTypes = {
   usernameSuggestions: PropTypes.arrayOf(PropTypes.string),
   userPipelineDataLoaded: PropTypes.bool,
   validationApiRateLimited: PropTypes.bool,
+  signupFormSectionNumber: PropTypes.number,
   // Actions
   backupFormState: PropTypes.func.isRequired,
   clearBackendError: PropTypes.func.isRequired,
@@ -729,6 +950,7 @@ RegistrationPage.propTypes = {
   resetUsernameSuggestions: PropTypes.func.isRequired,
   setUserPipelineDetailsLoaded: PropTypes.func.isRequired,
   validateFromBackend: PropTypes.func.isRequired,
+  setForm: PropTypes.func.isRequired,
 };
 
 RegistrationPage.defaultProps = {
@@ -737,10 +959,10 @@ RegistrationPage.defaultProps = {
       marketingEmailsOptIn: true,
     },
     formFields: {
-      name: '', email: '', username: '', password: '',
+      name: '', email: '', username: '', password: '', phone_number: '', national_id: '', linkedin_account: '', date_of_birth: '', gender: '',
     },
     errors: {
-      name: '', email: '', username: '', password: '',
+      name: '', email: '', username: '', password: '', phone_number: '', national_id: '', date_of_birth: '', gender: '',
     },
     emailSuggestion: {
       suggestion: '', type: '',
@@ -769,6 +991,7 @@ RegistrationPage.defaultProps = {
   usernameSuggestions: [],
   userPipelineDataLoaded: false,
   validationApiRateLimited: false,
+  signupFormSectionNumber: 1,
 };
 
 export default connect(
@@ -781,5 +1004,6 @@ export default connect(
     validateFromBackend: fetchRealtimeValidations,
     registerNewUser,
     setUserPipelineDetailsLoaded: setUserPipelineDataLoaded,
+    setForm: setForm,
   },
 )(RegistrationPage);

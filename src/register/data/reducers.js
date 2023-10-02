@@ -9,6 +9,7 @@ import {
   REGISTER_NEW_USER,
   REGISTER_SET_COUNTRY_CODE, REGISTER_SET_USER_PIPELINE_DATA_LOADED,
   REGISTERATION_CLEAR_BACKEND_ERROR,
+  SET_FORM,
 } from './actions';
 
 export const defaultState = {
@@ -20,13 +21,13 @@ export const defaultState = {
       marketingEmailsOptIn: true,
     },
     formFields: {
-      name: '', email: '', username: '', password: '',
+      name: '', email: '', username: '', password: '', phone_number: '', national_id: '', linkedin_account: '', date_of_birth: '', gender: '',
     },
     emailSuggestion: {
       suggestion: '', type: '',
     },
     errors: {
-      name: '', email: '', username: '', password: '',
+      name: '', email: '', username: '', password: '', phone_number: '', national_id: '', date_of_birth: '', gender: '',
     },
   },
   validations: null,
@@ -35,6 +36,7 @@ export const defaultState = {
   usernameSuggestions: [],
   validationApiRateLimited: false,
   shouldBackupState: false,
+  signupFormSectionNumber: 1,
 };
 
 const reducer = (state = defaultState, action = {}) => {
@@ -115,6 +117,12 @@ const reducer = (state = defaultState, action = {}) => {
       return {
         ...state,
         userPipelineDataLoaded: value,
+      };
+    }
+    case SET_FORM: {
+      return {
+        ...state,
+        signupFormSectionNumber: action.payload,
       };
     }
     default:
