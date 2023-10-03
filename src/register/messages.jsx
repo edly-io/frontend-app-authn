@@ -12,6 +12,21 @@ const messages = defineMessages({
     defaultMessage: 'Full name',
     description: 'Label that appears above fullname field',
   },
+  'registration.job_title.label': {
+    id: 'registration.job_title.label',
+    defaultMessage: 'Job Title',
+    description: 'Label that appears above job title field',
+  },
+  'registration.city.label': {
+    id: 'registration.city.label',
+    defaultMessage: 'City',
+    description: 'Label that appears above city field',
+  },
+  'registration.address_line.label': {
+    id: 'registration.address_line.label',
+    defaultMessage: 'Address line (Optional)',
+    description: 'Label that appears above address line field',
+  },
   'registration.email.label': {
     id: 'registration.email.label',
     defaultMessage: 'Email',
@@ -36,6 +51,31 @@ const messages = defineMessages({
     id: 'registration.date_of_birth.label',
     defaultMessage: 'Date of birth',
     description: 'Label that appears above date of birth field',
+  },
+  'registration.region.label': {
+    id: 'registration.region.label',
+    defaultMessage: 'Region',
+    description: 'Label that appears above region field',
+  },
+  'registration.type_of_degree.label': {
+    id: 'registration.type_of_degree.label',
+    defaultMessage: 'Type of degree',
+    description: 'Label that appears above type of degree field',
+  },
+  'registration.employment_status.label': {
+    id: 'registration.employment_status.label',
+    defaultMessage: 'Employement Status',
+    description: 'Label that appears above employement status field',
+  },
+  'registration.english_language_level.label': {
+    id: 'registration.english_language_level.label',
+    defaultMessage: 'Enlish Language Level (Optional)',
+    description: 'Label that appears above type of english language level field',
+  },
+  'registration.work_experience_level.label': {
+    id: 'registration.work_experience_level.label',
+    defaultMessage: 'Work Experience Level',
+    description: 'Label that appears above type of work experience level field',
   },
   'registration.linkedin_account.label': {
     id: 'registration.linkedin_account.label',
@@ -63,6 +103,46 @@ const messages = defineMessages({
     defaultMessage: 'This name will be used by any certificates that you earn.',
     description: 'Help text for fullname field on registration page',
   },
+  'help.text.job_title': {
+    id: 'help.text.job_title',
+    defaultMessage: 'Enter the title of your current job',
+    description: 'Help text for job title field on registration page',
+  },
+  'help.text.city': {
+    id: 'help.text.city',
+    defaultMessage: 'Enter the city where you live.',
+    description: 'Help text for city field on registration page',
+  },
+  'help.text.region': {
+    id: 'help.text.region',
+    defaultMessage: 'Select your region',
+    description: 'Help text for region field on registration page',
+  },
+  'help.text.type_of_degree': {
+    id: 'help.text.type_of_degree',
+    defaultMessage: 'Select your type of degree',
+    description: 'Help text for type of degree field on registration page',
+  },
+  'help.text.employment_status': {
+    id: 'help.text.employment_status',
+    defaultMessage: 'Select your employment status',
+    description: 'Help text for employment status field on registration page',
+  },
+  'help.text.english_language_level': {
+    id: 'help.text.english_language_level',
+    defaultMessage: 'Select your english language level',
+    description: 'Help text for english language level field on registration page',
+  },
+  'help.text.work_experience_level': {
+    id: 'help.text.work_experience_level',
+    defaultMessage: 'Select your work experience level',
+    description: 'Help text for work experience level field on registration page',
+  },
+  'help.text.address_line': {
+    id: 'help.text.address_line',
+    defaultMessage: 'Enter the address line.',
+    description: 'Help text for address line field on registration page',
+  },
   'help.text.username.1': {
     id: 'help.text.username.1',
     defaultMessage: 'The name that will identify you in your courses.',
@@ -76,27 +156,27 @@ const messages = defineMessages({
   'help.text.national_id': {
     id: 'help.text.national_id',
     defaultMessage: 'Saudi National Id',
-    description: 'Part of help text for username field on registration page',
+    description: 'Part of help text for national id field on registration page',
   },
   'help.text.linkedin_account': {
     id: 'help.text.linkedin_account',
     defaultMessage: 'Enter you linkedin profile link',
-    description: 'Part of help text for username field on registration page',
+    description: 'Part of help text for linkedin field on registration page',
   },
   'help.text.phone_number': {
     id: 'help.text.phone_number',
     defaultMessage: 'It can only be a number',
-    description: 'Part of help text for username field on registration page',
+    description: 'Part of help text for phone number field on registration page',
   },
   'help.text.email': {
     id: 'help.text.email',
     defaultMessage: 'For account activation and important updates',
-    description: 'Help text for email field on registration page',
+    description: 'Help text for date of birth field on registration page',
   },
   'help.text.date_of_birth': {
     id: 'help.text.date_of_birth',
     defaultMessage: 'Enter your date of birth',
-    description: 'Please Select your date of birth',
+    description: 'Help text for date of birth field on registration page',
   },
   // Form buttons
   'create.account.for.free.button': {
@@ -107,6 +187,11 @@ const messages = defineMessages({
   'proceed.account.creation.free.button': {
     id: 'proceed.account.creation.free.button',
     defaultMessage: 'Proceed account creation for free',
+    description: 'Label text for registration form submission button',
+  },
+  'back.account.creation.free.button': {
+    id: 'back.account.creation.free.button',
+    defaultMessage: 'Back',
     description: 'Label text for registration form submission button',
   },
   'registration.other.options.heading': {
@@ -131,6 +216,16 @@ const messages = defineMessages({
     defaultMessage: 'Enter your full name',
     description: 'Error message for empty fullname field',
   },
+  'empty.city.field.error': {
+    id: 'empty.city.field.error',
+    defaultMessage: 'Enter the City Where you live',
+    description: 'Error message for empty city field',
+  },
+  'empty.address_line.field.error': {
+    id: 'empty.address_line.field.error',
+    defaultMessage: 'Enter the address line',
+    description: 'Error message for empty address line field',
+  },
   'empty.email.field.error': {
     id: 'empty.email.field.error',
     defaultMessage: 'Enter your email',
@@ -148,8 +243,33 @@ const messages = defineMessages({
   },
   'empty.gender.field.error': {
     id: 'empty.gender.field.error',
-    defaultMessage: 'Please select your gender',
+    defaultMessage: 'Select your gender',
     description: 'Error message for not selecting gender field',
+  },
+  'empty.region.field.error': {
+    id: 'empty.region.field.error',
+    defaultMessage: 'Select your Region',
+    description: 'Error message for not selecting region field',
+  },
+  'empty.type_of_degree.field.error': {
+    id: 'empty.type_of_degree.field.error',
+    defaultMessage: 'Select your type of degree',
+    description: 'Error message for not selecting type of degree field',
+  },
+  'empty.employment_status.field.error': {
+    id: 'empty.employment_status.field.error',
+    defaultMessage: 'Select your employment status',
+    description: 'Error message for not selecting employment status field',
+  },
+  'empty.work_experience_level.field.error': {
+    id: 'empty.work_experience_level.field.error',
+    defaultMessage: 'Select your work experience level',
+    description: 'Error message for not selecting work experience level field',
+  },
+  'empty.job_title.field.error': {
+    id: 'empty.job_title.field.error',
+    defaultMessage: 'Enter your current job title',
+    description: 'Error message for not selecting job title field',
   },
   'empty.username.field.error': {
     id: 'empty.username.field.error',
@@ -270,7 +390,22 @@ const messages = defineMessages({
   'personal.information.text': {
     id: 'personal.information.text',
     defaultMessage: 'Personal Information',
-    description: 'Nafath Sign Up Form Heading',
+    description: 'Nafath Sign Up Form personal information Heading',
+  },
+  'address.information.text': {
+    id: 'address.information.text',
+    defaultMessage: 'Address',
+    description: 'Nafath Sign Up Form address Heading',
+  },
+  'education.information.text': {
+    id: 'education.information.text',
+    defaultMessage: 'Education',
+    description: 'Nafath Sign Up Form education Heading',
+  },
+  'Career.information.text': {
+    id: 'Career.information.text',
+    defaultMessage: 'Career Information',
+    description: 'Nafath Sign Up Form career information Heading',
   },
   'gender.heading.text': {
     id: 'gender.heading.text',

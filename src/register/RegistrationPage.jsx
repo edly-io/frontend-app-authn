@@ -8,7 +8,7 @@ import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import {
   getCountryList, getLocale, useIntl,
 } from '@edx/frontend-platform/i18n';
-import { Form, Spinner, StatefulButton, Input } from '@edx/paragon';
+import { Form, Spinner, StatefulButton, Input, InputSelect } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
@@ -104,6 +104,11 @@ const RegistrationPage = (props) => {
   const [formStartTime, setFormStartTime] = useState(null);
   const [focusedField, setFocusedField] = useState(null);
   const [datePickerClicked, setDatePickerClicked] = useState(false);
+  const [regionClicked, setRegionClicked] = useState(false);
+  const [typeOfDegeeClicked, setTypeOfDegeeClicked] = useState(false);
+  const [englishLanguageLevelClicked, setEnglishLanguageLevelClicked] = useState(false);
+  const [employmentStatusClicked, setEmploymentStatusClicked] = useState(false);
+  const [workExperienceLevelClicked, setWorkExperienceLevelClicked] = useState(false);
 
   const {
     providers, currentProvider, secondaryProviders, finishAuthUrl,
@@ -272,6 +277,36 @@ const RegistrationPage = (props) => {
           fieldError = formatMessage(messages['empty.date_of_birth.field.error']);
         }
         break;
+      case 'region':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.region.field.error']);
+        }
+        break;
+      case 'type_of_degree':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.type_of_degree.field.error']);
+        }
+        break;
+      case 'employment_status':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.employment_status.field.error']);
+        }
+        break;
+      case 'work_experience_level':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.work_experience_level.field.error']);
+        }
+        break;
+      case 'job_title':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.job_title.field.error']);
+        }
+        break;
+      case 'city':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.city.field.error']);
+        }
+        break;
       case 'gender':
         if (!value.trim()) {
           fieldError = formatMessage(messages['empty.gender.field.error']);
@@ -358,11 +393,20 @@ const RegistrationPage = (props) => {
     const fieldErrors = { ...errors };
     let isValid = !focusedFieldError;
     Object.keys(payload).forEach(key => {
-      const optional_fields = ["national_id", "linkedin_account"];
-      const ignoreForm2RequiredFieldsInPreviousForms = ["date_of_birth", "gender"]
+      const optional_fields = ["national_id", "linkedin_account", "address_line", "english_language_level"];
+      const ignoreForm2RequiredFieldsInPreviousForms = ["date_of_birth", "gender"];
+      const ignoreForm3RequiredFieldsInPreviousForms = ["region", "city"];
+      const ignoreForm4RequiredFieldsInPreviousForms = ["type_of_degree"];
+      const ignoreForm5RequiredFieldsInPreviousForms = ["employment_status", "work_experience_level", "job_title"];
       if (optional_fields.includes(key) && payload[key]==''){
         // passing optional empty fields
       } else if (signupFormSectionNumber == 1 && ignoreForm2RequiredFieldsInPreviousForms.includes(key) && payload[key]=='') {
+        // ignoring required fields in previous forms
+      } else if ((signupFormSectionNumber == 1 || signupFormSectionNumber == 2) && ignoreForm3RequiredFieldsInPreviousForms.includes(key) && payload[key]=='') {
+        // ignoring required fields in previous forms
+      } else if ((signupFormSectionNumber == 1 || signupFormSectionNumber == 2 || signupFormSectionNumber == 3) && ignoreForm4RequiredFieldsInPreviousForms.includes(key) && payload[key]=='') {
+        // ignoring required fields in previous forms
+      } else if ((signupFormSectionNumber == 1 || signupFormSectionNumber == 2 || signupFormSectionNumber == 3 || signupFormSectionNumber == 4) && ignoreForm5RequiredFieldsInPreviousForms.includes(key) && payload[key]=='') {
         // ignoring required fields in previous forms
       } else {
         if (!payload[key]) {
@@ -439,6 +483,14 @@ const RegistrationPage = (props) => {
         value = value.trim();
       }
     }
+    if (name === 'job_title') {
+      if (value.length > 63) {
+        value = value.substring(0, value.length - 1);
+      }
+      if (value.startsWith(' ')) {
+        value = value.trim();
+      }
+    }
     if (name === 'username') {
       if (value.length > 30) {
         return;
@@ -463,6 +515,21 @@ const RegistrationPage = (props) => {
     if (event.target.name == "date_of_birth") {
       setDatePickerClicked(false)
     }
+    if (event.target.name == "region") {
+      setRegionClicked(false)
+    }
+    if (event.target.name == "type_of_degree") {
+      setTypeOfDegeeClicked(false)
+    }
+    if (event.target.name == "english_language_level") {
+      setEnglishLanguageLevelClicked(false)
+    }
+    if (event.target.name == "employment_status") {
+      setEmploymentStatusClicked(false)
+    }
+    if (event.target.name == "work_experience_level") {
+      setWorkExperienceLevelClicked(false)
+    }
 
     setFocusedField(null);
     validateInput(name, name === 'password' ? formFields.password : value, payload, !validationApiRateLimited);
@@ -477,6 +544,21 @@ const RegistrationPage = (props) => {
     setFocusedField(name);
     if (name == "date_of_birth") {
       setDatePickerClicked(true)
+    }
+    if (name == "region") {
+      setRegionClicked(true)
+    }
+    if (name == "type_of_degree") {
+      setTypeOfDegeeClicked(true)
+    }
+    if (name == "english_language_level") {
+      setEnglishLanguageLevelClicked(true)
+    }
+    if (name == "employment_status") {
+      setEmploymentStatusClicked(true)
+    }
+    if (name == "work_experience_level") {
+      setWorkExperienceLevelClicked(true)
     }
     if (name === 'username') {
       props.resetUsernameSuggestions();
@@ -533,11 +615,12 @@ const RegistrationPage = (props) => {
 
     // add query params to the payload
     payload = { ...payload, ...queryParams };
-    if (signupFormSectionNumber == 2) {
+    if (signupFormSectionNumber == 5) {
       props.registerNewUser(payload);
     }
     else {
       props.setForm(signupFormSectionNumber + 1)
+      setErrorCode(prevState => ({ type: "", count: 0 }));
     }
   };
 
@@ -577,7 +660,13 @@ const RegistrationPage = (props) => {
         />
         <h2 style={{ marginBottom: "1.5rem", "text-decoration": "underline" }}>
           {(signupFormSectionNumber==1 || signupFormSectionNumber==2) &&
-            formatMessage(messages["personal.information.text"])}
+            formatMessage(messages["personal.information.text"]) ||
+            (signupFormSectionNumber==3) &&
+            formatMessage(messages["address.information.text"]) ||
+            (signupFormSectionNumber==4) &&
+            formatMessage(messages["education.information.text"]) ||
+            (signupFormSectionNumber==5) &&
+            formatMessage(messages["Career.information.text"])}
         </h2>
         {autoSubmitRegisterForm && !errorCode.type ? (
           <div className="mw-xs mt-5 text-center">
@@ -794,6 +883,294 @@ const RegistrationPage = (props) => {
                   </p>
                 </>
               )}
+              {signupFormSectionNumber == 3 && (
+                <>
+                  <h6>
+                    {formatMessage(messages["registration.region.label"])}:
+                  </h6>
+                  <InputSelect
+                    style={{
+                      "margin-top": "-1.75rem",
+                      "margin-bottom": "1.75rem",
+                      width: "98.1%",
+                      border: !errors.region
+                        ? "1px solid #707070"
+                        : "1px solid #C32D3A",
+                    }}
+                    name="region"
+                    onBlur={(value) => {
+                      handleOnBlur({
+                        target: { name: "region", value: value },
+                      });
+                    }}
+                    onChange={(value) => {
+                      handleOnChange({
+                        target: { name: "region", value: value },
+                      });
+                    }}
+                    onFocus={(value) => {
+                      handleOnFocus({
+                        target: { name: "region", value: value },
+                      });
+                    }}
+                    options={[
+                      { label: [formatMessage(messages['help.text.region'])], value: "", disabled: true },
+                      { label: "Riyadh", value: "RD" },
+                      { label: "Eastern", value: "ER" },
+                      { label: "Asir", value: "AI" },
+                      { label: "Jazan", value: "JA" },
+                      { label: "Medina", value: "MN" },
+                      { label: "Al-Qassim", value: "AS" },
+                      { label: "Tabuk", value: "TU" },
+                      { label: "Ha'il", value: "HI" },
+                      { label: "Najran", value: "NA" },
+                      { label: "Al-Jawf", value: "AW" },
+                      { label: "Al-Bahah", value: "AA" },
+                      { label: "Northern Borders", value: "NB" },
+                    ]}
+                  />
+                  <p
+                    style={{
+                      "font-size": "0.75rem",
+                      "margin-top": (errors.region && "-1.4rem") || "",
+                      "margin-bottom": "2rem",
+                      color: "#C32D3A",
+                    }}
+                  >
+                    {!regionClicked && errors.region}
+                  </p>
+                  <FormGroup
+                    name="city"
+                    value={formFields.city}
+                    handleChange={handleOnChange}
+                    handleBlur={handleOnBlur}
+                    handleFocus={handleOnFocus}
+                    errorMessage={errors.city}
+                    helpText={[formatMessage(messages['help.text.city'])]}
+                    floatingLabel={formatMessage(messages['registration.city.label'])}
+                  />
+                  <FormGroup
+                    name="address_line"
+                    value={formFields.address_line}
+                    handleChange={handleOnChange}
+                    handleBlur={handleOnBlur}
+                    handleFocus={handleOnFocus}
+                    errorMessage={errors.address_line}
+                    helpText={[formatMessage(messages['help.text.address_line'])]}
+                    floatingLabel={formatMessage(messages['registration.address_line.label'])}
+                  />
+                </>
+              )}
+              {signupFormSectionNumber == 4 && (
+                <>
+                  <h6>
+                    {formatMessage(messages["registration.type_of_degree.label"])}:
+                  </h6>
+                  <InputSelect
+                    style={{
+                      "margin-top": "-1.75rem",
+                      "margin-bottom": "1.75rem",
+                      width: "98.1%",
+                      border: !errors.type_of_degree
+                        ? "1px solid #707070"
+                        : "1px solid #C32D3A",
+                    }}
+                    name="type_of_degree"
+                    onBlur={(value) => {
+                      handleOnBlur({
+                        target: { name: "type_of_degree", value: value },
+                      });
+                    }}
+                    onChange={(value) => {
+                      handleOnChange({
+                        target: { name: "type_of_degree", value: value },
+                      });
+                    }}
+                    onFocus={(value) => {
+                      handleOnFocus({
+                        target: { name: "type_of_degree", value: value },
+                      });
+                    }}
+                    options={[
+                      { label: [formatMessage(messages['help.text.type_of_degree'])], value: "", disabled: true },
+                      { label: 'Middle School', value: 'MS' },
+                      { label: 'High School', value: 'HS' },
+                      { label: 'Diploma', value: 'DM' },
+                      { label: 'Bachelor', value: 'BS' },
+                      { label: 'Master', value: 'MR' },
+                      { label: 'Ph.D.', value: 'PH' }
+                    ]}
+                  />
+                  <p
+                    style={{
+                      "font-size": "0.75rem",
+                      "margin-top": (errors.type_of_degree && "-1.4rem") || "",
+                      "margin-bottom": "2rem",
+                      color: "#C32D3A",
+                    }}
+                  >
+                    {!typeOfDegeeClicked && errors.type_of_degree}
+                  </p>
+                  <h6>
+                    {formatMessage(messages["registration.english_language_level.label"])}:
+                  </h6>
+                  <InputSelect
+                    style={{
+                      "margin-top": "-1.75rem",
+                      "margin-bottom": "1.75rem",
+                      width: "98.1%",
+                      border: !errors.english_language_level
+                        ? "1px solid #707070"
+                        : "1px solid #C32D3A",
+                    }}
+                    name="english_language_level"
+                    onBlur={(value) => {
+                      handleOnBlur({
+                        target: { name: "english_language_level", value: value },
+                      });
+                    }}
+                    onChange={(value) => {
+                      handleOnChange({
+                        target: { name: "english_language_level", value: value },
+                      });
+                    }}
+                    onFocus={(value) => {
+                      handleOnFocus({
+                        target: { name: "english_language_level", value: value },
+                      });
+                    }}
+                    options={[
+                      { label: [formatMessage(messages['help.text.english_language_level'])], value: "", disabled: true },
+                      { label: '0', value: '0' },
+                      { label: '1', value: '1' },
+                      { label: '2', value: '2' },
+                      { label: '3', value: '3' },
+                      { label: '4', value: '4' },
+                      { label: '5', value: '5' },
+                      { label: '6', value: '6' },
+                      { label: '7', value: '7' },
+                      { label: '8', value: '8' },
+                      { label: '9', value: '9' }
+                    ]}
+                  />
+                  <p
+                    style={{
+                      "font-size": "0.75rem",
+                      "margin-top": (errors.english_language_level && "-1.4rem") || "",
+                      "margin-bottom": "2rem",
+                      color: "#C32D3A",
+                    }}
+                  >
+                    {!englishLanguageLevelClicked && errors.english_language_level}
+                  </p>
+                </>
+              )}
+              {signupFormSectionNumber == 5 && (
+                <>
+                  <h6>
+                    {formatMessage(messages["registration.employment_status.label"])}:
+                  </h6>
+                  <InputSelect
+                    style={{
+                      "margin-top": "-1.75rem",
+                      "margin-bottom": "1.75rem",
+                      width: "98.1%",
+                      border: !errors.employment_status
+                        ? "1px solid #707070"
+                        : "1px solid #C32D3A",
+                    }}
+                    name="employment_status"
+                    onBlur={(value) => {
+                      handleOnBlur({
+                        target: { name: "employment_status", value: value },
+                      });
+                    }}
+                    onChange={(value) => {
+                      handleOnChange({
+                        target: { name: "employment_status", value: value },
+                      });
+                    }}
+                    onFocus={(value) => {
+                      handleOnFocus({
+                        target: { name: "employment_status", value: value },
+                      });
+                    }}
+                    options={[
+                      { label: [formatMessage(messages['help.text.employment_status'])], value: "", disabled: true },
+                      { label: 'Public industry', value: 'PU' },
+                      { label: 'Private industry', value: 'PR' },
+                      { label: 'Job seeker', value: 'JS' },
+                      { label: 'Student', value: 'ST' }
+                    ]}
+                  />
+                  <p
+                    style={{
+                      "font-size": "0.75rem",
+                      "margin-top": (errors.employment_status && "-1.4rem") || "",
+                      "margin-bottom": "2rem",
+                      color: "#C32D3A",
+                    }}
+                  >
+                    {!employmentStatusClicked && errors.employment_status}
+                  </p>
+                  <h6>
+                    {formatMessage(messages["registration.work_experience_level.label"])}:
+                  </h6>
+                  <InputSelect
+                    style={{
+                      "margin-top": "-1.75rem",
+                      "margin-bottom": "1.75rem",
+                      width: "98.1%",
+                      border: !errors.work_experience_level
+                        ? "1px solid #707070"
+                        : "1px solid #C32D3A",
+                    }}
+                    name="work_experience_level"
+                    onBlur={(value) => {
+                      handleOnBlur({
+                        target: { name: "work_experience_level", value: value },
+                      });
+                    }}
+                    onChange={(value) => {
+                      handleOnChange({
+                        target: { name: "work_experience_level", value: value },
+                      });
+                    }}
+                    onFocus={(value) => {
+                      handleOnFocus({
+                        target: { name: "work_experience_level", value: value },
+                      });
+                    }}
+                    options={[
+                      { label: [formatMessage(messages['help.text.work_experience_level'])], value: "", disabled: true },
+                      { label: 'Junior level (0-2) years', value: 'JL' },
+                      { label: 'Middle level (3-4) years', value: 'ML' },
+                      { label: 'Senior level (5-10) years', value: 'SL' },
+                      { label: 'Expert (+ 10 years)', value: 'EL' }
+                    ]}
+                  />
+                  <p
+                    style={{
+                      "font-size": "0.75rem",
+                      "margin-top": (errors.work_experience_level && "-1.4rem") || "",
+                      "margin-bottom": "2rem",
+                      color: "#C32D3A",
+                    }}
+                  >
+                    {!workExperienceLevelClicked && errors.work_experience_level}
+                  </p>
+                  <FormGroup
+                    name="job_title"
+                    value={formFields.job_title}
+                    handleChange={handleOnChange}
+                    handleBlur={handleOnBlur}
+                    handleFocus={handleOnFocus}
+                    errorMessage={errors.job_title}
+                    helpText={[formatMessage(messages['help.text.job_title'])]}
+                    floatingLabel={formatMessage(messages['registration.job_title.label'])}
+                  />
+                </>
+              )}
               <ConfigurableRegistrationForm
                 countryList={countryList}
                 email={formFields.email}
@@ -804,18 +1181,26 @@ const RegistrationPage = (props) => {
                 setFocusedField={setFocusedField}
                 fieldDescriptions={fieldDescriptions}
               />
-              {/* <StatefulButton
-                id="proceed-register"
-                name="proceed-register"
-                variant="brand"
-                className="register-stateful-button-width mt-4 mb-4"
-                labels={{
-                  default: formatMessage(messages['create.account.for.free.button']),
-                  pending: '',
-                }}
-                onClick={handleSubmit}
-                onMouseDown={(e) => e.preventDefault()}
-              /> */}
+               {(signupFormSectionNumber == 2 ||
+                signupFormSectionNumber == 3 ||
+                signupFormSectionNumber == 4 ||
+                signupFormSectionNumber == 5) && (
+                <StatefulButton
+                  id="back-register-user"
+                  name="back-register-user"
+                  type="submit"
+                  variant="brand"
+                  className="mr-4 mt-4 mb-4"
+                  labels={{
+                    default: formatMessage(
+                      messages["back.account.creation.free.button"]
+                    ),
+                    pending: "",
+                  }}
+                  onClick={() => props.setForm(signupFormSectionNumber - 1)}
+                  onMouseDown={(e) => e.preventDefault()}
+                />
+              )}
               <StatefulButton
                 id="register-user"
                 name="register-user"
@@ -825,7 +1210,7 @@ const RegistrationPage = (props) => {
                 state={submitState}
                 labels={{
                   default:
-                    (signupFormSectionNumber == 2 &&
+                    (signupFormSectionNumber == 5 &&
                       formatMessage(
                         messages['create.account.for.free.button']
                       )) ||
@@ -959,10 +1344,39 @@ RegistrationPage.defaultProps = {
       marketingEmailsOptIn: true,
     },
     formFields: {
-      name: '', email: '', username: '', password: '', phone_number: '', national_id: '', linkedin_account: '', date_of_birth: '', gender: '',
+      name: '',
+      email: '',
+      username: '',
+      password: '',
+      phone_number: '',
+      national_id: '',
+      linkedin_account: '',
+      date_of_birth: '',
+      gender: '',
+      region: '',
+      city: '',
+      address_line: '',
+      type_of_degree: '',
+      english_language_level: '',
+      employment_status: '',
+      work_experience_level: '',
+      job_title: '',
     },
     errors: {
-      name: '', email: '', username: '', password: '', phone_number: '', national_id: '', date_of_birth: '', gender: '',
+      name: '',
+      email: '',
+      username: '',
+      password: '',
+      phone_number: '',
+      national_id: '',
+      date_of_birth: '',
+      gender: '',
+      region: '',
+      city: '',
+      type_of_degree: '',
+      employment_status: '',
+      work_experience_level: '',
+      job_title: '',
     },
     emailSuggestion: {
       suggestion: '', type: '',
