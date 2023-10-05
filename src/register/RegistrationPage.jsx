@@ -44,6 +44,9 @@ import {
   FIELDS,
   FORM_SUBMISSION_ERROR,
   TPA_AUTHENTICATION_FAILURE,
+  DUPLICATE_EMAIL_ERROR,
+  DUPLICATE_USERNAME_ERROR,
+  DUPLICATE_EMAIL_USERNAME_ERROR,
 } from './data/constants';
 import { registrationErrorSelector, validationsSelector } from './data/selectors';
 import {
@@ -193,7 +196,11 @@ const RegistrationPage = (props) => {
 
   useEffect(() => {
     if (registrationErrorCode) {
+      debugger;
       setErrorCode(prevState => ({ type: registrationErrorCode, count: prevState.count + 1 }));
+      if ([DUPLICATE_EMAIL_USERNAME_ERROR, DUPLICATE_EMAIL_ERROR, DUPLICATE_USERNAME_ERROR].includes(registrationErrorCode)){
+        props.setForm(1)
+      }
     }
   }, [registrationErrorCode]);
 
@@ -629,6 +636,11 @@ const RegistrationPage = (props) => {
     registerUser();
   };
 
+  const handleBack = (e) => {
+    e.preventDefault();
+    props.setForm(signupFormSectionNumber - 1);
+  };
+
   useEffect(() => {
     if (autoSubmitRegisterForm && userPipelineDataLoaded) {
       registerUser();
@@ -764,6 +776,41 @@ const RegistrationPage = (props) => {
               )}
               {signupFormSectionNumber == 2 && (
                 <>
+                  <Form.Group
+                    style={{ "margin-bottom": "1.75rem" }}
+                    className="d-flex align-items-center"
+                  >
+                    <Form.Label>
+                      <h5>{formatMessage(messages['gender.heading.text'])}</h5>
+                      <Form.RadioSet
+                        value={formFields.gender}
+                        onBlur={handleOnBlur}
+                        onChange={handleOnChange}
+                        onFocus={handleOnFocus}
+                        name="gender"
+                      >
+                        <Form.Radio value="m">
+                          {formatMessage(messages['gender.option.male.text'])}
+                        </Form.Radio>
+                        <Form.Radio value="f">
+                          {formatMessage(messages['gender.option.female.text'])}
+                        </Form.Radio>
+                        <Form.Radio value="o">
+                          {formatMessage(messages['gender.option.other.text'])}
+                        </Form.Radio>
+                      </Form.RadioSet>
+                    </Form.Label>
+                  </Form.Group>
+                  <p
+                    style={{
+                      "font-size": "0.75rem",
+                      "margin-top": (errors.gender && "-1.4rem") || "",
+                      "margin-bottom": "2rem",
+                      color: "#C32D3A",
+                    }}
+                  >
+                    {errors.gender}
+                  </p>
                   <FormGroup
                     name="linkedin_account"
                     value={formFields.linkedin_account}
@@ -832,41 +879,6 @@ const RegistrationPage = (props) => {
                     {!datePickerClicked &&
                       errors.date_of_birth}
                   </p>
-                  <Form.Group
-                    style={{ "margin-bottom": "1.75rem" }}
-                    className="d-flex align-items-center"
-                  >
-                    <Form.Label>
-                      <h3>{formatMessage(messages['gender.heading.text'])}</h3>
-                      <Form.RadioSet
-                        value={formFields.gender}
-                        onBlur={handleOnBlur}
-                        onChange={handleOnChange}
-                        onFocus={handleOnFocus}
-                        name="gender"
-                      >
-                        <Form.Radio value="m">
-                          {formatMessage(messages['gender.option.male.text'])}
-                        </Form.Radio>
-                        <Form.Radio value="f">
-                          {formatMessage(messages['gender.option.female.text'])}
-                        </Form.Radio>
-                        <Form.Radio value="o">
-                          {formatMessage(messages['gender.option.other.text'])}
-                        </Form.Radio>
-                      </Form.RadioSet>
-                    </Form.Label>
-                  </Form.Group>
-                  <p
-                    style={{
-                      "font-size": "0.75rem",
-                      "margin-top": (errors.gender && "-1.4rem") || "",
-                      "margin-bottom": "2rem",
-                      color: "#C32D3A",
-                    }}
-                  >
-                    {errors.gender}
-                  </p>
                 </>
               )}
               {signupFormSectionNumber == 3 && (
@@ -883,6 +895,7 @@ const RegistrationPage = (props) => {
                         ? "1px solid #707070"
                         : "1px solid #C32D3A",
                     }}
+                    value={formFields.region}
                     name="region"
                     onBlur={(value) => {
                       handleOnBlur({
@@ -961,6 +974,7 @@ const RegistrationPage = (props) => {
                         ? "1px solid #707070"
                         : "1px solid #C32D3A",
                     }}
+                    value={formFields.level_of_education}
                     name="level_of_education"
                     onBlur={(value) => {
                       handleOnBlur({
@@ -1009,6 +1023,7 @@ const RegistrationPage = (props) => {
                         ? "1px solid #707070"
                         : "1px solid #C32D3A",
                     }}
+                    value={formFields.english_language_level}
                     name="english_language_level"
                     onBlur={(value) => {
                       handleOnBlur({
@@ -1071,6 +1086,7 @@ const RegistrationPage = (props) => {
                         target: { name: "employment_status", value: value },
                       });
                     }}
+                    value={formFields.employment_status}
                     onChange={(value) => {
                       handleOnChange({
                         target: { name: "employment_status", value: value },
@@ -1112,6 +1128,7 @@ const RegistrationPage = (props) => {
                         : "1px solid #C32D3A",
                     }}
                     name="work_experience_level"
+                    value={formFields.work_experience_level}
                     onBlur={(value) => {
                       handleOnBlur({
                         target: { name: "work_experience_level", value: value },
@@ -1183,7 +1200,7 @@ const RegistrationPage = (props) => {
                     ),
                     pending: "",
                   }}
-                  onClick={() => props.setForm(signupFormSectionNumber - 1)}
+                  onClick={handleBack}
                   onMouseDown={(e) => e.preventDefault()}
                 />
               )}

@@ -54,8 +54,8 @@ const messages = defineMessages({
   },
   'registration.level_of_education.label': {
     id: 'registration.level_of_education.label',
-    defaultMessage: 'Type of degree',
-    description: 'Label that appears above type of degree field',
+    defaultMessage: 'Level of Education',
+    description: 'Label that appears above level of education field',
   },
   'registration.employment_status.label': {
     id: 'registration.employment_status.label',
@@ -115,8 +115,8 @@ const messages = defineMessages({
   },
   'help.text.level_of_education': {
     id: 'help.text.level_of_education',
-    defaultMessage: 'Select your type of degree',
-    description: 'Help text for type of degree field on registration page',
+    defaultMessage: 'Select your level of education',
+    description: 'Help text for level of education field on registration page',
   },
   'help.text.employment_status': {
     id: 'help.text.employment_status',
@@ -243,8 +243,8 @@ const messages = defineMessages({
   },
   'empty.level_of_education.field.error': {
     id: 'empty.level_of_education.field.error',
-    defaultMessage: 'Select your type of degree',
-    description: 'Error message for not selecting type of degree field',
+    defaultMessage: 'Select your level of education',
+    description: 'Error message for not selecting level of education field',
   },
   'empty.employment_status.field.error': {
     id: 'empty.employment_status.field.error',

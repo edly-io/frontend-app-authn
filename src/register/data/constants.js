@@ -11,6 +11,9 @@ export const FORM_SUBMISSION_ERROR = 'form-submission-error';
 export const INTERNAL_SERVER_ERROR = 'internal-server-error';
 export const TPA_AUTHENTICATION_FAILURE = 'tpa-authentication-failure';
 export const TPA_SESSION_EXPIRED = 'tpa-session-expired';
+export const DUPLICATE_EMAIL_ERROR = 'duplicate-email';
+export const DUPLICATE_USERNAME_ERROR = 'duplicate-username';
+export const DUPLICATE_EMAIL_USERNAME_ERROR = 'duplicate-email-username';
 
 export const YEAR_OF_BIRTH_OPTIONS = (() => {
   const currentYear = new Date().getFullYear();
