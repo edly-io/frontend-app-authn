@@ -9,7 +9,7 @@ export const REGISTER_SET_COUNTRY_CODE = 'REGISTER_SET_COUNTRY_CODE';
 export const REGISTER_SET_USER_PIPELINE_DATA_LOADED = 'REGISTER_SET_USER_PIPELINE_DATA_LOADED';
 export const SET_FORM = 'SET_FORM';
 
-//set nafath form sections
+// set nafath form sections
 export const setForm = (payload) => ({
   type: SET_FORM,
   payload: payload,

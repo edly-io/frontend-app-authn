@@ -37,11 +37,6 @@ const messages = defineMessages({
     defaultMessage: 'Public username',
     description: 'Label that appears above username field',
   },
-  'registration.national_id.label': {
-    id: 'registration.national_id.label',
-    defaultMessage: 'Saudi National Id (Optional)',
-    description: 'Label that appears above username field',
-  },
   'registration.phone_number.label': {
     id: 'registration.phone_number.label',
     defaultMessage: 'Phone',
@@ -57,8 +52,8 @@ const messages = defineMessages({
     defaultMessage: 'Region',
     description: 'Label that appears above region field',
   },
-  'registration.type_of_degree.label': {
-    id: 'registration.type_of_degree.label',
+  'registration.level_of_education.label': {
+    id: 'registration.level_of_education.label',
     defaultMessage: 'Type of degree',
     description: 'Label that appears above type of degree field',
   },
@@ -118,8 +113,8 @@ const messages = defineMessages({
     defaultMessage: 'Select your region',
     description: 'Help text for region field on registration page',
   },
-  'help.text.type_of_degree': {
-    id: 'help.text.type_of_degree',
+  'help.text.level_of_education': {
+    id: 'help.text.level_of_education',
     defaultMessage: 'Select your type of degree',
     description: 'Help text for type of degree field on registration page',
   },
@@ -152,11 +147,6 @@ const messages = defineMessages({
     id: 'help.text.username.2',
     defaultMessage: 'This can not be changed later.',
     description: 'Part of help text for username field on registration page',
-  },
-  'help.text.national_id': {
-    id: 'help.text.national_id',
-    defaultMessage: 'Saudi National Id',
-    description: 'Part of help text for national id field on registration page',
   },
   'help.text.linkedin_account': {
     id: 'help.text.linkedin_account',
@@ -251,8 +241,8 @@ const messages = defineMessages({
     defaultMessage: 'Select your Region',
     description: 'Error message for not selecting region field',
   },
-  'empty.type_of_degree.field.error': {
-    id: 'empty.type_of_degree.field.error',
+  'empty.level_of_education.field.error': {
+    id: 'empty.level_of_education.field.error',
     defaultMessage: 'Select your type of degree',
     description: 'Error message for not selecting type of degree field',
   },

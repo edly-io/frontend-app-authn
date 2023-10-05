@@ -105,7 +105,7 @@ const RegistrationPage = (props) => {
   const [focusedField, setFocusedField] = useState(null);
   const [datePickerClicked, setDatePickerClicked] = useState(false);
   const [regionClicked, setRegionClicked] = useState(false);
-  const [typeOfDegeeClicked, setTypeOfDegeeClicked] = useState(false);
+  const [levelOfEducationClicked, setLevelOfEducationClicked] = useState(false);
   const [englishLanguageLevelClicked, setEnglishLanguageLevelClicked] = useState(false);
   const [employmentStatusClicked, setEmploymentStatusClicked] = useState(false);
   const [workExperienceLevelClicked, setWorkExperienceLevelClicked] = useState(false);
@@ -282,9 +282,9 @@ const RegistrationPage = (props) => {
           fieldError = formatMessage(messages['empty.region.field.error']);
         }
         break;
-      case 'type_of_degree':
+      case 'level_of_education':
         if (!value.trim()) {
-          fieldError = formatMessage(messages['empty.type_of_degree.field.error']);
+          fieldError = formatMessage(messages['empty.level_of_education.field.error']);
         }
         break;
       case 'employment_status':
@@ -393,10 +393,10 @@ const RegistrationPage = (props) => {
     const fieldErrors = { ...errors };
     let isValid = !focusedFieldError;
     Object.keys(payload).forEach(key => {
-      const optional_fields = ["national_id", "linkedin_account", "address_line", "english_language_level"];
+      const optional_fields = ["linkedin_account", "address_line", "english_language_level"];
       const ignoreForm2RequiredFieldsInPreviousForms = ["date_of_birth", "gender"];
       const ignoreForm3RequiredFieldsInPreviousForms = ["region", "city"];
-      const ignoreForm4RequiredFieldsInPreviousForms = ["type_of_degree"];
+      const ignoreForm4RequiredFieldsInPreviousForms = ["level_of_education"];
       const ignoreForm5RequiredFieldsInPreviousForms = ["employment_status", "work_experience_level", "job_title"];
       if (optional_fields.includes(key) && payload[key]==''){
         // passing optional empty fields
@@ -518,8 +518,8 @@ const RegistrationPage = (props) => {
     if (event.target.name == "region") {
       setRegionClicked(false)
     }
-    if (event.target.name == "type_of_degree") {
-      setTypeOfDegeeClicked(false)
+    if (event.target.name == "level_of_education") {
+      setLevelOfEducationClicked(false)
     }
     if (event.target.name == "english_language_level") {
       setEnglishLanguageLevelClicked(false)
@@ -548,8 +548,8 @@ const RegistrationPage = (props) => {
     if (name == "region") {
       setRegionClicked(true)
     }
-    if (name == "type_of_degree") {
-      setTypeOfDegeeClicked(true)
+    if (name == "level_of_education") {
+      setLevelOfEducationClicked(true)
     }
     if (name == "english_language_level") {
       setEnglishLanguageLevelClicked(true)
@@ -716,20 +716,6 @@ const RegistrationPage = (props) => {
                     ]}
                     floatingLabel={formatMessage(
                       messages['registration.username.label']
-                    )}
-                  />
-                  <FormGroup
-                    name="national_id"
-                    value={formFields.national_id}
-                    handleBlur={handleOnBlur}
-                    handleChange={handleOnChange}
-                    handleFocus={handleOnFocus}
-                    errorMessage={errors.national_id}
-                    helpText={[
-                      formatMessage(messages['help.text.national_id']),
-                    ]}
-                    floatingLabel={formatMessage(
-                      messages['registration.national_id.label']
                     )}
                   />
                   <FormGroup
@@ -964,35 +950,35 @@ const RegistrationPage = (props) => {
               {signupFormSectionNumber == 4 && (
                 <>
                   <h6>
-                    {formatMessage(messages["registration.type_of_degree.label"])}:
+                    {formatMessage(messages["registration.level_of_education.label"])}:
                   </h6>
                   <InputSelect
                     style={{
                       "margin-top": "-1.75rem",
                       "margin-bottom": "1.75rem",
                       width: "98.1%",
-                      border: !errors.type_of_degree
+                      border: !errors.level_of_education
                         ? "1px solid #707070"
                         : "1px solid #C32D3A",
                     }}
-                    name="type_of_degree"
+                    name="level_of_education"
                     onBlur={(value) => {
                       handleOnBlur({
-                        target: { name: "type_of_degree", value: value },
+                        target: { name: "level_of_education", value: value },
                       });
                     }}
                     onChange={(value) => {
                       handleOnChange({
-                        target: { name: "type_of_degree", value: value },
+                        target: { name: "level_of_education", value: value },
                       });
                     }}
                     onFocus={(value) => {
                       handleOnFocus({
-                        target: { name: "type_of_degree", value: value },
+                        target: { name: "level_of_education", value: value },
                       });
                     }}
                     options={[
-                      { label: [formatMessage(messages['help.text.type_of_degree'])], value: "", disabled: true },
+                      { label: [formatMessage(messages['help.text.level_of_education'])], value: "", disabled: true },
                       { label: 'Middle School', value: 'MS' },
                       { label: 'High School', value: 'HS' },
                       { label: 'Diploma', value: 'DM' },
@@ -1004,12 +990,12 @@ const RegistrationPage = (props) => {
                   <p
                     style={{
                       "font-size": "0.75rem",
-                      "margin-top": (errors.type_of_degree && "-1.4rem") || "",
+                      "margin-top": (errors.level_of_education && "-1.4rem") || "",
                       "margin-bottom": "2rem",
                       color: "#C32D3A",
                     }}
                   >
-                    {!typeOfDegeeClicked && errors.type_of_degree}
+                    {!levelOfEducationClicked && errors.level_of_education}
                   </p>
                   <h6>
                     {formatMessage(messages["registration.english_language_level.label"])}:
@@ -1349,14 +1335,13 @@ RegistrationPage.defaultProps = {
       username: '',
       password: '',
       phone_number: '',
-      national_id: '',
       linkedin_account: '',
       date_of_birth: '',
       gender: '',
       region: '',
       city: '',
       address_line: '',
-      type_of_degree: '',
+      level_of_education: '',
       english_language_level: '',
       employment_status: '',
       work_experience_level: '',
@@ -1368,12 +1353,11 @@ RegistrationPage.defaultProps = {
       username: '',
       password: '',
       phone_number: '',
-      national_id: '',
       date_of_birth: '',
       gender: '',
       region: '',
       city: '',
-      type_of_degree: '',
+      level_of_education: '',
       employment_status: '',
       work_experience_level: '',
       job_title: '',
