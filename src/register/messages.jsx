@@ -557,6 +557,11 @@ const messages = defineMessages({
     defaultMessage: '9',
     description: 'Nafath Sign Up Form english level language option 9',
   },
+  'english_language_level.option.10.text': {
+    id: 'english_language_level.option.10.text',
+    defaultMessage: '10',
+    description: 'Nafath Sign Up Form english level language option 10',
+  },
   'employment_status.option.Public industry.text': {
     id: 'employment_status.option.Public industry.text',
     defaultMessage: 'Public industry',

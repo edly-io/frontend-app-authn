@@ -23,7 +23,14 @@ import {
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
   COMPLETE_STATE,
-  DEFAULT_STATE, INVALID_NAME_REGEX, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
+  DEFAULT_STATE,
+  INVALID_NAME_REGEX,
+  LETTER_REGEX,
+  NUMBER_REGEX,
+  PENDING_STATE,
+  REGISTER_PAGE,
+  VALID_EMAIL_REGEX,
+  SPECIAL_CHARACTER_REGEX,
 } from '../data/constants';
 import {
   getAllPossibleQueryParams, getTpaHint, getTpaProvider, setCookie, setSurveyCookie,
@@ -359,7 +366,7 @@ const RegistrationPage = (props) => {
         }
         break;
       case 'password':
-        if (!value || !LETTER_REGEX.test(value) || !NUMBER_REGEX.test(value) || value.length < 8) {
+        if (!value || !LETTER_REGEX.test(value) || !NUMBER_REGEX.test(value) || value.length < 8 || !SPECIAL_CHARACTER_REGEX.test(value)) {
           fieldError = formatMessage(messages['password.validation.message']);
         } else if (shouldValidateFromBackend) {
           validateFromBackend(payload);
@@ -1050,7 +1057,8 @@ const RegistrationPage = (props) => {
                       { label: [formatMessage(messages['english_language_level.option.6.text'])], value: '6' },
                       { label: [formatMessage(messages['english_language_level.option.7.text'])], value: '7' },
                       { label: [formatMessage(messages['english_language_level.option.8.text'])], value: '8' },
-                      { label: [formatMessage(messages['english_language_level.option.9.text'])], value: '9' }
+                      { label: [formatMessage(messages['english_language_level.option.9.text'])], value: '9' },
+                      { label: [formatMessage(messages['english_language_level.option.10.text'])], value: '10' }
                     ]}
                   />
                   <p
