@@ -417,6 +417,186 @@ const messages = defineMessages({
     defaultMessage: 'Other/Prefer Not to Say',
     description: 'Nafath Sign Up Form Gender option other',
   },
+  'region.option.Riyadh.text': {
+    id: 'region.option.Riyadh.text',
+    defaultMessage: 'Riyadh',
+    description: 'Nafath Sign Up Form region option Riyadh',
+  },
+  'region.option.Eastern.text': {
+    id: 'region.option.Eastern.text',
+    defaultMessage: 'Eastern',
+    description: 'Nafath Sign Up Form region option Eastern',
+  },
+  'region.option.Asir.text': {
+    id: 'region.option.Asir.text',
+    defaultMessage: 'Asir',
+    description: 'Nafath Sign Up Form region option Asir',
+  },
+  'region.option.Jazan.text': {
+    id: 'region.option.Jazan.text',
+    defaultMessage: 'Jazan',
+    description: 'Nafath Sign Up Form region option Jazan',
+  },
+  'region.option.Medina.text': {
+    id: 'region.option.Medina.text',
+    defaultMessage: 'Medina',
+    description: 'Nafath Sign Up Form region option Medina',
+  },
+  'region.option.Al-Qassim.text': {
+    id: 'region.option.Al-Qassim.text',
+    defaultMessage: 'Al-Qassim',
+    description: 'Nafath Sign Up Form region option Al-Qassim',
+  },
+  'region.option.Tabuk.text': {
+    id: 'region.option.Tabuk.text',
+    defaultMessage: 'Tabuk',
+    description: 'Nafath Sign Up Form region option Tabuk',
+  },
+  "region.option.Ha'il.text": {
+    id: "region.option.Ha'il.text",
+    defaultMessage: "Ha'il",
+    description: "Nafath Sign Up Form region option Ha'il",
+  },
+  'region.option.Najran.text': {
+    id: 'region.option.Najran.text',
+    defaultMessage: 'Najran',
+    description: 'Nafath Sign Up Form region option Najran',
+  },
+  'region.option.Al-Jawf.text': {
+    id: 'region.option.Al-Jawf.text',
+    defaultMessage: 'Al-Jawf',
+    description: 'Nafath Sign Up Form region option Al-Jawf',
+  },
+  'region.option.Al-Bahah.text': {
+    id: 'region.option.Al-Bahah.text',
+    defaultMessage: 'Al-Bahah',
+    description: 'Nafath Sign Up Form region option Al-Bahah',
+  },
+  'region.option.Northern Borders.text': {
+    id: 'region.option.Northern Borders.text',
+    defaultMessage: 'Northern Borders',
+    description: 'Nafath Sign Up Form region option Northern Borders',
+  },
+  'education.option.Middle School.text': {
+    id: 'education.option.Middle School.text',
+    defaultMessage: 'Middle School',
+    description: 'Nafath Sign Up Form level of education option Middle School',
+  },
+  'education.option.High School.text': {
+    id: 'education.option.High School.text',
+    defaultMessage: 'High School',
+    description: 'Nafath Sign Up Form level of education option High School',
+  },
+  'education.option.Diploma.text': {
+    id: 'education.option.Diploma.text',
+    defaultMessage: 'Diploma',
+    description: 'Nafath Sign Up Form level of education option Diploma',
+  },
+  'education.option.Bachelor.text': {
+    id: 'education.option.Bachelor.text',
+    defaultMessage: 'Bachelor',
+    description: 'Nafath Sign Up Form level of education option Bachelor',
+  },
+  'education.option.Master.text': {
+    id: 'education.option.Master.text',
+    defaultMessage: 'Master',
+    description: 'Nafath Sign Up Form level of education option Master',
+  },
+  'education.option.Ph.D..text': {
+    id: 'education.option.Ph.D..text',
+    defaultMessage: 'Ph.D.',
+    description: 'Nafath Sign Up Form level of education option Ph.D.',
+  },
+  'english_language_level.option.0.text': {
+    id: 'english_language_level.option.0.text',
+    defaultMessage: '0',
+    description: 'Nafath Sign Up Form english level language option 0',
+  },
+  'english_language_level.option.1.text': {
+    id: 'english_language_level.option.1.text',
+    defaultMessage: '1',
+    description: 'Nafath Sign Up Form english level language option 1',
+  },
+  'english_language_level.option.2.text': {
+    id: 'english_language_level.option.2.text',
+    defaultMessage: '2',
+    description: 'Nafath Sign Up Form english level language option 2',
+  },
+  'english_language_level.option.3.text': {
+    id: 'english_language_level.option.3.text',
+    defaultMessage: '3',
+    description: 'Nafath Sign Up Form english level language option 3',
+  },
+  'english_language_level.option.4.text': {
+    id: 'english_language_level.option.4.text',
+    defaultMessage: '4',
+    description: 'Nafath Sign Up Form english level language option 4',
+  },
+  'english_language_level.option.5.text': {
+    id: 'english_language_level.option.5.text',
+    defaultMessage: '5',
+    description: 'Nafath Sign Up Form english level language option 5',
+  },
+  'english_language_level.option.6.text': {
+    id: 'english_language_level.option.6.text',
+    defaultMessage: '6',
+    description: 'Nafath Sign Up Form english level language option 6',
+  },
+  'english_language_level.option.7.text': {
+    id: 'english_language_level.option.7.text',
+    defaultMessage: '7',
+    description: 'Nafath Sign Up Form english level language option 7',
+  },
+  'english_language_level.option.8.text': {
+    id: 'english_language_level.option.8.text',
+    defaultMessage: '8',
+    description: 'Nafath Sign Up Form english level language option 8',
+  },
+  'english_language_level.option.9.text': {
+    id: 'english_language_level.option.9.text',
+    defaultMessage: '9',
+    description: 'Nafath Sign Up Form english level language option 9',
+  },
+  'employment_status.option.Public industry.text': {
+    id: 'employment_status.option.Public industry.text',
+    defaultMessage: 'Public industry',
+    description: 'Nafath Sign Up Form employment status option Public industry',
+  },
+  'employment_status.option.Private industry.text': {
+    id: 'employment_status.option.Private industry.text',
+    defaultMessage: 'Private industry',
+    description: 'Nafath Sign Up Form employment status option Private industry',
+  },
+  'employment_status.option.Job seeker.text': {
+    id: 'employment_status.option.Job seeker.text',
+    defaultMessage: 'Job seeker',
+    description: 'Nafath Sign Up Form employment status option Job seeker',
+  },
+  'employment_status.option.Student.text': {
+    id: 'employment_status.option.Student.text',
+    defaultMessage: 'Student',
+    description: 'Nafath Sign Up Form employment status option Student',
+  },
+  'work_experience_level.option.Junior level (0-2) years.text': {
+    id: 'work_experience_level.option.Junior level (0-2) years.text',
+    defaultMessage: 'Junior level (0-2) years',
+    description: 'Nafath Sign Up Form work experience level option Junior level (0-2) years',
+  },
+  'work_experience_level.option.Middle level (3-4) years.text': {
+    id: 'work_experience_level.option.Middle level (3-4) years.text',
+    defaultMessage: 'Middle level (3-4) years',
+    description: 'Nafath Sign Up Form work experience level option Middle level (3-4) years',
+  },
+  'work_experience_level.option.Senior level (5-10) years.text': {
+    id: 'work_experience_level.option.Senior level (5-10) years.text',
+    defaultMessage: 'Senior level (5-10) years',
+    description: 'Nafath Sign Up Form work experience level option Senior level (5-10) years',
+  },
+  'work_experience_level.option.Expert (+ 10 years).text': {
+    id: 'work_experience_level.option.Expert (+ 10 years).text',
+    defaultMessage: 'Expert (+ 10 years)',
+    description: 'Nafath Sign Up Form work experience level option Expert (+ 10 years)',
+  },
 });
 
 export default messages;

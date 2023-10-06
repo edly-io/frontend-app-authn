@@ -914,18 +914,18 @@ const RegistrationPage = (props) => {
                     }}
                     options={[
                       { label: [formatMessage(messages['help.text.region'])], value: "", disabled: true },
-                      { label: "Riyadh", value: "RD" },
-                      { label: "Eastern", value: "ER" },
-                      { label: "Asir", value: "AI" },
-                      { label: "Jazan", value: "JA" },
-                      { label: "Medina", value: "MN" },
-                      { label: "Al-Qassim", value: "AS" },
-                      { label: "Tabuk", value: "TU" },
-                      { label: "Ha'il", value: "HI" },
-                      { label: "Najran", value: "NA" },
-                      { label: "Al-Jawf", value: "AW" },
-                      { label: "Al-Bahah", value: "AA" },
-                      { label: "Northern Borders", value: "NB" },
+                      { label: [formatMessage(messages['region.option.Riyadh.text'])], value: "RD" },
+                      { label: [formatMessage(messages['region.option.Eastern.text'])], value: "ER" },
+                      { label: [formatMessage(messages['region.option.Asir.text'])], value: "AI" },
+                      { label: [formatMessage(messages['region.option.Jazan.text'])], value: "JA" },
+                      { label: [formatMessage(messages['region.option.Medina.text'])], value: "MN" },
+                      { label: [formatMessage(messages['region.option.Al-Qassim.text'])], value: "AS" },
+                      { label: [formatMessage(messages['region.option.Tabuk.text'])], value: "TU" },
+                      { label: [formatMessage(messages["region.option.Ha'il.text"])], value: "HI" },
+                      { label: [formatMessage(messages['region.option.Najran.text'])], value: "NA" },
+                      { label: [formatMessage(messages['region.option.Al-Jawf.text'])], value: "AW" },
+                      { label: [formatMessage(messages['region.option.Al-Bahah.text'])], value: "AA" },
+                      { label: [formatMessage(messages['region.option.Northern Borders.text'])], value: "NB" },
                     ]}
                   />
                   <p
@@ -993,12 +993,12 @@ const RegistrationPage = (props) => {
                     }}
                     options={[
                       { label: [formatMessage(messages['help.text.level_of_education'])], value: "", disabled: true },
-                      { label: 'Middle School', value: 'MS' },
-                      { label: 'High School', value: 'HS' },
-                      { label: 'Diploma', value: 'DM' },
-                      { label: 'Bachelor', value: 'BS' },
-                      { label: 'Master', value: 'MR' },
-                      { label: 'Ph.D.', value: 'PH' }
+                      { label: [formatMessage(messages['education.option.Middle School.text'])], value: 'MS' },
+                      { label: [formatMessage(messages['education.option.High School.text'])], value: 'HS' },
+                      { label: [formatMessage(messages['education.option.Diploma.text'])], value: 'DM' },
+                      { label: [formatMessage(messages['education.option.Bachelor.text'])], value: 'BS' },
+                      { label: [formatMessage(messages['education.option.Master.text'])], value: 'MR' },
+                      { label: [formatMessage(messages['education.option.Ph.D..text'])], value: 'PH' }
                     ]}
                   />
                   <p
@@ -1042,16 +1042,16 @@ const RegistrationPage = (props) => {
                     }}
                     options={[
                       { label: [formatMessage(messages['help.text.english_language_level'])], value: "", disabled: true },
-                      { label: '0', value: '0' },
-                      { label: '1', value: '1' },
-                      { label: '2', value: '2' },
-                      { label: '3', value: '3' },
-                      { label: '4', value: '4' },
-                      { label: '5', value: '5' },
-                      { label: '6', value: '6' },
-                      { label: '7', value: '7' },
-                      { label: '8', value: '8' },
-                      { label: '9', value: '9' }
+                      { label: [formatMessage(messages['english_language_level.option.0.text'])], value: '0' },
+                      { label: [formatMessage(messages['english_language_level.option.1.text'])], value: '1' },
+                      { label: [formatMessage(messages['english_language_level.option.2.text'])], value: '2' },
+                      { label: [formatMessage(messages['english_language_level.option.3.text'])], value: '3' },
+                      { label: [formatMessage(messages['english_language_level.option.4.text'])], value: '4' },
+                      { label: [formatMessage(messages['english_language_level.option.5.text'])], value: '5' },
+                      { label: [formatMessage(messages['english_language_level.option.6.text'])], value: '6' },
+                      { label: [formatMessage(messages['english_language_level.option.7.text'])], value: '7' },
+                      { label: [formatMessage(messages['english_language_level.option.8.text'])], value: '8' },
+                      { label: [formatMessage(messages['english_language_level.option.9.text'])], value: '9' }
                     ]}
                   />
                   <p
@@ -1099,10 +1099,10 @@ const RegistrationPage = (props) => {
                     }}
                     options={[
                       { label: [formatMessage(messages['help.text.employment_status'])], value: "", disabled: true },
-                      { label: 'Public industry', value: 'PU' },
-                      { label: 'Private industry', value: 'PR' },
-                      { label: 'Job seeker', value: 'JS' },
-                      { label: 'Student', value: 'ST' }
+                      { label: [formatMessage(messages['employment_status.option.Public industry.text'])], value: 'PU' },
+                      { label: [formatMessage(messages['employment_status.option.Private industry.text'])], value: 'PR' },
+                      { label: [formatMessage(messages['employment_status.option.Job seeker.text'])], value: 'JS' },
+                      { label: [formatMessage(messages['employment_status.option.Student.text'])], value: 'ST' }
                     ]}
                   />
                   <p
@@ -1146,10 +1146,10 @@ const RegistrationPage = (props) => {
                     }}
                     options={[
                       { label: [formatMessage(messages['help.text.work_experience_level'])], value: "", disabled: true },
-                      { label: 'Junior level (0-2) years', value: 'JL' },
-                      { label: 'Middle level (3-4) years', value: 'ML' },
-                      { label: 'Senior level (5-10) years', value: 'SL' },
-                      { label: 'Expert (+ 10 years)', value: 'EL' }
+                      { label: [formatMessage(messages['work_experience_level.option.Junior level (0-2) years.text'])], value: 'JL' },
+                      { label: [formatMessage(messages['work_experience_level.option.Middle level (3-4) years.text'])], value: 'ML' },
+                      { label: [formatMessage(messages['work_experience_level.option.Senior level (5-10) years.text'])], value: 'SL' },
+                      { label: [formatMessage(messages['work_experience_level.option.Expert (+ 10 years).text'])], value: 'EL' }
                     ]}
                   />
                   <p
