@@ -196,7 +196,6 @@ const RegistrationPage = (props) => {
 
   useEffect(() => {
     if (registrationErrorCode) {
-      debugger;
       setErrorCode(prevState => ({ type: registrationErrorCode, count: prevState.count + 1 }));
       if ([DUPLICATE_EMAIL_USERNAME_ERROR, DUPLICATE_EMAIL_ERROR, DUPLICATE_USERNAME_ERROR].includes(registrationErrorCode)){
         props.setForm(1)
