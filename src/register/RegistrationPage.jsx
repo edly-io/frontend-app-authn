@@ -801,9 +801,6 @@ const RegistrationPage = (props) => {
                         <Form.Radio value="f">
                           {formatMessage(messages['gender.option.female.text'])}
                         </Form.Radio>
-                        <Form.Radio value="o">
-                          {formatMessage(messages['gender.option.other.text'])}
-                        </Form.Radio>
                       </Form.RadioSet>
                     </Form.Label>
                   </Form.Group>
