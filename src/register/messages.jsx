@@ -37,6 +37,16 @@ const messages = defineMessages({
     defaultMessage: 'Public username',
     description: 'Label that appears above username field',
   },
+  'registration.email.duplicate.error': {
+    id: 'registration.email.duplicate.error',
+    defaultMessage: 'This email is already associated with an existing or previous Sdaia account',
+    description: 'Duplication Error that appears below email field on register page',
+  },
+  'registration.username.duplicate.error': {
+    id: 'registration.username.duplicate.error',
+    defaultMessage: 'It looks like this username is already taken',
+    description: 'Duplication Error that appears below username field',
+  },
   'registration.phone_number.label': {
     id: 'registration.phone_number.label',
     defaultMessage: 'Phone',

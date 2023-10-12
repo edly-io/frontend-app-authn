@@ -33,6 +33,7 @@ export async function checkUserRequestStatusRequest(payload) {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     nafath_id: payload.nafath_id,
     trans_id: payload.trans_id,
+    user_data: payload.user_data,
   };
   const { data } = await getAuthenticatedHttpClient()
     .post(
@@ -46,7 +47,7 @@ export async function checkUserRequestStatusRequest(payload) {
   return data;
 }
 
-export async function completeNafathUserRegistration(userRegistrationPayload) {
+export async function verifyBackendValidationsAndSendUserActivationCode(userRegistrationPayload) {
   const requestConfig = {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     nafath_id: userRegistrationPayload.nafath_id,
@@ -60,8 +61,7 @@ export async function completeNafathUserRegistration(userRegistrationPayload) {
       requestConfig
     )
     .catch((e) => {
-      const data = e.response;
-      return data;
+      return e.response;
     });
 
   return data;

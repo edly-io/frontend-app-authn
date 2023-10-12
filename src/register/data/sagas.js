@@ -18,8 +18,10 @@ import { getFieldsValidations, registerRequest } from './service';
 export function* handleNewUserRegistration(action) {
   try {
     yield put(registerNewUserBegin());
-    const date = new Date(action.payload.registrationInfo.date_of_birth);
-    action.payload.registrationInfo.year_of_birth = (date.getFullYear()) + '';
+    if (action.payload.registrationInfo.date_of_birth) {
+      const date = new Date(action.payload.registrationInfo.date_of_birth);
+      action.payload.registrationInfo.year_of_birth = (date.getFullYear()) + '';
+    }
     const { redirectUrl, success } = yield call(registerRequest, action.payload.registrationInfo);
 
     yield put(registerNewUserSuccess(

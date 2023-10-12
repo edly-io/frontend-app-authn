@@ -12,6 +12,26 @@ const messages = defineMessages({
     defaultMessage: "Nafath ID",
     description: "Label for user identity field to enter Nafath ID to login",
   },
+  "nafath.user.activation_code.label": {
+    id: "nafath.user.activation_code.label",
+    defaultMessage: "Activation Code sent to you via email",
+    description: "Label for user identity field to enter Nafath ID to login",
+  },
+  "help.text.activation_code": {
+    id: "help.text.activation_code",
+    defaultMessage: "Enter the activation code that is sent to you via email",
+    description: "Label for activation code field to enter activation code sent via email to  complete registeration",
+  },
+  "empty.activation_code.field.error": {
+    id: "help.text.activation_code",
+    defaultMessage: "Enter the activation code that is sent to you via email",
+    description: "Error message for empty activation code field to enter activation code sent via email to  complete registeration",
+  },
+  "registration.activation.code.do.not.match.error": {
+    id: "registration.activation.code.do.not.match.error",
+    defaultMessage: "Activation code does not match with the code that is sent to you via email",
+    description: "Error message for empty activation code field to enter activation code sent via email to  complete registeration",
+  },
   "nafath.user.email.label": {
     id: "nafath.user.email.label",
     defaultMessage: "Enter Email to complete registration",
