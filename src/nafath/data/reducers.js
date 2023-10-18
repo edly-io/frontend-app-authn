@@ -335,12 +335,12 @@ const reducer = (state = defaultState, action = {}) => {
         status: action.payload.status,
         form: action.payload.form,
         person: action.payload.person,
-        name: action.payload.person.includes("full_name#en") && action.payload.person["full_name#en"] || "",
+        name: action.payload.person && "full_name#en" in action.payload.person && action.payload.person["full_name#en"] || "",
         gender:
-          (action.payload.person.gender == "M" && "m") ||
-          (action.payload.person.gender == "F" && "f") ||
+          (action.payload.person && action.payload.person.gender == "M" && "m") ||
+          (action.payload.person && action.payload.person.gender == "F" && "f") ||
           "",
-        date_of_birth: action.payload.person.includes("dob#g") && action.payload.person["dob#g"] || "",
+        date_of_birth: action.payload.person && "dob#g" in action.payload.person && action.payload.person["dob#g"] || "",
       };
       break;
     case SET_NAFATH_USER_REGISTRATION_SUCCESS:
