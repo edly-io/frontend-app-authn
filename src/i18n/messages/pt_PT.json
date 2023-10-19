@@ -132,7 +132,7 @@
   "empty.country.field.error": "Select your country or region of residence",
   "email.do.not.match": "The email addresses do not match.",
   "email.invalid.format.error": "Enter a valid email address",
-  "username.validation.message": "Username must be between 2 and 30 characters",
+  "username.validation.message": "Username must be between 3 and 30 characters",
   "name.validation.message": "Enter a valid name",
   "username.format.validation.message": "Usernames can only contain letters (A-Z, a-z), numerals (0-9), underscores (_), and hyphens (-). Usernames cannot contain spaces",
   "registration.request.failure.header": "Não foi possível criar a sua conta.",

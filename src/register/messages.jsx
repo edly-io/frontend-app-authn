@@ -298,7 +298,7 @@ const messages = defineMessages({
   },
   'username.validation.message': {
     id: 'username.validation.message',
-    defaultMessage: 'Username must be between 2 and 30 characters',
+    defaultMessage: 'Username must be between 3 and 30 characters',
     description: 'Error message for empty username field',
   },
   'name.validation.message': {

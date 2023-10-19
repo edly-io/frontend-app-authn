@@ -421,7 +421,7 @@ const NafathAuthenticationPage = (props) => {
         props.setFormGenderError(fieldError || props.state.genderError);
         break;
       case "username":
-        if (!value || value.length <= 1 || value.length > 30) {
+        if (!value || value.length <= 2 || value.length > 30) {
           fieldError = formatMessage(
             registrationFormMessages["username.validation.message"]
           );

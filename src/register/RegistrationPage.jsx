@@ -357,7 +357,7 @@ const RegistrationPage = (props) => {
         }
         break;
       case 'username':
-        if (!value || value.length <= 1 || value.length > 30) {
+        if (!value || value.length <= 2 || value.length > 30) {
           fieldError = formatMessage(messages['username.validation.message']);
         } else if (!value.match(/^[a-zA-Z0-9_-]*$/i)) {
           fieldError = formatMessage(messages['username.format.validation.message']);
