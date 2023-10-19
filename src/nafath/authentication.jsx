@@ -366,7 +366,6 @@ const NafathAuthenticationPage = (props) => {
         props.setFormRegionError(fieldError || props.state.regionError);
         break;
       case "level_of_education":
-        debugger;
         if (!value.trim()) {
           fieldError = formatMessage(
             registrationFormMessages["empty.level_of_education.field.error"]
