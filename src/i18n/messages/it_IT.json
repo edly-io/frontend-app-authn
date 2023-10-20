@@ -132,7 +132,7 @@
   "empty.country.field.error": "Seleziona il tuo paese o regione di residenza",
   "email.do.not.match": "Gli indirizzi email non corrispondono.",
   "email.invalid.format.error": "Inserisci un indirizzo email valido",
-  "username.validation.message": "Il nome utente deve essere compreso tra 2 e 30 caratteri",
+  "username.validation.message": "Il nome utente deve essere compreso tra 3 e 30 caratteri",
   "name.validation.message": "Inserisci un nome valido",
   "username.format.validation.message": "I nomi utente possono contenere solo lettere (AZ, az), numeri (0-9), trattini bassi (_) e trattini (-). I nomi utente non possono contenere spazi",
   "registration.request.failure.header": "Impossibile creare il tuo account.",

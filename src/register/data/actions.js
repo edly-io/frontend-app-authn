@@ -7,6 +7,13 @@ export const REGISTER_CLEAR_USERNAME_SUGGESTIONS = 'REGISTRATION_CLEAR_USERNAME_
 export const REGISTERATION_CLEAR_BACKEND_ERROR = 'REGISTERATION_CLEAR_BACKEND_ERROR';
 export const REGISTER_SET_COUNTRY_CODE = 'REGISTER_SET_COUNTRY_CODE';
 export const REGISTER_SET_USER_PIPELINE_DATA_LOADED = 'REGISTER_SET_USER_PIPELINE_DATA_LOADED';
+export const SET_FORM = 'SET_FORM';
+
+// set nafath form sections
+export const setForm = (payload) => ({
+  type: SET_FORM,
+  payload: payload,
+});
 
 // Backup registration form
 export const backupRegistrationForm = () => ({

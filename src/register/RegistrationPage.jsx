@@ -8,7 +8,7 @@ import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import {
   getCountryList, getLocale, useIntl,
 } from '@edx/frontend-platform/i18n';
-import { Form, Spinner, StatefulButton } from '@edx/paragon';
+import { Form, Spinner, StatefulButton, Input, InputSelect } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
@@ -23,7 +23,14 @@ import {
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
   COMPLETE_STATE,
-  DEFAULT_STATE, INVALID_NAME_REGEX, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
+  DEFAULT_STATE,
+  INVALID_NAME_REGEX,
+  LETTER_REGEX,
+  NUMBER_REGEX,
+  PENDING_STATE,
+  REGISTER_PAGE,
+  VALID_EMAIL_REGEX,
+  SPECIAL_CHARACTER_REGEX,
 } from '../data/constants';
 import {
   getAllPossibleQueryParams, getTpaHint, getTpaProvider, setCookie, setSurveyCookie,
@@ -36,6 +43,7 @@ import {
   fetchRealtimeValidations,
   registerNewUser,
   setUserPipelineDataLoaded,
+  setForm,
 } from './data/actions';
 import {
   COUNTRY_CODE_KEY,
@@ -43,6 +51,9 @@ import {
   FIELDS,
   FORM_SUBMISSION_ERROR,
   TPA_AUTHENTICATION_FAILURE,
+  DUPLICATE_EMAIL_ERROR,
+  DUPLICATE_USERNAME_ERROR,
+  DUPLICATE_EMAIL_USERNAME_ERROR,
 } from './data/constants';
 import { registrationErrorSelector, validationsSelector } from './data/selectors';
 import {
@@ -81,6 +92,7 @@ const RegistrationPage = (props) => {
     userPipelineDataLoaded,
     validateFromBackend,
     clearBackendError,
+    signupFormSectionNumber,
   } = props;
 
   const { formatMessage } = useIntl();
@@ -101,6 +113,12 @@ const RegistrationPage = (props) => {
   const [errorCode, setErrorCode] = useState({ type: '', count: 0 });
   const [formStartTime, setFormStartTime] = useState(null);
   const [focusedField, setFocusedField] = useState(null);
+  const [datePickerClicked, setDatePickerClicked] = useState(false);
+  const [regionClicked, setRegionClicked] = useState(false);
+  const [levelOfEducationClicked, setLevelOfEducationClicked] = useState(false);
+  const [englishLanguageLevelClicked, setEnglishLanguageLevelClicked] = useState(false);
+  const [employmentStatusClicked, setEmploymentStatusClicked] = useState(false);
+  const [workExperienceLevelClicked, setWorkExperienceLevelClicked] = useState(false);
 
   const {
     providers, currentProvider, secondaryProviders, finishAuthUrl,
@@ -186,6 +204,9 @@ const RegistrationPage = (props) => {
   useEffect(() => {
     if (registrationErrorCode) {
       setErrorCode(prevState => ({ type: registrationErrorCode, count: prevState.count + 1 }));
+      if ([DUPLICATE_EMAIL_USERNAME_ERROR, DUPLICATE_EMAIL_ERROR, DUPLICATE_USERNAME_ERROR].includes(registrationErrorCode)){
+        props.setForm(1)
+      }
     }
   }, [registrationErrorCode]);
 
@@ -257,6 +278,53 @@ const RegistrationPage = (props) => {
           validateFromBackend(payload);
         }
         break;
+      case 'phone_number':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.phone_number.field.error']);
+        } else if (!value.match(/^[0-9+]+$/)) {
+          fieldError = formatMessage(messages['phone_number.validation.message']);
+        }
+        break;
+      case 'date_of_birth':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.date_of_birth.field.error']);
+        }
+        break;
+      case 'region':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.region.field.error']);
+        }
+        break;
+      case 'level_of_education':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.level_of_education.field.error']);
+        }
+        break;
+      case 'employment_status':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.employment_status.field.error']);
+        }
+        break;
+      case 'work_experience_level':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.work_experience_level.field.error']);
+        }
+        break;
+      case 'job_title':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.job_title.field.error']);
+        }
+        break;
+      case 'city':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.city.field.error']);
+        }
+        break;
+      case 'gender':
+        if (!value.trim()) {
+          fieldError = formatMessage(messages['empty.gender.field.error']);
+        }
+        break;
       case 'email':
         if (!value) {
           fieldError = formatMessage(messages['empty.email.field.error']);
@@ -289,7 +357,7 @@ const RegistrationPage = (props) => {
         }
         break;
       case 'username':
-        if (!value || value.length <= 1 || value.length > 30) {
+        if (!value || value.length <= 2 || value.length > 30) {
           fieldError = formatMessage(messages['username.validation.message']);
         } else if (!value.match(/^[a-zA-Z0-9_-]*$/i)) {
           fieldError = formatMessage(messages['username.format.validation.message']);
@@ -298,7 +366,7 @@ const RegistrationPage = (props) => {
         }
         break;
       case 'password':
-        if (!value || !LETTER_REGEX.test(value) || !NUMBER_REGEX.test(value) || value.length < 8) {
+        if (!value || !LETTER_REGEX.test(value) || !NUMBER_REGEX.test(value) || value.length < 8 || !SPECIAL_CHARACTER_REGEX.test(value)) {
           fieldError = formatMessage(messages['password.validation.message']);
         } else if (shouldValidateFromBackend) {
           validateFromBackend(payload);
@@ -338,11 +406,28 @@ const RegistrationPage = (props) => {
     const fieldErrors = { ...errors };
     let isValid = !focusedFieldError;
     Object.keys(payload).forEach(key => {
-      if (!payload[key]) {
-        fieldErrors[key] = formatMessage(messages[`empty.${key}.field.error`]);
-      }
-      if (fieldErrors[key]) {
-        isValid = false;
+      const optional_fields = ["linkedin_account", "address_line", "english_language_level"];
+      const ignoreForm2RequiredFieldsInPreviousForms = ["date_of_birth", "gender"];
+      const ignoreForm3RequiredFieldsInPreviousForms = ["region", "city"];
+      const ignoreForm4RequiredFieldsInPreviousForms = ["level_of_education"];
+      const ignoreForm5RequiredFieldsInPreviousForms = ["employment_status", "work_experience_level", "job_title"];
+      if (optional_fields.includes(key) && payload[key]==''){
+        // passing optional empty fields
+      } else if (signupFormSectionNumber == 1 && ignoreForm2RequiredFieldsInPreviousForms.includes(key) && payload[key]=='') {
+        // ignoring required fields in previous forms
+      } else if ((signupFormSectionNumber == 1 || signupFormSectionNumber == 2) && ignoreForm3RequiredFieldsInPreviousForms.includes(key) && payload[key]=='') {
+        // ignoring required fields in previous forms
+      } else if ((signupFormSectionNumber == 1 || signupFormSectionNumber == 2 || signupFormSectionNumber == 3) && ignoreForm4RequiredFieldsInPreviousForms.includes(key) && payload[key]=='') {
+        // ignoring required fields in previous forms
+      } else if ((signupFormSectionNumber == 1 || signupFormSectionNumber == 2 || signupFormSectionNumber == 3 || signupFormSectionNumber == 4) && ignoreForm5RequiredFieldsInPreviousForms.includes(key) && payload[key]=='') {
+        // ignoring required fields in previous forms
+      } else {
+        if (!payload[key]) {
+          fieldErrors[key] = formatMessage(messages[`empty.${key}.field.error`]);
+        }
+        if (fieldErrors[key]) {
+          isValid = false;
+        }
       }
     });
 
@@ -403,6 +488,22 @@ const RegistrationPage = (props) => {
       clearBackendError(name);
       setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
     }
+    if (name === 'phone_number') {
+      if (value.length > 50 || !value.match(/^[0-9+]+$/)) {
+        value = value.substring(0, value.length - 1);
+      }
+      if (value.startsWith(' ')) {
+        value = value.trim();
+      }
+    }
+    if (name === 'job_title') {
+      if (value.length > 63) {
+        value = value.substring(0, value.length - 1);
+      }
+      if (value.startsWith(' ')) {
+        value = value.trim();
+      }
+    }
     if (name === 'username') {
       if (value.length > 30) {
         return;
@@ -424,6 +525,24 @@ const RegistrationPage = (props) => {
       password: formFields.password,
       form_field_key: name,
     };
+    if (event.target.name == "date_of_birth") {
+      setDatePickerClicked(false)
+    }
+    if (event.target.name == "region") {
+      setRegionClicked(false)
+    }
+    if (event.target.name == "level_of_education") {
+      setLevelOfEducationClicked(false)
+    }
+    if (event.target.name == "english_language_level") {
+      setEnglishLanguageLevelClicked(false)
+    }
+    if (event.target.name == "employment_status") {
+      setEmploymentStatusClicked(false)
+    }
+    if (event.target.name == "work_experience_level") {
+      setWorkExperienceLevelClicked(false)
+    }
 
     setFocusedField(null);
     validateInput(name, name === 'password' ? formFields.password : value, payload, !validationApiRateLimited);
@@ -436,7 +555,24 @@ const RegistrationPage = (props) => {
     // Since we are removing the form errors from the focused field, we will
     // need to rerun the validation for focused field on form submission.
     setFocusedField(name);
-
+    if (name == "date_of_birth") {
+      setDatePickerClicked(true)
+    }
+    if (name == "region") {
+      setRegionClicked(true)
+    }
+    if (name == "level_of_education") {
+      setLevelOfEducationClicked(true)
+    }
+    if (name == "english_language_level") {
+      setEnglishLanguageLevelClicked(true)
+    }
+    if (name == "employment_status") {
+      setEmploymentStatusClicked(true)
+    }
+    if (name == "work_experience_level") {
+      setWorkExperienceLevelClicked(true)
+    }
     if (name === 'username') {
       props.resetUsernameSuggestions();
       // If we added a space character to username field to display the suggestion
@@ -492,12 +628,23 @@ const RegistrationPage = (props) => {
 
     // add query params to the payload
     payload = { ...payload, ...queryParams };
-    props.registerNewUser(payload);
+    if (signupFormSectionNumber == 5) {
+      props.registerNewUser(payload);
+    }
+    else {
+      props.setForm(signupFormSectionNumber + 1)
+      setErrorCode(prevState => ({ type: "", count: 0 }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     registerUser();
+  };
+
+  const handleBack = (e) => {
+    e.preventDefault();
+    props.setForm(signupFormSectionNumber - 1);
   };
 
   useEffect(() => {
@@ -529,6 +676,16 @@ const RegistrationPage = (props) => {
             getConfig().ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN && Object.keys(optionalFields).includes('fields')
           }
         />
+        <h2 style={{ marginBottom: "1.5rem", "text-decoration": "underline" }}>
+          {(signupFormSectionNumber==1 || signupFormSectionNumber==2) &&
+            formatMessage(messages["personal.information.text"]) ||
+            (signupFormSectionNumber==3) &&
+            formatMessage(messages["address.information.text"]) ||
+            (signupFormSectionNumber==4) &&
+            formatMessage(messages["education.information.text"]) ||
+            (signupFormSectionNumber==5) &&
+            formatMessage(messages["Career.information.text"])}
+        </h2>
         {autoSubmitRegisterForm && !errorCode.type ? (
           <div className="mw-xs mt-5 text-center">
             <Spinner animation="border" variant="primary" id="tpa-spinner" />
@@ -546,53 +703,480 @@ const RegistrationPage = (props) => {
               context={{ provider: currentProvider, errorMessage: thirdPartyAuthContext.errorMessage }}
             />
             <Form id="registration-form" name="registration-form">
-              <FormGroup
-                name="name"
-                value={formFields.name}
-                handleChange={handleOnChange}
-                handleBlur={handleOnBlur}
-                handleFocus={handleOnFocus}
-                errorMessage={errors.name}
-                helpText={[formatMessage(messages['help.text.name'])]}
-                floatingLabel={formatMessage(messages['registration.fullname.label'])}
-              />
-              <EmailField
-                name="email"
-                value={formFields.email}
-                handleChange={handleOnChange}
-                handleBlur={handleOnBlur}
-                handleFocus={handleOnFocus}
-                handleSuggestionClick={(e) => handleSuggestionClick(e, 'email')}
-                handleOnClose={handleEmailSuggestionClosed}
-                emailSuggestion={emailSuggestion}
-                errorMessage={errors.email}
-                helpText={[formatMessage(messages['help.text.email'])]}
-                floatingLabel={formatMessage(messages['registration.email.label'])}
-              />
-              <UsernameField
-                name="username"
-                spellCheck="false"
-                value={formFields.username}
-                handleBlur={handleOnBlur}
-                handleChange={handleOnChange}
-                handleFocus={handleOnFocus}
-                handleSuggestionClick={handleSuggestionClick}
-                handleUsernameSuggestionClose={handleUsernameSuggestionClosed}
-                usernameSuggestions={usernameSuggestions}
-                errorMessage={errors.username}
-                helpText={[formatMessage(messages['help.text.username.1']), formatMessage(messages['help.text.username.2'])]}
-                floatingLabel={formatMessage(messages['registration.username.label'])}
-              />
-              {!currentProvider && (
-                <PasswordField
-                  name="password"
-                  value={formFields.password}
-                  handleChange={handleOnChange}
-                  handleBlur={handleOnBlur}
-                  handleFocus={handleOnFocus}
-                  errorMessage={errors.password}
-                  floatingLabel={formatMessage(messages['registration.password.label'])}
-                />
+              {signupFormSectionNumber == 1 && (
+                <>
+                  <FormGroup
+                    name="name"
+                    value={formFields.name}
+                    handleChange={handleOnChange}
+                    handleBlur={handleOnBlur}
+                    handleFocus={handleOnFocus}
+                    errorMessage={errors.name}
+                    helpText={[formatMessage(messages['help.text.name'])]}
+                    floatingLabel={formatMessage(messages['registration.fullname.label'])}
+                  />
+                  <UsernameField
+                    name="username"
+                    spellCheck="false"
+                    value={formFields.username}
+                    handleBlur={handleOnBlur}
+                    handleChange={handleOnChange}
+                    handleFocus={handleOnFocus}
+                    handleSuggestionClick={handleSuggestionClick}
+                    handleUsernameSuggestionClose={
+                      handleUsernameSuggestionClosed
+                    }
+                    usernameSuggestions={usernameSuggestions}
+                    errorMessage={errors.username}
+                    helpText={[
+                      formatMessage(messages['help.text.username.1']),
+                      formatMessage(messages['help.text.username.2']),
+                    ]}
+                    floatingLabel={formatMessage(
+                      messages['registration.username.label']
+                    )}
+                  />
+                  <FormGroup
+                    name="phone_number"
+                    value={formFields.phone_number}
+                    handleBlur={handleOnBlur}
+                    handleChange={handleOnChange}
+                    handleFocus={handleOnFocus}
+                    errorMessage={errors.phone_number}
+                    helpText={[
+                      formatMessage(messages['help.text.phone_number']),
+                    ]}
+                    floatingLabel={formatMessage(
+                      messages['registration.phone_number.label']
+                    )}
+                  />
+                  <EmailField
+                    name="email"
+                    value={formFields.email}
+                    handleChange={handleOnChange}
+                    handleBlur={handleOnBlur}
+                    handleFocus={handleOnFocus}
+                    handleSuggestionClick={(e) =>
+                      handleSuggestionClick(e, "email")
+                    }
+                    handleOnClose={handleEmailSuggestionClosed}
+                    emailSuggestion={emailSuggestion}
+                    errorMessage={errors.email}
+                    helpText={[formatMessage(messages['help.text.email'])]}
+                    floatingLabel={formatMessage(
+                      messages['registration.email.label']
+                    )}
+                  />
+                  {!currentProvider && (
+                    <PasswordField
+                      name="password"
+                      value={formFields.password}
+                      handleChange={handleOnChange}
+                      handleBlur={handleOnBlur}
+                      handleFocus={handleOnFocus}
+                      errorMessage={errors.password}
+                      floatingLabel={formatMessage(messages['registration.password.label'])}
+                    />
+                  )}
+                </>
+              )}
+              {signupFormSectionNumber == 2 && (
+                <>
+                  <Form.Group
+                    style={{ "margin-bottom": "1.75rem" }}
+                    className="d-flex align-items-center"
+                  >
+                    <Form.Label>
+                      <h5>{formatMessage(messages['gender.heading.text'])}</h5>
+                      <Form.RadioSet
+                        value={formFields.gender}
+                        onBlur={handleOnBlur}
+                        onChange={handleOnChange}
+                        onFocus={handleOnFocus}
+                        name="gender"
+                      >
+                        <Form.Radio value="m">
+                          {formatMessage(messages['gender.option.male.text'])}
+                        </Form.Radio>
+                        <Form.Radio value="f">
+                          {formatMessage(messages['gender.option.female.text'])}
+                        </Form.Radio>
+                      </Form.RadioSet>
+                    </Form.Label>
+                  </Form.Group>
+                  <p
+                    style={{
+                      "font-size": "0.75rem",
+                      "margin-top": (errors.gender && "-1.4rem") || "",
+                      "margin-bottom": "2rem",
+                      color: "#C32D3A",
+                    }}
+                  >
+                    {errors.gender}
+                  </p>
+                  <FormGroup
+                    name="linkedin_account"
+                    value={formFields.linkedin_account}
+                    handleBlur={handleOnBlur}
+                    handleChange={handleOnChange}
+                    handleFocus={handleOnFocus}
+                    errorMessage={errors.linkedin_account}
+                    helpText={[
+                      formatMessage(messages['help.text.linkedin_account']),
+                    ]}
+                    floatingLabel={formatMessage(
+                      messages['registration.linkedin_account.label']
+                    )}
+                  />
+                  <h6>
+                    {formatMessage(
+                      messages['registration.date_of_birth.label']
+                    )}:
+                  </h6>
+                  <Input
+                    type="date"
+                    name="date_of_birth"
+                    style={{
+                      "font-weight": 400,
+                      color: formFields.date_of_birth == "" && "#707070" || "#101820",
+                      padding: "0.5625rem 1rem",
+                      display: "block",
+                      width: "98.1%",
+                      "font-size": "0.875rem",
+                      "line-height": "1.5rem",
+                      height: "2.75rem",
+                      "background-clip": "padding-box",
+                      border: !errors.date_of_birth?"1px solid #707070":"1px solid #C32D3A",
+                      "border-radius": "0.375rem",
+                      transition:
+                        "border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out",
+                      overflow: "visible",
+                      "font-family": "inherit",
+                      "box-sizing": "border-box",
+                      "margin-bottom": "1.75rem",
+                    }}
+                    value={formFields.date_of_birth}
+                    onBlur={handleOnBlur}
+                    onChange={handleOnChange}
+                    onFocus={handleOnFocus}
+                  />
+                  <p
+                    style={{
+                      "font-size": "0.75rem",
+                      "margin-top": (datePickerClicked && "-1.4rem") || "",
+                      "margin-bottom": "2rem",
+                      color: "#707070",
+                    }}
+                  >
+                    {datePickerClicked &&
+                      formatMessage(messages['help.text.date_of_birth'])}
+                  </p>
+                  <p
+                    style={{
+                      "font-size": "0.75rem",
+                      "margin-top": (errors.date_of_birth && "-1.4rem") || "",
+                      "margin-bottom": "2rem",
+                      color: "#C32D3A",
+                    }}
+                  >
+                    {!datePickerClicked &&
+                      errors.date_of_birth}
+                  </p>
+                </>
+              )}
+              {signupFormSectionNumber == 3 && (
+                <>
+                  <h6>
+                    {formatMessage(messages["registration.region.label"])}:
+                  </h6>
+                  <InputSelect
+                    style={{
+                      "margin-top": "-1.75rem",
+                      "margin-bottom": "1.75rem",
+                      width: "98.1%",
+                      border: !errors.region
+                        ? "1px solid #707070"
+                        : "1px solid #C32D3A",
+                    }}
+                    value={formFields.region}
+                    name="region"
+                    onBlur={(value) => {
+                      handleOnBlur({
+                        target: { name: "region", value: value },
+                      });
+                    }}
+                    onChange={(value) => {
+                      handleOnChange({
+                        target: { name: "region", value: value },
+                      });
+                    }}
+                    onFocus={(value) => {
+                      handleOnFocus({
+                        target: { name: "region", value: value },
+                      });
+                    }}
+                    options={[
+                      { label: [formatMessage(messages['help.text.region'])], value: "", disabled: true },
+                      { label: [formatMessage(messages['region.option.Riyadh.text'])], value: "RD" },
+                      { label: [formatMessage(messages['region.option.Eastern.text'])], value: "ER" },
+                      { label: [formatMessage(messages['region.option.Asir.text'])], value: "AI" },
+                      { label: [formatMessage(messages['region.option.Jazan.text'])], value: "JA" },
+                      { label: [formatMessage(messages['region.option.Medina.text'])], value: "MN" },
+                      { label: [formatMessage(messages['region.option.Al-Qassim.text'])], value: "AS" },
+                      { label: [formatMessage(messages['region.option.Tabuk.text'])], value: "TU" },
+                      { label: [formatMessage(messages["region.option.Ha'il.text"])], value: "HI" },
+                      { label: [formatMessage(messages['region.option.Najran.text'])], value: "NA" },
+                      { label: [formatMessage(messages['region.option.Al-Jawf.text'])], value: "AW" },
+                      { label: [formatMessage(messages['region.option.Al-Bahah.text'])], value: "AA" },
+                      { label: [formatMessage(messages['region.option.Northern Borders.text'])], value: "NB" },
+                    ]}
+                  />
+                  <p
+                    style={{
+                      "font-size": "0.75rem",
+                      "margin-top": (errors.region && "-1.4rem") || "",
+                      "margin-bottom": "2rem",
+                      color: "#C32D3A",
+                    }}
+                  >
+                    {!regionClicked && errors.region}
+                  </p>
+                  <FormGroup
+                    name="city"
+                    value={formFields.city}
+                    handleChange={handleOnChange}
+                    handleBlur={handleOnBlur}
+                    handleFocus={handleOnFocus}
+                    errorMessage={errors.city}
+                    helpText={[formatMessage(messages['help.text.city'])]}
+                    floatingLabel={formatMessage(messages['registration.city.label'])}
+                  />
+                  <FormGroup
+                    name="address_line"
+                    value={formFields.address_line}
+                    handleChange={handleOnChange}
+                    handleBlur={handleOnBlur}
+                    handleFocus={handleOnFocus}
+                    errorMessage={errors.address_line}
+                    helpText={[formatMessage(messages['help.text.address_line'])]}
+                    floatingLabel={formatMessage(messages['registration.address_line.label'])}
+                  />
+                </>
+              )}
+              {signupFormSectionNumber == 4 && (
+                <>
+                  <h6>
+                    {formatMessage(messages["registration.level_of_education.label"])}:
+                  </h6>
+                  <InputSelect
+                    style={{
+                      "margin-top": "-1.75rem",
+                      "margin-bottom": "1.75rem",
+                      width: "98.1%",
+                      border: !errors.level_of_education
+                        ? "1px solid #707070"
+                        : "1px solid #C32D3A",
+                    }}
+                    value={formFields.level_of_education}
+                    name="level_of_education"
+                    onBlur={(value) => {
+                      handleOnBlur({
+                        target: { name: "level_of_education", value: value },
+                      });
+                    }}
+                    onChange={(value) => {
+                      handleOnChange({
+                        target: { name: "level_of_education", value: value },
+                      });
+                    }}
+                    onFocus={(value) => {
+                      handleOnFocus({
+                        target: { name: "level_of_education", value: value },
+                      });
+                    }}
+                    options={[
+                      { label: [formatMessage(messages['help.text.level_of_education'])], value: "", disabled: true },
+                      { label: [formatMessage(messages['education.option.Middle School.text'])], value: 'MS' },
+                      { label: [formatMessage(messages['education.option.High School.text'])], value: 'HS' },
+                      { label: [formatMessage(messages['education.option.Diploma.text'])], value: 'DM' },
+                      { label: [formatMessage(messages['education.option.Bachelor.text'])], value: 'BS' },
+                      { label: [formatMessage(messages['education.option.Master.text'])], value: 'MR' },
+                      { label: [formatMessage(messages['education.option.Ph.D..text'])], value: 'PH' }
+                    ]}
+                  />
+                  <p
+                    style={{
+                      "font-size": "0.75rem",
+                      "margin-top": (errors.level_of_education && "-1.4rem") || "",
+                      "margin-bottom": "2rem",
+                      color: "#C32D3A",
+                    }}
+                  >
+                    {!levelOfEducationClicked && errors.level_of_education}
+                  </p>
+                  <h6>
+                    {formatMessage(messages["registration.english_language_level.label"])}:
+                  </h6>
+                  <InputSelect
+                    style={{
+                      "margin-top": "-1.75rem",
+                      "margin-bottom": "1.75rem",
+                      width: "98.1%",
+                      border: !errors.english_language_level
+                        ? "1px solid #707070"
+                        : "1px solid #C32D3A",
+                    }}
+                    value={formFields.english_language_level}
+                    name="english_language_level"
+                    onBlur={(value) => {
+                      handleOnBlur({
+                        target: { name: "english_language_level", value: value },
+                      });
+                    }}
+                    onChange={(value) => {
+                      handleOnChange({
+                        target: { name: "english_language_level", value: value },
+                      });
+                    }}
+                    onFocus={(value) => {
+                      handleOnFocus({
+                        target: { name: "english_language_level", value: value },
+                      });
+                    }}
+                    options={[
+                      { label: [formatMessage(messages['help.text.english_language_level'])], value: "", disabled: true },
+                      { label: [formatMessage(messages['english_language_level.option.0.text'])], value: '0' },
+                      { label: [formatMessage(messages['english_language_level.option.1.text'])], value: '1' },
+                      { label: [formatMessage(messages['english_language_level.option.2.text'])], value: '2' },
+                      { label: [formatMessage(messages['english_language_level.option.3.text'])], value: '3' },
+                      { label: [formatMessage(messages['english_language_level.option.4.text'])], value: '4' },
+                      { label: [formatMessage(messages['english_language_level.option.5.text'])], value: '5' },
+                      { label: [formatMessage(messages['english_language_level.option.6.text'])], value: '6' },
+                      { label: [formatMessage(messages['english_language_level.option.7.text'])], value: '7' },
+                      { label: [formatMessage(messages['english_language_level.option.8.text'])], value: '8' },
+                      { label: [formatMessage(messages['english_language_level.option.9.text'])], value: '9' },
+                      { label: [formatMessage(messages['english_language_level.option.10.text'])], value: '10' }
+                    ]}
+                  />
+                  <p
+                    style={{
+                      "font-size": "0.75rem",
+                      "margin-top": (errors.english_language_level && "-1.4rem") || "",
+                      "margin-bottom": "2rem",
+                      color: "#C32D3A",
+                    }}
+                  >
+                    {!englishLanguageLevelClicked && errors.english_language_level}
+                  </p>
+                </>
+              )}
+              {signupFormSectionNumber == 5 && (
+                <>
+                  <h6>
+                    {formatMessage(messages["registration.employment_status.label"])}:
+                  </h6>
+                  <InputSelect
+                    style={{
+                      "margin-top": "-1.75rem",
+                      "margin-bottom": "1.75rem",
+                      width: "98.1%",
+                      border: !errors.employment_status
+                        ? "1px solid #707070"
+                        : "1px solid #C32D3A",
+                    }}
+                    name="employment_status"
+                    onBlur={(value) => {
+                      handleOnBlur({
+                        target: { name: "employment_status", value: value },
+                      });
+                    }}
+                    value={formFields.employment_status}
+                    onChange={(value) => {
+                      handleOnChange({
+                        target: { name: "employment_status", value: value },
+                      });
+                    }}
+                    onFocus={(value) => {
+                      handleOnFocus({
+                        target: { name: "employment_status", value: value },
+                      });
+                    }}
+                    options={[
+                      { label: [formatMessage(messages['help.text.employment_status'])], value: "", disabled: true },
+                      { label: [formatMessage(messages['employment_status.option.Public industry.text'])], value: 'PU' },
+                      { label: [formatMessage(messages['employment_status.option.Private industry.text'])], value: 'PR' },
+                      { label: [formatMessage(messages['employment_status.option.Job seeker.text'])], value: 'JS' },
+                      { label: [formatMessage(messages['employment_status.option.Student.text'])], value: 'ST' }
+                    ]}
+                  />
+                  <p
+                    style={{
+                      "font-size": "0.75rem",
+                      "margin-top": (errors.employment_status && "-1.4rem") || "",
+                      "margin-bottom": "2rem",
+                      color: "#C32D3A",
+                    }}
+                  >
+                    {!employmentStatusClicked && errors.employment_status}
+                  </p>
+                  <h6>
+                    {formatMessage(messages["registration.work_experience_level.label"])}:
+                  </h6>
+                  <InputSelect
+                    style={{
+                      "margin-top": "-1.75rem",
+                      "margin-bottom": "1.75rem",
+                      width: "98.1%",
+                      border: !errors.work_experience_level
+                        ? "1px solid #707070"
+                        : "1px solid #C32D3A",
+                    }}
+                    name="work_experience_level"
+                    value={formFields.work_experience_level}
+                    onBlur={(value) => {
+                      handleOnBlur({
+                        target: { name: "work_experience_level", value: value },
+                      });
+                    }}
+                    onChange={(value) => {
+                      handleOnChange({
+                        target: { name: "work_experience_level", value: value },
+                      });
+                    }}
+                    onFocus={(value) => {
+                      handleOnFocus({
+                        target: { name: "work_experience_level", value: value },
+                      });
+                    }}
+                    options={[
+                      { label: [formatMessage(messages['help.text.work_experience_level'])], value: "", disabled: true },
+                      { label: [formatMessage(messages['work_experience_level.option.Junior level (0-2) years.text'])], value: 'JL' },
+                      { label: [formatMessage(messages['work_experience_level.option.Middle level (3-4) years.text'])], value: 'ML' },
+                      { label: [formatMessage(messages['work_experience_level.option.Senior level (5-10) years.text'])], value: 'SL' },
+                      { label: [formatMessage(messages['work_experience_level.option.Expert (+ 10 years).text'])], value: 'EL' }
+                    ]}
+                  />
+                  <p
+                    style={{
+                      "font-size": "0.75rem",
+                      "margin-top": (errors.work_experience_level && "-1.4rem") || "",
+                      "margin-bottom": "2rem",
+                      color: "#C32D3A",
+                    }}
+                  >
+                    {!workExperienceLevelClicked && errors.work_experience_level}
+                  </p>
+                  <FormGroup
+                    name="job_title"
+                    value={formFields.job_title}
+                    handleChange={handleOnChange}
+                    handleBlur={handleOnBlur}
+                    handleFocus={handleOnFocus}
+                    errorMessage={errors.job_title}
+                    helpText={[formatMessage(messages['help.text.job_title'])]}
+                    floatingLabel={formatMessage(messages['registration.job_title.label'])}
+                  />
+                </>
               )}
               <ConfigurableRegistrationForm
                 countryList={countryList}
@@ -604,6 +1188,26 @@ const RegistrationPage = (props) => {
                 setFocusedField={setFocusedField}
                 fieldDescriptions={fieldDescriptions}
               />
+               {(signupFormSectionNumber == 2 ||
+                signupFormSectionNumber == 3 ||
+                signupFormSectionNumber == 4 ||
+                signupFormSectionNumber == 5) && (
+                <StatefulButton
+                  id="back-register-user"
+                  name="back-register-user"
+                  type="submit"
+                  variant="brand"
+                  className="mr-4 mt-4 mb-4"
+                  labels={{
+                    default: formatMessage(
+                      messages["back.account.creation.free.button"]
+                    ),
+                    pending: "",
+                  }}
+                  onClick={handleBack}
+                  onMouseDown={(e) => e.preventDefault()}
+                />
+              )}
               <StatefulButton
                 id="register-user"
                 name="register-user"
@@ -612,8 +1216,15 @@ const RegistrationPage = (props) => {
                 className="register-stateful-button-width mt-4 mb-4"
                 state={submitState}
                 labels={{
-                  default: formatMessage(messages['create.account.for.free.button']),
-                  pending: '',
+                  default:
+                    (signupFormSectionNumber == 5 &&
+                      formatMessage(
+                        messages['create.account.for.free.button']
+                      )) ||
+                    formatMessage(
+                      messages['proceed.account.creation.free.button']
+                    ),
+                  pending: "",
                 }}
                 onClick={handleSubmit}
                 onMouseDown={(e) => e.preventDefault()}
@@ -667,6 +1278,7 @@ const mapStateToProps = state => {
     thirdPartyAuthContext: thirdPartyAuthContextSelector(state),
     validationApiRateLimited: registerPageState.validationApiRateLimited,
     usernameSuggestions: registerPageState.usernameSuggestions,
+    signupFormSectionNumber: registerPageState.signupFormSectionNumber,
   };
 };
 
@@ -720,6 +1332,7 @@ RegistrationPage.propTypes = {
   usernameSuggestions: PropTypes.arrayOf(PropTypes.string),
   userPipelineDataLoaded: PropTypes.bool,
   validationApiRateLimited: PropTypes.bool,
+  signupFormSectionNumber: PropTypes.number,
   // Actions
   backupFormState: PropTypes.func.isRequired,
   clearBackendError: PropTypes.func.isRequired,
@@ -729,6 +1342,7 @@ RegistrationPage.propTypes = {
   resetUsernameSuggestions: PropTypes.func.isRequired,
   setUserPipelineDetailsLoaded: PropTypes.func.isRequired,
   validateFromBackend: PropTypes.func.isRequired,
+  setForm: PropTypes.func.isRequired,
 };
 
 RegistrationPage.defaultProps = {
@@ -737,10 +1351,37 @@ RegistrationPage.defaultProps = {
       marketingEmailsOptIn: true,
     },
     formFields: {
-      name: '', email: '', username: '', password: '',
+      name: '',
+      email: '',
+      username: '',
+      password: '',
+      phone_number: '',
+      linkedin_account: '',
+      date_of_birth: '',
+      gender: '',
+      region: '',
+      city: '',
+      address_line: '',
+      level_of_education: '',
+      english_language_level: '',
+      employment_status: '',
+      work_experience_level: '',
+      job_title: '',
     },
     errors: {
-      name: '', email: '', username: '', password: '',
+      name: '',
+      email: '',
+      username: '',
+      password: '',
+      phone_number: '',
+      date_of_birth: '',
+      gender: '',
+      region: '',
+      city: '',
+      level_of_education: '',
+      employment_status: '',
+      work_experience_level: '',
+      job_title: '',
     },
     emailSuggestion: {
       suggestion: '', type: '',
@@ -769,6 +1410,7 @@ RegistrationPage.defaultProps = {
   usernameSuggestions: [],
   userPipelineDataLoaded: false,
   validationApiRateLimited: false,
+  signupFormSectionNumber: 1,
 };
 
 export default connect(
@@ -781,5 +1423,6 @@ export default connect(
     validateFromBackend: fetchRealtimeValidations,
     registerNewUser,
     setUserPipelineDetailsLoaded: setUserPipelineDataLoaded,
+    setForm: setForm,
   },
 )(RegistrationPage);
