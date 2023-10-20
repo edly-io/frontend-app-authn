@@ -23,7 +23,7 @@ const messages = defineMessages({
     description: "Label for activation code field to enter activation code sent via email to  complete registeration",
   },
   "empty.activation_code.field.error": {
-    id: "help.text.activation_code",
+    id: "empty.activation_code.field.error",
     defaultMessage: "Enter the activation code that is sent to you via email",
     description: "Error message for empty activation code field to enter activation code sent via email to  complete registeration",
   },
