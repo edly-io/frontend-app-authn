@@ -612,6 +612,16 @@ const messages = defineMessages({
     defaultMessage: 'Expert (+ 10 years)',
     description: 'Nafath Sign Up Form work experience level option Expert (+ 10 years)',
   },
+  'registration.terms.and.conditions.policy.checkbox.label1': {
+    id: 'registration.terms.and.conditions.policy.checkbox.label1',
+    defaultMessage: 'I agree to the',
+    description: 'Label that appears above fullname field',
+  },
+  'registration.terms.and.conditions.policy.checkbox.label2': {
+    id: 'registration.terms.and.conditions.policy.checkbox.label2',
+    defaultMessage: 'sdaia terms and conditions policy',
+    description: 'Label that appears above fullname field',
+  },
 });
 
 export default messages;
