@@ -28,7 +28,13 @@ import {
 import messages from './messages';
 
 const Logistration = (props) => {
-  const { selectedPage, tpaProviders } = props;
+  const queryParams = new URLSearchParams(window.location.search)
+  const showRegisterTab = queryParams.get("show_register") === "true";
+  const { tpaProviders } = props;
+  let { selectedPage } = props;
+  if ((!showRegisterTab) && selectedPage==="/register") {
+    selectedPage = "/nafath";
+  }
   const tpaHint = getTpaHint();
   const {
     providers, secondaryProviders,
@@ -114,9 +120,9 @@ const Logistration = (props) => {
                 )
                 : (!isValidTpaHint() && (
                   <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
-                    <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
-                    <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
                     <Tab title={formatMessage(messages['logistration.nafath.authentication'])} eventKey={NAFATH_AUTHENTICATION_PAGE} />
+                    <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
+                    {showRegisterTab && <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />}
                   </Tabs>
                 ))}
               {key && (
@@ -126,12 +132,12 @@ const Logistration = (props) => {
                 {selectedPage === LOGIN_PAGE
                   ? <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
                   : selectedPage === REGISTER_PAGE
-                    ? (
+                    ? showRegisterTab ?(
                       <RegistrationPage
                         institutionLogin={institutionLogin}
                         handleInstitutionLogin={handleInstitutionLogin}
                       />
-                    )
+                    ) : <NafathAuthenticationPage />
                     : <NafathAuthenticationPage />}
               </div>
             </div>
