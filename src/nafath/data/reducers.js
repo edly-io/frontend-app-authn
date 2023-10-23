@@ -39,6 +39,7 @@ import {
   SET_FORM_WORK_EXPERIENCE_LEVEL_ERROR,
   SET_FORM_JOB_TITLE,
   SET_FORM_JOB_TITLE_ERROR,
+  SET_TERMS_AND_CONDITIONS,
 } from "./actions";
 
 export const defaultState = {
@@ -84,6 +85,7 @@ export const defaultState = {
   work_experience_levelError: "",
   job_titleError: "",
   activation_codeError: "",
+  terms_and_conditions: true,
 };
 
 const reducer = (state = defaultState, action = {}) => {
@@ -132,6 +134,7 @@ const reducer = (state = defaultState, action = {}) => {
         work_experience_levelError: "",
         job_titleError: "",
         activation_codeError: "",
+        terms_and_conditions: true,
       };
       break;
     case SET_NAFATH_AUTHN_DATA:
@@ -141,6 +144,12 @@ const reducer = (state = defaultState, action = {}) => {
         randomText: action.payload.random,
         userId: action.payload.userId,
         status: action.payload.status,
+      };
+      break;
+    case SET_TERMS_AND_CONDITIONS:
+      state = {
+        ...state,
+        terms_and_conditions: action.payload,
       };
       break;
     case SET_FORM_CITY:

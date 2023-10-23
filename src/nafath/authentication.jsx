@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { getConfig } from "@edx/frontend-platform";
 import { useIntl } from "@edx/frontend-platform/i18n";
 
-import { Form, StatefulButton, Input, InputSelect } from "@edx/paragon";
+import { Form, StatefulButton, Input, InputSelect, FormCheck } from "@edx/paragon";
 import PropTypes from "prop-types";
 import { Helmet } from "react-helmet";
 
@@ -49,6 +49,7 @@ import {
   setFormEmploymentStatusError,
   setFormJobTitle,
   setFormJobTitleError,
+  setTermsAndConditions,
 } from "./data/actions";
 import LoginFailureMessage from "../login/LoginFailure";
 import { validateEmailAddress } from "../register/data/utils";
@@ -1567,6 +1568,25 @@ const NafathAuthenticationPage = (props) => {
                   registrationFormMessages["registration.job_title.label"]
                 )}
               />
+              <FormCheck
+                name="terms_and_conditions"
+                value={props.state.terms_and_conditions}
+                defaultChecked
+                type="checkbox"
+                inline={true}
+                style={{"font-size": "1rem"}}
+                onChange={(e) => {
+                  let value = e.target.value;
+                  props.setTermsAndConditions(value);
+                  return value;
+                }}
+                label={[
+                  formatMessage(registrationFormMessages['registration.terms.and.conditions.policy.checkbox.label1']),
+                  " ",
+                  <a href='https://courses.sdaia.academy/privacy-policy/' target='_blank'>{formatMessage(registrationFormMessages['registration.terms.and.conditions.policy.checkbox.label2'])}</a>,
+                  "."
+                ]}
+              />
             </>
           )}
           {props.state.form == 7 && (
@@ -1723,4 +1743,5 @@ export default connect(mapStateToProps, {
   setFormEmploymentStatusError,
   setFormJobTitle,
   setFormJobTitleError,
+  setTermsAndConditions,
 })(NafathAuthenticationPage);

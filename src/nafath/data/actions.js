@@ -52,6 +52,7 @@ export const SET_FORM_WORK_EXPERIENCE_LEVEL_ERROR =
   "SET_FORM_WORK_EXPERIENCE_LEVEL_ERROR";
 export const SET_FORM_JOB_TITLE = "SET_FORM_JOB_TITLE";
 export const SET_FORM_JOB_TITLE_ERROR = "SET_FORM_JOB_TITLE_ERROR";
+export const SET_TERMS_AND_CONDITIONS = "SET_TERMS_AND_CONDITIONS";
 
 export const setFormJobTitle = (job_title) => ({
   type: SET_FORM_JOB_TITLE,
@@ -61,6 +62,11 @@ export const setFormJobTitle = (job_title) => ({
 export const setFormJobTitleError = (error) => ({
   type: SET_FORM_JOB_TITLE_ERROR,
   payload: error,
+});
+
+export const setTermsAndConditions = (terms_and_conditions) => ({
+  type: SET_TERMS_AND_CONDITIONS,
+  payload: terms_and_conditions,
 });
 
 export const setFormWorkExperienceLevel = (work_experience_level) => ({
