@@ -29,7 +29,7 @@ import messages from './messages';
 
 const Logistration = (props) => {
   const queryParams = new URLSearchParams(window.location.search)
-  const showRegisterTab = queryParams.get("show_register") === "true";
+  const showRegisterTab = queryParams.get("sr") === "true";
   const { tpaProviders } = props;
   let { selectedPage } = props;
   if ((!showRegisterTab) && selectedPage==="/register") {
