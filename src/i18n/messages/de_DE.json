@@ -127,7 +127,7 @@
   "register.institution.login.page.title": "Registrieren Sie sich mit Institutions-/Campus-Anmeldeinformationen",
   "empty.name.field.error": "Geben Sie Ihren vollständigen Namen ein",
   "empty.email.field.error": "Geben Sie Ihre E-Mail-Adresse ein",
-  "empty.username.field.error": "Der Benutzername muss zwischen 2 und 30 Zeichen lang sein",
+  "empty.username.field.error": "Der Benutzername muss zwischen 3 und 30 Zeichen lang sein",
   "empty.password.field.error": "Kennwortkriterien wurden nicht erfüllt",
   "empty.country.field.error": "Wählen Sie das Land oder die Region Ihres Wohnsitzes aus",
   "email.do.not.match": "Die E-Mail-Adressen stimmen nicht überein.",
