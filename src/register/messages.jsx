@@ -273,7 +273,7 @@ const messages = defineMessages({
   },
   'empty.username.field.error': {
     id: 'empty.username.field.error',
-    defaultMessage: 'Username must be between 2 and 30 characters',
+    defaultMessage: 'Username must be between 3 and 30 characters',
     description: 'Error message for empty username field',
   },
   'empty.password.field.error': {

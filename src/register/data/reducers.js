@@ -37,6 +37,7 @@ export const defaultState = {
       employment_status: '',
       work_experience_level: '',
       job_title: '',
+      terms_and_conditions: true,
     },
     emailSuggestion: {
       suggestion: '', type: '',

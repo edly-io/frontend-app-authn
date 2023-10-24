@@ -8,7 +8,7 @@ import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import {
   getCountryList, getLocale, useIntl,
 } from '@edx/frontend-platform/i18n';
-import { Form, Spinner, StatefulButton, Input, InputSelect } from '@edx/paragon';
+import { Form, Spinner, StatefulButton, Input, InputSelect, FormCheck } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
@@ -411,7 +411,7 @@ const RegistrationPage = (props) => {
       const ignoreForm3RequiredFieldsInPreviousForms = ["region", "city"];
       const ignoreForm4RequiredFieldsInPreviousForms = ["level_of_education"];
       const ignoreForm5RequiredFieldsInPreviousForms = ["employment_status", "work_experience_level", "job_title"];
-      if (optional_fields.includes(key) && payload[key]==''){
+      if (optional_fields.includes(key) && payload[key]=='' || key=="terms_and_conditions"){
         // passing optional empty fields
       } else if (signupFormSectionNumber == 1 && ignoreForm2RequiredFieldsInPreviousForms.includes(key) && payload[key]=='') {
         // ignoring required fields in previous forms
@@ -485,6 +485,20 @@ const RegistrationPage = (props) => {
     const { name } = event.target;
     let value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     if (registrationError[name]) {
+      clearBackendError(name);
+      setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
+    }
+    if (name=="date_of_birth") {
+      const date = new Date(value);
+      let year = (date.getFullYear()) + '';
+      if (year.length > 4) {
+        const month = (date.getMonth() + 1) + '';
+        const day = (date.getDate()) + '';
+        year = year.substring(0, year.length - 1);
+        value = year + "-" + month + "-" + day;
+      }
+    }
+    if (name=="gender" && errors.gender) {
       clearBackendError(name);
       setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
     }
@@ -1176,6 +1190,23 @@ const RegistrationPage = (props) => {
                     helpText={[formatMessage(messages['help.text.job_title'])]}
                     floatingLabel={formatMessage(messages['registration.job_title.label'])}
                   />
+                  <FormCheck
+                    name="terms_and_conditions"
+                    value={formFields.terms_and_conditions}
+                    defaultChecked
+                    type="checkbox"
+                    inline={true}
+                    style={{"font-size": "1rem"}}
+                    onChange={(event) => {
+                      handleOnChange(event);
+                    }}
+                    label={[
+                      formatMessage(messages['registration.terms.and.conditions.policy.checkbox.label1']),
+                      " ",
+                      <a href='https://courses.sdaia.academy/privacy-policy/' target='_blank'>{formatMessage(messages['registration.terms.and.conditions.policy.checkbox.label2'])}</a>,
+                      "."
+                    ]}
+                  />
                 </>
               )}
               <ConfigurableRegistrationForm
@@ -1367,6 +1398,7 @@ RegistrationPage.defaultProps = {
       employment_status: '',
       work_experience_level: '',
       job_title: '',
+      terms_and_conditions: true,
     },
     errors: {
       name: '',

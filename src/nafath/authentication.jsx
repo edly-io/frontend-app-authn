@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { getConfig } from "@edx/frontend-platform";
 import { useIntl } from "@edx/frontend-platform/i18n";
 
-import { Form, StatefulButton, Input, InputSelect } from "@edx/paragon";
+import { Form, StatefulButton, Input, InputSelect, FormCheck } from "@edx/paragon";
 import PropTypes from "prop-types";
 import { Helmet } from "react-helmet";
 
@@ -49,6 +49,7 @@ import {
   setFormEmploymentStatusError,
   setFormJobTitle,
   setFormJobTitleError,
+  setTermsAndConditions,
 } from "./data/actions";
 import LoginFailureMessage from "../login/LoginFailure";
 import { validateEmailAddress } from "../register/data/utils";
@@ -162,7 +163,7 @@ const NafathAuthenticationPage = (props) => {
       Object.keys(form3fields).forEach((key) => {
         let fieldName = form3fields[key];
         let value =
-          (fieldName == "gender" && props.state.name) ||
+          (fieldName == "gender" && props.state.gender) ||
           "" ||
           (fieldName == "date_of_birth" && props.state.date_of_birth) ||
           "";
@@ -790,6 +791,14 @@ const NafathAuthenticationPage = (props) => {
                   let value = e.target.value;
                   if (value.startsWith(" ")) {
                     value = value.trim();
+                  }
+                  const date = new Date(value);
+                  let year = (date.getFullYear()) + '';
+                  if (year.length > 4) {
+                    const month = (date.getMonth() + 1) + '';
+                    const day = (date.getDate()) + '';
+                    year = year.substring(0, year.length - 1);
+                    value = year + "-" + month + "-" + day;
                   }
                   props.setFormDateOfBirth(value);
                   props.setFormDateOfBirthError("");
@@ -1567,6 +1576,25 @@ const NafathAuthenticationPage = (props) => {
                   registrationFormMessages["registration.job_title.label"]
                 )}
               />
+              <FormCheck
+                name="terms_and_conditions"
+                value={props.state.terms_and_conditions}
+                defaultChecked
+                type="checkbox"
+                inline={true}
+                style={{"font-size": "1rem"}}
+                onChange={(e) => {
+                  let value = e.target.value;
+                  props.setTermsAndConditions(value);
+                  return value;
+                }}
+                label={[
+                  formatMessage(registrationFormMessages['registration.terms.and.conditions.policy.checkbox.label1']),
+                  " ",
+                  <a href='https://courses.sdaia.academy/privacy-policy/' target='_blank'>{formatMessage(registrationFormMessages['registration.terms.and.conditions.policy.checkbox.label2'])}</a>,
+                  "."
+                ]}
+              />
             </>
           )}
           {props.state.form == 7 && (
@@ -1723,4 +1751,5 @@ export default connect(mapStateToProps, {
   setFormEmploymentStatusError,
   setFormJobTitle,
   setFormJobTitleError,
+  setTermsAndConditions,
 })(NafathAuthenticationPage);
