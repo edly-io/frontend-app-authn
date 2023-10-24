@@ -163,7 +163,7 @@ const NafathAuthenticationPage = (props) => {
       Object.keys(form3fields).forEach((key) => {
         let fieldName = form3fields[key];
         let value =
-          (fieldName == "gender" && props.state.name) ||
+          (fieldName == "gender" && props.state.gender) ||
           "" ||
           (fieldName == "date_of_birth" && props.state.date_of_birth) ||
           "";
@@ -791,6 +791,14 @@ const NafathAuthenticationPage = (props) => {
                   let value = e.target.value;
                   if (value.startsWith(" ")) {
                     value = value.trim();
+                  }
+                  const date = new Date(value);
+                  let year = (date.getFullYear()) + '';
+                  if (year.length > 4) {
+                    const month = (date.getMonth() + 1) + '';
+                    const day = (date.getDate()) + '';
+                    year = year.substring(0, year.length - 1);
+                    value = year + "-" + month + "-" + day;
                   }
                   props.setFormDateOfBirth(value);
                   props.setFormDateOfBirthError("");

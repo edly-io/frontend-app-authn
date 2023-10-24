@@ -488,6 +488,20 @@ const RegistrationPage = (props) => {
       clearBackendError(name);
       setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
     }
+    if (name=="date_of_birth") {
+      const date = new Date(value);
+      let year = (date.getFullYear()) + '';
+      if (year.length > 4) {
+        const month = (date.getMonth() + 1) + '';
+        const day = (date.getDate()) + '';
+        year = year.substring(0, year.length - 1);
+        value = year + "-" + month + "-" + day;
+      }
+    }
+    if (name=="gender" && errors.gender) {
+      clearBackendError(name);
+      setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
+    }
     if (name === 'phone_number') {
       if (value.length > 50 || !value.match(/^[0-9+]+$/)) {
         value = value.substring(0, value.length - 1);
