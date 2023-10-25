@@ -761,57 +761,59 @@ const NafathAuthenticationPage = (props) => {
                 )}
                 :
               </h6>
-              <Input
-                type="date"
-                name="date_of_birth"
-                style={{
-                  "font-weight": 400,
-                  color:
-                    (props.state.date_of_birth == "" && "#707070") || "#101820",
-                  padding: "0.5625rem 1rem",
-                  display: "block",
-                  width: "98.1%",
-                  "font-size": "0.875rem",
-                  "line-height": "1.5rem",
-                  height: "2.75rem",
-                  "background-clip": "padding-box",
-                  border: !props.state.date_of_birthError
-                    ? "1px solid #707070"
-                    : "1px solid #C32D3A",
-                  "border-radius": "0.375rem",
-                  transition:
-                    "border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out",
-                  overflow: "visible",
-                  "font-family": "inherit",
-                  "box-sizing": "border-box",
-                  "margin-bottom": "1.75rem",
-                }}
-                value={props.state.date_of_birth}
-                onChange={(e) => {
-                  let value = e.target.value;
-                  if (value.startsWith(" ")) {
-                    value = value.trim();
-                  }
-                  const date = new Date(value);
-                  let year = (date.getFullYear()) + '';
-                  if (year.length > 4) {
-                    const month = (date.getMonth() + 1) + '';
-                    const day = (date.getDate()) + '';
-                    year = year.substring(0, year.length - 1);
-                    value = year + "-" + month + "-" + day;
-                  }
-                  props.setFormDateOfBirth(value);
-                  props.setFormDateOfBirthError("");
-                  return value;
-                }}
-                onBlur={(e) => {
-                  setFocusedField("");
-                  validateInput(e.target.name, e.target.value);
-                }}
-                onFocus={() => {
-                  setFocusedField("date_of_birth");
-                }}
-              />
+              <div class="custom-input-width">
+                <Input
+                  type="date"
+                  name="date_of_birth"
+                  style={{
+                    "font-weight": 400,
+                    color:
+                      (props.state.date_of_birth == "" && "#707070") || "#101820",
+                    padding: "0.5625rem 1rem",
+                    display: "block",
+                    width: "98.1%",
+                    "font-size": "0.875rem",
+                    "line-height": "1.5rem",
+                    height: "2.75rem",
+                    "background-clip": "padding-box",
+                    border: !props.state.date_of_birthError
+                      ? "1px solid #707070"
+                      : "1px solid #C32D3A",
+                    "border-radius": "0.375rem",
+                    transition:
+                      "border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out",
+                    overflow: "visible",
+                    "font-family": "inherit",
+                    "box-sizing": "border-box",
+                    "margin-bottom": "1.75rem",
+                  }}
+                  value={props.state.date_of_birth}
+                  onChange={(e) => {
+                    let value = e.target.value;
+                    if (value.startsWith(" ")) {
+                      value = value.trim();
+                    }
+                    const date = new Date(value);
+                    let year = (date.getFullYear()) + '';
+                    if (year.length > 4) {
+                      const month = (date.getMonth() + 1) + '';
+                      const day = (date.getDate()) + '';
+                      year = year.substring(0, year.length - 1);
+                      value = year + "-" + month + "-" + day;
+                    }
+                    props.setFormDateOfBirth(value);
+                    props.setFormDateOfBirthError("");
+                    return value;
+                  }}
+                  onBlur={(e) => {
+                    setFocusedField("");
+                    validateInput(e.target.name, e.target.value);
+                  }}
+                  onFocus={() => {
+                    setFocusedField("date_of_birth");
+                  }}
+                />
+              </div>
               <p
                 style={{
                   "font-size": "0.75rem",
@@ -848,139 +850,141 @@ const NafathAuthenticationPage = (props) => {
                 )}
                 :
               </h6>
-              <InputSelect
-                style={{
-                  "margin-top": "-1.75rem",
-                  "margin-bottom": "1.75rem",
-                  width: "98.1%",
-                  border: !props.state.regionError
-                    ? "1px solid #707070"
-                    : "1px solid #C32D3A",
-                }}
-                value={props.state.region}
-                name="region"
-                onChange={(value) => {
-                  props.setFormRegion(value);
-                  props.setFormRegionError("");
-                  return value;
-                }}
-                onBlur={(value) => {
-                  setFocusedField("");
-                  validateInput("region", value);
-                }}
-                onFocus={() => {
-                  setFocusedField("region");
-                }}
-                options={[
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages["help.text.region"]
-                      ),
-                    ],
-                    value: "",
-                    disabled: true,
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages["region.option.Riyadh.text"]
-                      ),
-                    ],
-                    value: "RD",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages["region.option.Eastern.text"]
-                      ),
-                    ],
-                    value: "ER",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages["region.option.Asir.text"]
-                      ),
-                    ],
-                    value: "AI",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages["region.option.Jazan.text"]
-                      ),
-                    ],
-                    value: "JA",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages["region.option.Medina.text"]
-                      ),
-                    ],
-                    value: "MN",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages["region.option.Al-Qassim.text"]
-                      ),
-                    ],
-                    value: "AS",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages["region.option.Tabuk.text"]
-                      ),
-                    ],
-                    value: "TU",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages["region.option.Ha'il.text"]
-                      ),
-                    ],
-                    value: "HI",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages["region.option.Najran.text"]
-                      ),
-                    ],
-                    value: "NA",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages["region.option.Al-Jawf.text"]
-                      ),
-                    ],
-                    value: "AW",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages["region.option.Al-Bahah.text"]
-                      ),
-                    ],
-                    value: "AA",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "region.option.Northern Borders.text"
-                        ]
-                      ),
-                    ],
-                    value: "NB",
-                  },
-                ]}
-              />
+              <div class="custom-input-width">
+                <InputSelect
+                  style={{
+                    "margin-top": "-1.75rem",
+                    "margin-bottom": "1.75rem",
+                    width: "98.1%",
+                    border: !props.state.regionError
+                      ? "1px solid #707070"
+                      : "1px solid #C32D3A",
+                  }}
+                  value={props.state.region}
+                  name="region"
+                  onChange={(value) => {
+                    props.setFormRegion(value);
+                    props.setFormRegionError("");
+                    return value;
+                  }}
+                  onBlur={(value) => {
+                    setFocusedField("");
+                    validateInput("region", value);
+                  }}
+                  onFocus={() => {
+                    setFocusedField("region");
+                  }}
+                  options={[
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages["help.text.region"]
+                        ),
+                      ],
+                      value: "",
+                      disabled: true,
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages["region.option.Riyadh.text"]
+                        ),
+                      ],
+                      value: "RD",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages["region.option.Eastern.text"]
+                        ),
+                      ],
+                      value: "ER",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages["region.option.Asir.text"]
+                        ),
+                      ],
+                      value: "AI",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages["region.option.Jazan.text"]
+                        ),
+                      ],
+                      value: "JA",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages["region.option.Medina.text"]
+                        ),
+                      ],
+                      value: "MN",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages["region.option.Al-Qassim.text"]
+                        ),
+                      ],
+                      value: "AS",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages["region.option.Tabuk.text"]
+                        ),
+                      ],
+                      value: "TU",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages["region.option.Ha'il.text"]
+                        ),
+                      ],
+                      value: "HI",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages["region.option.Najran.text"]
+                        ),
+                      ],
+                      value: "NA",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages["region.option.Al-Jawf.text"]
+                        ),
+                      ],
+                      value: "AW",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages["region.option.Al-Bahah.text"]
+                        ),
+                      ],
+                      value: "AA",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "region.option.Northern Borders.text"
+                          ]
+                        ),
+                      ],
+                      value: "NB",
+                    },
+                  ]}
+                />
+              </div>
               <p
                 style={{
                   "font-size": "0.75rem",
@@ -1062,97 +1066,99 @@ const NafathAuthenticationPage = (props) => {
                 )}
                 :
               </h6>
-              <InputSelect
-                style={{
-                  "margin-top": "-1.75rem",
-                  "margin-bottom": "1.75rem",
-                  width: "98.1%",
-                  border: !props.state.level_of_educationError
-                    ? "1px solid #707070"
-                    : "1px solid #C32D3A",
-                }}
-                value={props.state.level_of_education}
-                name="level_of_education"
-                onBlur={(value) => {
-                  setFocusedField("");
-                  validateInput("level_of_education", value);
-                }}
-                onChange={(value) => {
-                  props.setFormLevelOfEducation(value);
-                  props.setFormLevelOfEducationError("");
-                  return value;
-                }}
-                onFocus={() => {
-                  setFocusedField("level_of_education");
-                }}
-                options={[
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages["help.text.level_of_education"]
-                      ),
-                    ],
-                    value: "",
-                    disabled: true,
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "education.option.Middle School.text"
-                        ]
-                      ),
-                    ],
-                    value: "MS",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "education.option.High School.text"
-                        ]
-                      ),
-                    ],
-                    value: "HS",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "education.option.Diploma.text"
-                        ]
-                      ),
-                    ],
-                    value: "DM",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "education.option.Bachelor.text"
-                        ]
-                      ),
-                    ],
-                    value: "BS",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages["education.option.Master.text"]
-                      ),
-                    ],
-                    value: "MR",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages["education.option.Ph.D..text"]
-                      ),
-                    ],
-                    value: "PH",
-                  },
-                ]}
-              />
+              <div class="custom-input-width">
+                <InputSelect
+                  style={{
+                    "margin-top": "-1.75rem",
+                    "margin-bottom": "1.75rem",
+                    width: "98.1%",
+                    border: !props.state.level_of_educationError
+                      ? "1px solid #707070"
+                      : "1px solid #C32D3A",
+                  }}
+                  value={props.state.level_of_education}
+                  name="level_of_education"
+                  onBlur={(value) => {
+                    setFocusedField("");
+                    validateInput("level_of_education", value);
+                  }}
+                  onChange={(value) => {
+                    props.setFormLevelOfEducation(value);
+                    props.setFormLevelOfEducationError("");
+                    return value;
+                  }}
+                  onFocus={() => {
+                    setFocusedField("level_of_education");
+                  }}
+                  options={[
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages["help.text.level_of_education"]
+                        ),
+                      ],
+                      value: "",
+                      disabled: true,
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "education.option.Middle School.text"
+                          ]
+                        ),
+                      ],
+                      value: "MS",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "education.option.High School.text"
+                          ]
+                        ),
+                      ],
+                      value: "HS",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "education.option.Diploma.text"
+                          ]
+                        ),
+                      ],
+                      value: "DM",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "education.option.Bachelor.text"
+                          ]
+                        ),
+                      ],
+                      value: "BS",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages["education.option.Master.text"]
+                        ),
+                      ],
+                      value: "MR",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages["education.option.Ph.D..text"]
+                        ),
+                      ],
+                      value: "PH",
+                    },
+                  ]}
+                />
+              </div>
               <p
                 style={{
                   "font-size": "0.75rem",
@@ -1176,153 +1182,155 @@ const NafathAuthenticationPage = (props) => {
                 )}
                 :
               </h6>
-              <InputSelect
-                style={{
-                  "margin-top": "-1.75rem",
-                  "margin-bottom": "1.75rem",
-                  width: "98.1%",
-                  border: !props.state.english_language_levelError
-                    ? "1px solid #707070"
-                    : "1px solid #C32D3A",
-                }}
-                value={props.state.english_language_level}
-                name="english_language_level"
-                onBlur={(value) => {
-                  setFocusedField("");
-                  validateInput("english_language_level", value);
-                }}
-                onChange={(value) => {
-                  props.setFormEnglishLanguageLevel(value);
-                  props.setFormEnglishLanguageLevelError("");
-                  return value;
-                }}
-                onFocus={() => {
-                  setFocusedField("english_language_level");
-                }}
-                options={[
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "help.text.english_language_level"
-                        ]
-                      ),
-                    ],
-                    value: "",
-                    disabled: true,
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "english_language_level.option.0.text"
-                        ]
-                      ),
-                    ],
-                    value: "0",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "english_language_level.option.1.text"
-                        ]
-                      ),
-                    ],
-                    value: "1",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "english_language_level.option.2.text"
-                        ]
-                      ),
-                    ],
-                    value: "2",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "english_language_level.option.3.text"
-                        ]
-                      ),
-                    ],
-                    value: "3",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "english_language_level.option.4.text"
-                        ]
-                      ),
-                    ],
-                    value: "4",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "english_language_level.option.5.text"
-                        ]
-                      ),
-                    ],
-                    value: "5",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "english_language_level.option.6.text"
-                        ]
-                      ),
-                    ],
-                    value: "6",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "english_language_level.option.7.text"
-                        ]
-                      ),
-                    ],
-                    value: "7",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "english_language_level.option.8.text"
-                        ]
-                      ),
-                    ],
-                    value: "8",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "english_language_level.option.9.text"
-                        ]
-                      ),
-                    ],
-                    value: "9",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "english_language_level.option.10.text"
-                        ]
-                      ),
-                    ],
-                    value: "10",
-                  },
-                ]}
-              />
+              <div class="custom-input-width">
+                <InputSelect
+                  style={{
+                    "margin-top": "-1.75rem",
+                    "margin-bottom": "1.75rem",
+                    width: "98.1%",
+                    border: !props.state.english_language_levelError
+                      ? "1px solid #707070"
+                      : "1px solid #C32D3A",
+                  }}
+                  value={props.state.english_language_level}
+                  name="english_language_level"
+                  onBlur={(value) => {
+                    setFocusedField("");
+                    validateInput("english_language_level", value);
+                  }}
+                  onChange={(value) => {
+                    props.setFormEnglishLanguageLevel(value);
+                    props.setFormEnglishLanguageLevelError("");
+                    return value;
+                  }}
+                  onFocus={() => {
+                    setFocusedField("english_language_level");
+                  }}
+                  options={[
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "help.text.english_language_level"
+                          ]
+                        ),
+                      ],
+                      value: "",
+                      disabled: true,
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "english_language_level.option.0.text"
+                          ]
+                        ),
+                      ],
+                      value: "0",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "english_language_level.option.1.text"
+                          ]
+                        ),
+                      ],
+                      value: "1",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "english_language_level.option.2.text"
+                          ]
+                        ),
+                      ],
+                      value: "2",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "english_language_level.option.3.text"
+                          ]
+                        ),
+                      ],
+                      value: "3",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "english_language_level.option.4.text"
+                          ]
+                        ),
+                      ],
+                      value: "4",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "english_language_level.option.5.text"
+                          ]
+                        ),
+                      ],
+                      value: "5",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "english_language_level.option.6.text"
+                          ]
+                        ),
+                      ],
+                      value: "6",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "english_language_level.option.7.text"
+                          ]
+                        ),
+                      ],
+                      value: "7",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "english_language_level.option.8.text"
+                          ]
+                        ),
+                      ],
+                      value: "8",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "english_language_level.option.9.text"
+                          ]
+                        ),
+                      ],
+                      value: "9",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "english_language_level.option.10.text"
+                          ]
+                        ),
+                      ],
+                      value: "10",
+                    },
+                  ]}
+                />
+              </div>
               <p
                 style={{
                   "font-size": "0.75rem",
@@ -1350,81 +1358,83 @@ const NafathAuthenticationPage = (props) => {
                 )}
                 :
               </h6>
-              <InputSelect
-                style={{
-                  "margin-top": "-1.75rem",
-                  "margin-bottom": "1.75rem",
-                  width: "98.1%",
-                  border: !props.state.employment_statusError
-                    ? "1px solid #707070"
-                    : "1px solid #C32D3A",
-                }}
-                value={props.state.employment_status}
-                name="employment_status"
-                onBlur={(value) => {
-                  setFocusedField("");
-                  validateInput("employment_status", value);
-                }}
-                onChange={(value) => {
-                  props.setFormEmploymentStatus(value);
-                  props.setFormEmploymentStatusError("");
-                  return value;
-                }}
-                onFocus={() => {
-                  setFocusedField("employment_status");
-                }}
-                options={[
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages["help.text.employment_status"]
-                      ),
-                    ],
-                    value: "",
-                    disabled: true,
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "employment_status.option.Public industry.text"
-                        ]
-                      ),
-                    ],
-                    value: "PU",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "employment_status.option.Private industry.text"
-                        ]
-                      ),
-                    ],
-                    value: "PR",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "employment_status.option.Job seeker.text"
-                        ]
-                      ),
-                    ],
-                    value: "JS",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "employment_status.option.Student.text"
-                        ]
-                      ),
-                    ],
-                    value: "ST",
-                  },
-                ]}
-              />
+              <div class="custom-input-width">
+                <InputSelect
+                  style={{
+                    "margin-top": "-1.75rem",
+                    "margin-bottom": "1.75rem",
+                    width: "98.1%",
+                    border: !props.state.employment_statusError
+                      ? "1px solid #707070"
+                      : "1px solid #C32D3A",
+                  }}
+                  value={props.state.employment_status}
+                  name="employment_status"
+                  onBlur={(value) => {
+                    setFocusedField("");
+                    validateInput("employment_status", value);
+                  }}
+                  onChange={(value) => {
+                    props.setFormEmploymentStatus(value);
+                    props.setFormEmploymentStatusError("");
+                    return value;
+                  }}
+                  onFocus={() => {
+                    setFocusedField("employment_status");
+                  }}
+                  options={[
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages["help.text.employment_status"]
+                        ),
+                      ],
+                      value: "",
+                      disabled: true,
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "employment_status.option.Public industry.text"
+                          ]
+                        ),
+                      ],
+                      value: "PU",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "employment_status.option.Private industry.text"
+                          ]
+                        ),
+                      ],
+                      value: "PR",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "employment_status.option.Job seeker.text"
+                          ]
+                        ),
+                      ],
+                      value: "JS",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "employment_status.option.Student.text"
+                          ]
+                        ),
+                      ],
+                      value: "ST",
+                    },
+                  ]}
+                />
+              </div>
               <p
                 style={{
                   "font-size": "0.75rem",
@@ -1448,83 +1458,85 @@ const NafathAuthenticationPage = (props) => {
                 )}
                 :
               </h6>
-              <InputSelect
-                style={{
-                  "margin-top": "-1.75rem",
-                  "margin-bottom": "1.75rem",
-                  width: "98.1%",
-                  border: !props.state.work_experience_levelError
-                    ? "1px solid #707070"
-                    : "1px solid #C32D3A",
-                }}
-                value={props.state.work_experience_level}
-                name="work_experience_level"
-                onBlur={(value) => {
-                  setFocusedField("");
-                  validateInput("work_experience_level", value);
-                }}
-                onChange={(value) => {
-                  props.setFormWorkExperienceLevel(value);
-                  props.setFormWorkExperienceLevelError("");
-                  return value;
-                }}
-                onFocus={() => {
-                  setFocusedField("work_experience_level");
-                }}
-                options={[
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "help.text.work_experience_level"
-                        ]
-                      ),
-                    ],
-                    value: "",
-                    disabled: true,
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "work_experience_level.option.Junior level (0-2) years.text"
-                        ]
-                      ),
-                    ],
-                    value: "JL",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "work_experience_level.option.Middle level (3-4) years.text"
-                        ]
-                      ),
-                    ],
-                    value: "ML",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "work_experience_level.option.Senior level (5-10) years.text"
-                        ]
-                      ),
-                    ],
-                    value: "SL",
-                  },
-                  {
-                    label: [
-                      formatMessage(
-                        registrationFormMessages[
-                          "work_experience_level.option.Expert (+ 10 years).text"
-                        ]
-                      ),
-                    ],
-                    value: "EL",
-                  },
-                ]}
-              />
+              <div class="custom-input-width">
+                <InputSelect
+                  style={{
+                    "margin-top": "-1.75rem",
+                    "margin-bottom": "1.75rem",
+                    width: "98.1%",
+                    border: !props.state.work_experience_levelError
+                      ? "1px solid #707070"
+                      : "1px solid #C32D3A",
+                  }}
+                  value={props.state.work_experience_level}
+                  name="work_experience_level"
+                  onBlur={(value) => {
+                    setFocusedField("");
+                    validateInput("work_experience_level", value);
+                  }}
+                  onChange={(value) => {
+                    props.setFormWorkExperienceLevel(value);
+                    props.setFormWorkExperienceLevelError("");
+                    return value;
+                  }}
+                  onFocus={() => {
+                    setFocusedField("work_experience_level");
+                  }}
+                  options={[
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "help.text.work_experience_level"
+                          ]
+                        ),
+                      ],
+                      value: "",
+                      disabled: true,
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "work_experience_level.option.Junior level (0-2) years.text"
+                          ]
+                        ),
+                      ],
+                      value: "JL",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "work_experience_level.option.Middle level (3-4) years.text"
+                          ]
+                        ),
+                      ],
+                      value: "ML",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "work_experience_level.option.Senior level (5-10) years.text"
+                          ]
+                        ),
+                      ],
+                      value: "SL",
+                    },
+                    {
+                      label: [
+                        formatMessage(
+                          registrationFormMessages[
+                            "work_experience_level.option.Expert (+ 10 years).text"
+                          ]
+                        ),
+                      ],
+                      value: "EL",
+                    },
+                  ]}
+                />
+              </div>
               <p
                 style={{
                   "font-size": "0.75rem",

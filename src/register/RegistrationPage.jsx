@@ -63,6 +63,7 @@ import messages from './messages';
 import RegistrationFailure from './RegistrationFailure';
 import { EmailField, UsernameField } from './registrationFields';
 import ThirdPartyAuth from './ThirdPartyAuth';
+import "./RegistrationPage.css"
 
 const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
 const urlRegex = new RegExp(INVALID_NAME_REGEX);
@@ -847,33 +848,35 @@ const RegistrationPage = (props) => {
                       messages['registration.date_of_birth.label']
                     )}:
                   </h6>
-                  <Input
-                    type="date"
-                    name="date_of_birth"
-                    style={{
-                      "font-weight": 400,
-                      color: formFields.date_of_birth == "" && "#707070" || "#101820",
-                      padding: "0.5625rem 1rem",
-                      display: "block",
-                      width: "98.1%",
-                      "font-size": "0.875rem",
-                      "line-height": "1.5rem",
-                      height: "2.75rem",
-                      "background-clip": "padding-box",
-                      border: !errors.date_of_birth?"1px solid #707070":"1px solid #C32D3A",
-                      "border-radius": "0.375rem",
-                      transition:
-                        "border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out",
-                      overflow: "visible",
-                      "font-family": "inherit",
-                      "box-sizing": "border-box",
-                      "margin-bottom": "1.75rem",
-                    }}
-                    value={formFields.date_of_birth}
-                    onBlur={handleOnBlur}
-                    onChange={handleOnChange}
-                    onFocus={handleOnFocus}
-                  />
+                  <div class="custom-input-width">
+                    <Input
+                      type="date"
+                      name="date_of_birth"
+                      style={{
+                        "font-weight": 400,
+                        color: formFields.date_of_birth == "" && "#707070" || "#101820",
+                        padding: "0.5625rem 1rem",
+                        display: "block",
+                        width: "98.1%",
+                        "font-size": "0.875rem",
+                        "line-height": "1.5rem",
+                        height: "2.75rem",
+                        "background-clip": "padding-box",
+                        border: !errors.date_of_birth?"1px solid #707070":"1px solid #C32D3A",
+                        "border-radius": "0.375rem",
+                        transition:
+                          "border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out",
+                        overflow: "visible",
+                        "font-family": "inherit",
+                        "box-sizing": "border-box",
+                        "margin-bottom": "1.75rem",
+                      }}
+                      value={formFields.date_of_birth}
+                      onBlur={handleOnBlur}
+                      onChange={handleOnChange}
+                      onFocus={handleOnFocus}
+                    />
+                  </div>
                   <p
                     style={{
                       "font-size": "0.75rem",
@@ -903,48 +906,50 @@ const RegistrationPage = (props) => {
                   <h6>
                     {formatMessage(messages["registration.region.label"])}:
                   </h6>
-                  <InputSelect
-                    style={{
-                      "margin-top": "-1.75rem",
-                      "margin-bottom": "1.75rem",
-                      width: "98.1%",
-                      border: !errors.region
-                        ? "1px solid #707070"
-                        : "1px solid #C32D3A",
-                    }}
-                    value={formFields.region}
-                    name="region"
-                    onBlur={(value) => {
-                      handleOnBlur({
-                        target: { name: "region", value: value },
-                      });
-                    }}
-                    onChange={(value) => {
-                      handleOnChange({
-                        target: { name: "region", value: value },
-                      });
-                    }}
-                    onFocus={(value) => {
-                      handleOnFocus({
-                        target: { name: "region", value: value },
-                      });
-                    }}
-                    options={[
-                      { label: [formatMessage(messages['help.text.region'])], value: "", disabled: true },
-                      { label: [formatMessage(messages['region.option.Riyadh.text'])], value: "RD" },
-                      { label: [formatMessage(messages['region.option.Eastern.text'])], value: "ER" },
-                      { label: [formatMessage(messages['region.option.Asir.text'])], value: "AI" },
-                      { label: [formatMessage(messages['region.option.Jazan.text'])], value: "JA" },
-                      { label: [formatMessage(messages['region.option.Medina.text'])], value: "MN" },
-                      { label: [formatMessage(messages['region.option.Al-Qassim.text'])], value: "AS" },
-                      { label: [formatMessage(messages['region.option.Tabuk.text'])], value: "TU" },
-                      { label: [formatMessage(messages["region.option.Ha'il.text"])], value: "HI" },
-                      { label: [formatMessage(messages['region.option.Najran.text'])], value: "NA" },
-                      { label: [formatMessage(messages['region.option.Al-Jawf.text'])], value: "AW" },
-                      { label: [formatMessage(messages['region.option.Al-Bahah.text'])], value: "AA" },
-                      { label: [formatMessage(messages['region.option.Northern Borders.text'])], value: "NB" },
-                    ]}
-                  />
+                  <div class="custom-input-width">
+                    <InputSelect
+                      style={{
+                        "margin-top": "-1.75rem",
+                        "margin-bottom": "1.75rem",
+                        width: "98.1%",
+                        border: !errors.region
+                          ? "1px solid #707070"
+                          : "1px solid #C32D3A",
+                      }}
+                      value={formFields.region}
+                      name="region"
+                      onBlur={(value) => {
+                        handleOnBlur({
+                          target: { name: "region", value: value },
+                        });
+                      }}
+                      onChange={(value) => {
+                        handleOnChange({
+                          target: { name: "region", value: value },
+                        });
+                      }}
+                      onFocus={(value) => {
+                        handleOnFocus({
+                          target: { name: "region", value: value },
+                        });
+                      }}
+                      options={[
+                        { label: [formatMessage(messages['help.text.region'])], value: "", disabled: true },
+                        { label: [formatMessage(messages['region.option.Riyadh.text'])], value: "RD" },
+                        { label: [formatMessage(messages['region.option.Eastern.text'])], value: "ER" },
+                        { label: [formatMessage(messages['region.option.Asir.text'])], value: "AI" },
+                        { label: [formatMessage(messages['region.option.Jazan.text'])], value: "JA" },
+                        { label: [formatMessage(messages['region.option.Medina.text'])], value: "MN" },
+                        { label: [formatMessage(messages['region.option.Al-Qassim.text'])], value: "AS" },
+                        { label: [formatMessage(messages['region.option.Tabuk.text'])], value: "TU" },
+                        { label: [formatMessage(messages["region.option.Ha'il.text"])], value: "HI" },
+                        { label: [formatMessage(messages['region.option.Najran.text'])], value: "NA" },
+                        { label: [formatMessage(messages['region.option.Al-Jawf.text'])], value: "AW" },
+                        { label: [formatMessage(messages['region.option.Al-Bahah.text'])], value: "AA" },
+                        { label: [formatMessage(messages['region.option.Northern Borders.text'])], value: "NB" },
+                      ]}
+                    />
+                  </div>
                   <p
                     style={{
                       "font-size": "0.75rem",
@@ -982,42 +987,44 @@ const RegistrationPage = (props) => {
                   <h6>
                     {formatMessage(messages["registration.level_of_education.label"])}:
                   </h6>
-                  <InputSelect
-                    style={{
-                      "margin-top": "-1.75rem",
-                      "margin-bottom": "1.75rem",
-                      width: "98.1%",
-                      border: !errors.level_of_education
-                        ? "1px solid #707070"
-                        : "1px solid #C32D3A",
-                    }}
-                    value={formFields.level_of_education}
-                    name="level_of_education"
-                    onBlur={(value) => {
-                      handleOnBlur({
-                        target: { name: "level_of_education", value: value },
-                      });
-                    }}
-                    onChange={(value) => {
-                      handleOnChange({
-                        target: { name: "level_of_education", value: value },
-                      });
-                    }}
-                    onFocus={(value) => {
-                      handleOnFocus({
-                        target: { name: "level_of_education", value: value },
-                      });
-                    }}
-                    options={[
-                      { label: [formatMessage(messages['help.text.level_of_education'])], value: "", disabled: true },
-                      { label: [formatMessage(messages['education.option.Middle School.text'])], value: 'MS' },
-                      { label: [formatMessage(messages['education.option.High School.text'])], value: 'HS' },
-                      { label: [formatMessage(messages['education.option.Diploma.text'])], value: 'DM' },
-                      { label: [formatMessage(messages['education.option.Bachelor.text'])], value: 'BS' },
-                      { label: [formatMessage(messages['education.option.Master.text'])], value: 'MR' },
-                      { label: [formatMessage(messages['education.option.Ph.D..text'])], value: 'PH' }
-                    ]}
-                  />
+                  <div class="custom-input-width">
+                    <InputSelect
+                      style={{
+                        "margin-top": "-1.75rem",
+                        "margin-bottom": "1.75rem",
+                        width: "98.1%",
+                        border: !errors.level_of_education
+                          ? "1px solid #707070"
+                          : "1px solid #C32D3A",
+                      }}
+                      value={formFields.level_of_education}
+                      name="level_of_education"
+                      onBlur={(value) => {
+                        handleOnBlur({
+                          target: { name: "level_of_education", value: value },
+                        });
+                      }}
+                      onChange={(value) => {
+                        handleOnChange({
+                          target: { name: "level_of_education", value: value },
+                        });
+                      }}
+                      onFocus={(value) => {
+                        handleOnFocus({
+                          target: { name: "level_of_education", value: value },
+                        });
+                      }}
+                      options={[
+                        { label: [formatMessage(messages['help.text.level_of_education'])], value: "", disabled: true },
+                        { label: [formatMessage(messages['education.option.Middle School.text'])], value: 'MS' },
+                        { label: [formatMessage(messages['education.option.High School.text'])], value: 'HS' },
+                        { label: [formatMessage(messages['education.option.Diploma.text'])], value: 'DM' },
+                        { label: [formatMessage(messages['education.option.Bachelor.text'])], value: 'BS' },
+                        { label: [formatMessage(messages['education.option.Master.text'])], value: 'MR' },
+                        { label: [formatMessage(messages['education.option.Ph.D..text'])], value: 'PH' }
+                      ]}
+                    />
+                  </div>
                   <p
                     style={{
                       "font-size": "0.75rem",
@@ -1031,47 +1038,49 @@ const RegistrationPage = (props) => {
                   <h6>
                     {formatMessage(messages["registration.english_language_level.label"])}:
                   </h6>
-                  <InputSelect
-                    style={{
-                      "margin-top": "-1.75rem",
-                      "margin-bottom": "1.75rem",
-                      width: "98.1%",
-                      border: !errors.english_language_level
-                        ? "1px solid #707070"
-                        : "1px solid #C32D3A",
-                    }}
-                    value={formFields.english_language_level}
-                    name="english_language_level"
-                    onBlur={(value) => {
-                      handleOnBlur({
-                        target: { name: "english_language_level", value: value },
-                      });
-                    }}
-                    onChange={(value) => {
-                      handleOnChange({
-                        target: { name: "english_language_level", value: value },
-                      });
-                    }}
-                    onFocus={(value) => {
-                      handleOnFocus({
-                        target: { name: "english_language_level", value: value },
-                      });
-                    }}
-                    options={[
-                      { label: [formatMessage(messages['help.text.english_language_level'])], value: "", disabled: true },
-                      { label: [formatMessage(messages['english_language_level.option.0.text'])], value: '0' },
-                      { label: [formatMessage(messages['english_language_level.option.1.text'])], value: '1' },
-                      { label: [formatMessage(messages['english_language_level.option.2.text'])], value: '2' },
-                      { label: [formatMessage(messages['english_language_level.option.3.text'])], value: '3' },
-                      { label: [formatMessage(messages['english_language_level.option.4.text'])], value: '4' },
-                      { label: [formatMessage(messages['english_language_level.option.5.text'])], value: '5' },
-                      { label: [formatMessage(messages['english_language_level.option.6.text'])], value: '6' },
-                      { label: [formatMessage(messages['english_language_level.option.7.text'])], value: '7' },
-                      { label: [formatMessage(messages['english_language_level.option.8.text'])], value: '8' },
-                      { label: [formatMessage(messages['english_language_level.option.9.text'])], value: '9' },
-                      { label: [formatMessage(messages['english_language_level.option.10.text'])], value: '10' }
-                    ]}
-                  />
+                  <div class="custom-input-width">
+                    <InputSelect
+                      style={{
+                        "margin-top": "-1.75rem",
+                        "margin-bottom": "1.75rem",
+                        width: "98.1%",
+                        border: !errors.english_language_level
+                          ? "1px solid #707070"
+                          : "1px solid #C32D3A",
+                      }}
+                      value={formFields.english_language_level}
+                      name="english_language_level"
+                      onBlur={(value) => {
+                        handleOnBlur({
+                          target: { name: "english_language_level", value: value },
+                        });
+                      }}
+                      onChange={(value) => {
+                        handleOnChange({
+                          target: { name: "english_language_level", value: value },
+                        });
+                      }}
+                      onFocus={(value) => {
+                        handleOnFocus({
+                          target: { name: "english_language_level", value: value },
+                        });
+                      }}
+                      options={[
+                        { label: [formatMessage(messages['help.text.english_language_level'])], value: "", disabled: true },
+                        { label: [formatMessage(messages['english_language_level.option.0.text'])], value: '0' },
+                        { label: [formatMessage(messages['english_language_level.option.1.text'])], value: '1' },
+                        { label: [formatMessage(messages['english_language_level.option.2.text'])], value: '2' },
+                        { label: [formatMessage(messages['english_language_level.option.3.text'])], value: '3' },
+                        { label: [formatMessage(messages['english_language_level.option.4.text'])], value: '4' },
+                        { label: [formatMessage(messages['english_language_level.option.5.text'])], value: '5' },
+                        { label: [formatMessage(messages['english_language_level.option.6.text'])], value: '6' },
+                        { label: [formatMessage(messages['english_language_level.option.7.text'])], value: '7' },
+                        { label: [formatMessage(messages['english_language_level.option.8.text'])], value: '8' },
+                        { label: [formatMessage(messages['english_language_level.option.9.text'])], value: '9' },
+                        { label: [formatMessage(messages['english_language_level.option.10.text'])], value: '10' }
+                      ]}
+                    />
+                  </div>
                   <p
                     style={{
                       "font-size": "0.75rem",
@@ -1089,40 +1098,42 @@ const RegistrationPage = (props) => {
                   <h6>
                     {formatMessage(messages["registration.employment_status.label"])}:
                   </h6>
-                  <InputSelect
-                    style={{
-                      "margin-top": "-1.75rem",
-                      "margin-bottom": "1.75rem",
-                      width: "98.1%",
-                      border: !errors.employment_status
-                        ? "1px solid #707070"
-                        : "1px solid #C32D3A",
-                    }}
-                    name="employment_status"
-                    onBlur={(value) => {
-                      handleOnBlur({
-                        target: { name: "employment_status", value: value },
-                      });
-                    }}
-                    value={formFields.employment_status}
-                    onChange={(value) => {
-                      handleOnChange({
-                        target: { name: "employment_status", value: value },
-                      });
-                    }}
-                    onFocus={(value) => {
-                      handleOnFocus({
-                        target: { name: "employment_status", value: value },
-                      });
-                    }}
-                    options={[
-                      { label: [formatMessage(messages['help.text.employment_status'])], value: "", disabled: true },
-                      { label: [formatMessage(messages['employment_status.option.Public industry.text'])], value: 'PU' },
-                      { label: [formatMessage(messages['employment_status.option.Private industry.text'])], value: 'PR' },
-                      { label: [formatMessage(messages['employment_status.option.Job seeker.text'])], value: 'JS' },
-                      { label: [formatMessage(messages['employment_status.option.Student.text'])], value: 'ST' }
-                    ]}
-                  />
+                  <div class="custom-input-width">
+                    <InputSelect
+                      style={{
+                        "margin-top": "-1.75rem",
+                        "margin-bottom": "1.75rem",
+                        width: "98.1%",
+                        border: !errors.employment_status
+                          ? "1px solid #707070"
+                          : "1px solid #C32D3A",
+                      }}
+                      name="employment_status"
+                      onBlur={(value) => {
+                        handleOnBlur({
+                          target: { name: "employment_status", value: value },
+                        });
+                      }}
+                      value={formFields.employment_status}
+                      onChange={(value) => {
+                        handleOnChange({
+                          target: { name: "employment_status", value: value },
+                        });
+                      }}
+                      onFocus={(value) => {
+                        handleOnFocus({
+                          target: { name: "employment_status", value: value },
+                        });
+                      }}
+                      options={[
+                        { label: [formatMessage(messages['help.text.employment_status'])], value: "", disabled: true },
+                        { label: [formatMessage(messages['employment_status.option.Public industry.text'])], value: 'PU' },
+                        { label: [formatMessage(messages['employment_status.option.Private industry.text'])], value: 'PR' },
+                        { label: [formatMessage(messages['employment_status.option.Job seeker.text'])], value: 'JS' },
+                        { label: [formatMessage(messages['employment_status.option.Student.text'])], value: 'ST' }
+                      ]}
+                    />
+                  </div>
                   <p
                     style={{
                       "font-size": "0.75rem",
@@ -1136,40 +1147,42 @@ const RegistrationPage = (props) => {
                   <h6>
                     {formatMessage(messages["registration.work_experience_level.label"])}:
                   </h6>
-                  <InputSelect
-                    style={{
-                      "margin-top": "-1.75rem",
-                      "margin-bottom": "1.75rem",
-                      width: "98.1%",
-                      border: !errors.work_experience_level
-                        ? "1px solid #707070"
-                        : "1px solid #C32D3A",
-                    }}
-                    name="work_experience_level"
-                    value={formFields.work_experience_level}
-                    onBlur={(value) => {
-                      handleOnBlur({
-                        target: { name: "work_experience_level", value: value },
-                      });
-                    }}
-                    onChange={(value) => {
-                      handleOnChange({
-                        target: { name: "work_experience_level", value: value },
-                      });
-                    }}
-                    onFocus={(value) => {
-                      handleOnFocus({
-                        target: { name: "work_experience_level", value: value },
-                      });
-                    }}
-                    options={[
-                      { label: [formatMessage(messages['help.text.work_experience_level'])], value: "", disabled: true },
-                      { label: [formatMessage(messages['work_experience_level.option.Junior level (0-2) years.text'])], value: 'JL' },
-                      { label: [formatMessage(messages['work_experience_level.option.Middle level (3-4) years.text'])], value: 'ML' },
-                      { label: [formatMessage(messages['work_experience_level.option.Senior level (5-10) years.text'])], value: 'SL' },
-                      { label: [formatMessage(messages['work_experience_level.option.Expert (+ 10 years).text'])], value: 'EL' }
-                    ]}
-                  />
+                  <div class="custom-input-width">
+                    <InputSelect
+                      style={{
+                        "margin-top": "-1.75rem",
+                        "margin-bottom": "1.75rem",
+                        width: "98.1%",
+                        border: !errors.work_experience_level
+                          ? "1px solid #707070"
+                          : "1px solid #C32D3A",
+                      }}
+                      name="work_experience_level"
+                      value={formFields.work_experience_level}
+                      onBlur={(value) => {
+                        handleOnBlur({
+                          target: { name: "work_experience_level", value: value },
+                        });
+                      }}
+                      onChange={(value) => {
+                        handleOnChange({
+                          target: { name: "work_experience_level", value: value },
+                        });
+                      }}
+                      onFocus={(value) => {
+                        handleOnFocus({
+                          target: { name: "work_experience_level", value: value },
+                        });
+                      }}
+                      options={[
+                        { label: [formatMessage(messages['help.text.work_experience_level'])], value: "", disabled: true },
+                        { label: [formatMessage(messages['work_experience_level.option.Junior level (0-2) years.text'])], value: 'JL' },
+                        { label: [formatMessage(messages['work_experience_level.option.Middle level (3-4) years.text'])], value: 'ML' },
+                        { label: [formatMessage(messages['work_experience_level.option.Senior level (5-10) years.text'])], value: 'SL' },
+                        { label: [formatMessage(messages['work_experience_level.option.Expert (+ 10 years).text'])], value: 'EL' }
+                      ]}
+                    />
+                  </div>
                   <p
                     style={{
                       "font-size": "0.75rem",

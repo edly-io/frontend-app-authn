@@ -498,6 +498,12 @@ select.form-control {
   }
 }
 
+@media (max-width: 575px) {
+  .custom-input-width {
+      min-width: 101.9% !important;
+  }
+}
+
 @media (min-width: 463px) {
   .reset-password-container {
     width: 420px;
