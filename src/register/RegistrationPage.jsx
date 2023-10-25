@@ -63,7 +63,6 @@ import messages from './messages';
 import RegistrationFailure from './RegistrationFailure';
 import { EmailField, UsernameField } from './registrationFields';
 import ThirdPartyAuth from './ThirdPartyAuth';
-import "./RegistrationPage.css"
 
 const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
 const urlRegex = new RegExp(INVALID_NAME_REGEX);
