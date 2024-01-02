@@ -252,6 +252,7 @@ class LoginPage extends React.Component {
           success={this.props.loginResult.success}
           redirectUrl={this.props.loginResult.redirectUrl}
           finishAuthUrl={thirdPartyAuthContext.finishAuthUrl}
+          badgrData={this.props.badgrData}
         />
         <div className="mw-xs mt-3">
           <ThirdPartyAuthAlert
@@ -426,6 +427,7 @@ const mapStateToProps = state => {
     thirdPartyAuthContext,
     loginFormData,
     resetPassword: state.login.resetPassword,
+    badgrData: state.login.badgrData
   };
 };
 

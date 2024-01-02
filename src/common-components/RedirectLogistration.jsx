@@ -17,9 +17,10 @@ const RedirectLogistration = (props) => {
     redirectToRecommendationsPage,
     educationLevel,
     userId,
+    badgrData,
   } = props;
   let finalRedirectUrl = '';
-
+  
   if (success) {
     // If we're in a third party auth pipeline, we must complete the pipeline
     // once user has successfully logged in. Otherwise, redirect to the specified redirect url.
@@ -64,6 +65,11 @@ const RedirectLogistration = (props) => {
       );
     }
 
+
+    if(badgrData){
+      const queryString = `?data=${encodeURIComponent(JSON.stringify(badgrData))}`;
+      finalRedirectUrl = `${finalRedirectUrl}${queryString}`;
+    }
     window.location.href = finalRedirectUrl;
   }
 

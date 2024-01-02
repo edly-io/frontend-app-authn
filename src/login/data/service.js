@@ -18,9 +18,15 @@ export async function loginRequest(creds) {
     .catch((e) => {
       throw (e);
     });
-
-  return {
+  
+  let response_data = {
     redirectUrl: data.redirect_url || `${getConfig().LMS_BASE_URL}/dashboard`,
     success: data.success || false,
   };
+
+  if(data.badgr_data){
+    response_data.badgrData = data.badgr_data;
+  };
+
+  return response_data;
 }

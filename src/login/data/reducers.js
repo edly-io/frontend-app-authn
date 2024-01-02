@@ -14,6 +14,7 @@ export const defaultState = {
       password: '',
     },
   },
+  badgrData: {},
 };
 
 const reducer = (state = defaultState, action = {}) => {
@@ -25,9 +26,13 @@ const reducer = (state = defaultState, action = {}) => {
         resetPassword: false,
       };
     case LOGIN_REQUEST.SUCCESS:
-      return {
+            return {
         ...state,
-        loginResult: action.payload,
+        loginResult: {
+          success: action.payload.success,
+          redirectUrl: action.payload.redirectUrl
+        },
+        badgrData: action.payload.badgrData || {},
       };
     case LOGIN_REQUEST.FAILURE:
       return {

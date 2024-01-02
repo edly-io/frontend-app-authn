@@ -17,11 +17,12 @@ export function* handleLoginRequest(action) {
   try {
     yield put(loginRequestBegin());
 
-    const { redirectUrl, success } = yield call(loginRequest, action.payload.creds);
+    const { redirectUrl, success, badgrData } = yield call(loginRequest, action.payload.creds);
 
     yield put(loginRequestSuccess(
       redirectUrl,
       success,
+      badgrData,
     ));
   } catch (e) {
     const statusCodes = [400];

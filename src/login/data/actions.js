@@ -14,10 +14,17 @@ export const loginRequestBegin = () => ({
   type: LOGIN_REQUEST.BEGIN,
 });
 
-export const loginRequestSuccess = (redirectUrl, success) => ({
-  type: LOGIN_REQUEST.SUCCESS,
-  payload: { redirectUrl, success },
-});
+export const loginRequestSuccess = (redirectUrl, success, badgrData=null) => {
+  let payload = { redirectUrl, success }
+  if(badgrData){
+    payload.badgrData = badgrData;
+  };
+
+  return ({
+    type: LOGIN_REQUEST.SUCCESS,
+    payload: payload,
+  });
+}
 
 export const loginRequestFailure = (loginError) => ({
   type: LOGIN_REQUEST.FAILURE,
