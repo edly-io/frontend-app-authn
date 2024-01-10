@@ -83,19 +83,17 @@ export function* checkUserRequestStatusSaga(action) {
       yield put(setCheckRequestStatusIntervelTime(3000));
     }
   } catch (e) {
+    logError(e);
     const statusCodes = [400];
-    if (e.response) {
-      const { status } = e.response.request;
-      if (statusCodes.includes(status)) {
-        yield put(setNafathUserLoginError(camelCaseObject(e.response.data)));
-      } else if (status === 403) {
-        yield put(setNafathUserLoginError({ errorCode: FORBIDDEN_REQUEST }));
-      } else {
-        yield put(
-          setNafathUserLoginError({ errorCode: "internal-server-error" })
-        );
-        logError(e);
-      }
+    const status = e.response && e.response.status;
+    if (statusCodes.includes(status)) {
+      yield put(setNafathUserLoginError(camelCaseObject(e.response.data)));
+    } else if (status === 403) {
+      yield put(setNafathUserLoginError({ errorCode: "forbidden-request" }));
+    } else {
+      yield put(
+        setNafathUserLoginError({ errorCode: "internal-server-error" })
+      );
     }
   }
 }
