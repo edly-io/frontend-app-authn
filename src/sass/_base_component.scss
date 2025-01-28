@@ -1,20 +1,24 @@
-
+// Mubeen Code variables Auth
+$text-primary-color: #111827;
+$active-border-color: #4600c7;
+$input-text-color: #575757;
+$input-border-color: #d3d3d3;
 .layout {
   display: flex;
 
-  @include media-breakpoint-down('lg') {
+  @include media-breakpoint-down("lg") {
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
 
-  @include media-breakpoint-up('xl') {
+  @include media-breakpoint-up("xl") {
     justify-content: space-between;
   }
 }
 
 .content {
-  @include media-breakpoint-up('xl') {
+  @include media-breakpoint-up("xl") {
     display: flex;
     justify-content: center;
     width: 50vw;
@@ -47,7 +51,7 @@
   font-weight: 700;
   line-height: 1;
 
-  @include media-breakpoint-down('xl') {
+  @include media-breakpoint-down("xl") {
     font-size: 3.75rem;
   }
 
@@ -60,7 +64,7 @@
   margin-bottom: 0.5rem;
   font-weight: 700;
 
-  @include media-breakpoint-down('xl') {
+  @include media-breakpoint-down("xl") {
     font-size: 1.375rem;
     line-height: 1.75rem;
   }
@@ -72,7 +76,7 @@
 }
 
 .large-screen-left-container {
-  @include media-breakpoint-down('xl') {
+  @include media-breakpoint-down("xl") {
     flex: 0 0 25%;
     max-width: 25%;
   }
@@ -89,12 +93,12 @@
     102.02deg,
     $brand-700,
     $brand-700 20%,
-    $brand 20%,
+    $brand 20%
   );
   background-repeat: no-repeat;
 }
 
-@include media-breakpoint-only('md') {
+@include media-breakpoint-only("md") {
   .medium-screen-top-stripe {
     display: flex;
     height: 0.5rem;
@@ -105,13 +109,13 @@
       $brand 10%,
       $brand 90%,
       $primary-700 90%,
-      $primary-700 100%,
+      $primary-700 100%
     );
     background-repeat: no-repeat;
   }
 }
 
-@include media-breakpoint-only('lg') {
+@include media-breakpoint-only("lg") {
   .medium-screen-top-stripe {
     display: flex;
     height: 0.5rem;
@@ -129,25 +133,27 @@
   }
 }
 
-.extra-large-screen-top-stripe { display: none; }
+.extra-large-screen-top-stripe {
+  display: none;
+}
 
-@include media-breakpoint-up('xl') {
- .extra-large-screen-top-stripe {
-   display: flex;
-   height: 0.5rem;
-   background-image: linear-gradient(
-     102.02deg,
-     $brand-700 10%,
-     $brand 10%,
-     $brand 45%,
-     $primary-700 45%,
-     $primary-700 55%,
-     $accent-a 55%,
-     $accent-a 75%,
-     $info-200 75%,
-  );
-   background-repeat: no-repeat;
- }
+@include media-breakpoint-up("xl") {
+  .extra-large-screen-top-stripe {
+    display: flex;
+    height: 0.5rem;
+    background-image: linear-gradient(
+      102.02deg,
+      $brand-700 10%,
+      $brand 10%,
+      $brand 45%,
+      $primary-700 45%,
+      $primary-700 55%,
+      $accent-a 55%,
+      $accent-a 75%,
+      $info-200 75%
+    );
+    background-repeat: no-repeat;
+  }
 }
 
 .large-screen-svg-light,
@@ -172,7 +178,7 @@
   fill: $primary-400;
 }
 
-[dir=rtl]{
+[dir="rtl"] {
   .medium-screen-svg-light,
   .medium-screen-svg-primary,
   .large-screen-svg-light,
@@ -200,4 +206,153 @@
   height: 0;
   border: 3px solid $accent-b;
   transform: rotate(102.02deg);
+}
+// mubeen code auth start
+.auth_wrapper {
+  .content {
+    width: 100%;
+    max-width: 660px;
+    .auth_main_wrap {
+      box-shadow: 0px -24px 50px 0px #fafafa;
+      border-radius: 42px;
+      border: 1px solid;
+      padding: 80px;
+      width: 100%;
+      // border-image: linear-gradient(#eee, #fff) 30;
+      border: 1px solid #eee;
+      .auth_logo_wrap {
+        margin-bottom: 60px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+      }
+      .logo {
+        margin: 0;
+      }
+      .nav-tabs {
+        gap: 60px;
+        border-bottom: 1px solid $input-border-color;
+        margin-bottom: 42px;
+        .nav-link {
+          color: $text-primary-color;
+          border-bottom: 2px solid transparent;
+          padding: 16px 12px;
+          font-size: 24px;
+          &.active,
+          &:hover,
+          &:focus {
+            color: $text-primary-color;
+            background: transparent;
+            border: 0;
+            border-bottom: 2px solid $active-border-color;
+            outline: unset;
+          }
+          &:focus {
+            &::before {
+              border: 0;
+              outline: 1px dotted $active-border-color;
+              outline-offset: 1px;
+              border-radius: 4px;
+            }
+          }
+        }
+      }
+      .main-content {
+        padding-top: 0 !important;
+      }
+      .auth_action_wrap {
+        display: flex;
+        gap: 24px;
+        flex-direction: column;
+        .btn-brand {
+          background-color: $active-border-color;
+          border-radius: 16px;
+          font-size: 20px;
+          font-weight: 500;
+          line-height: 24px;
+          height: 65px;
+        }
+        #forgot-password {
+          color: $text-primary-color;
+          font-weight: 500;
+        }
+      }
+      .auth_inner_wrap {
+        .pgn {
+          &-transition-replace-group {
+            display: none !important;
+          }
+          &__form-group {
+            margin-bottom: 24px;
+          }
+          &__form-control {
+            &-decorator {
+              &-group {
+                margin: 0;
+              }
+              &-trailing {
+                height: 65px;
+                padding-inline-end: calc(12px - 0px);
+              }
+              .btn-icon {
+                &:hover {
+                  background-color: $active-border-color !important;
+                }
+              }
+            }
+
+            &-floating-label {
+              padding: 0 20px;
+              align-items: center;
+              &-content {
+                font-size: 20px !important;
+                line-height: 24px;
+                inset-inline-start: 0;
+                padding-top: 0;
+              }
+              &-text {
+                color: $input-text-color;
+                font-weight: 500;
+                padding: 0;
+                margin-bottom: 0;
+                font-size: 20px;
+                line-height: 24px;
+              }
+            }
+          }
+        }
+        input.form-control {
+          border-radius: 16px;
+          border: 1px solid $input-border-color;
+          height: 65px;
+          line-height: 24px;
+          font-size: 20px;
+          padding: 0 20px;
+          color: $text-primary-color;
+          &:focus {
+            box-shadow: unset;
+            border: 1px solid #1d1d1f;
+            ~ .pgn__form-control-floating-label
+              .pgn__form-control-floating-label-text,
+            .form-control.has-value
+              ~ .pgn__form-control-floating-label
+              .pgn__form-control-floating-label-text {
+              transform: translateY(-15px) scale(0.75)
+                translateY(-80.0007500188%);
+              padding: 0 10px;
+              font-size: 26px;
+            }
+          }
+          &.has-value
+            ~ .pgn__form-control-floating-label
+            .pgn__form-control-floating-label-text {
+            padding: 0 10px;
+            font-size: 26px;
+
+            transform: translateY(-15px) scale(0.75) translateY(-80.0007500188%);
+          }
+        }
+      }
+    }
+  }
 }

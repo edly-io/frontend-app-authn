@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
+
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, useIntl } from '@edx/frontend-platform/i18n';
 import {
@@ -209,8 +210,9 @@ const LoginPage = (props) => {
         redirectUrl={loginResult.redirectUrl}
         finishAuthUrl={finishAuthUrl}
       />
-      <div className="mw-xs mt-3 mb-2">
-        <LoginFailureMessage
+      {/* Mubeen Code add class  also remove these classes mw-xs mt-3 mb-2*/}
+      <div className=" auth_inner_wrap">
+      <LoginFailureMessage
           errorCode={errorCode.type}
           errorCount={errorCode.count}
           context={errorCode.context}
@@ -244,6 +246,7 @@ const LoginPage = (props) => {
             errorMessage={errors.password}
             floatingLabel={formatMessage(messages['login.password.label'])}
           />
+          <div className='auth_action_wrap'>
           <StatefulButton
             name="sign-in"
             id="sign-in"
@@ -267,6 +270,7 @@ const LoginPage = (props) => {
           >
             {formatMessage(messages['forgot.password'])}
           </Link>
+          </div>
           <ThirdPartyAuth
             currentProvider={currentProvider}
             providers={providers}
