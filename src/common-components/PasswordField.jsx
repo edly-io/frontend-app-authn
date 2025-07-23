@@ -46,11 +46,14 @@ const PasswordField = (props) => {
 
     setShowTooltip(props.showRequirements && false);
     if (props.handleErrorChange) { // If rendering from register page
-      const fieldError = validatePasswordField(passwordValue, formatMessage);
+      const { fieldError, confirmPasswordError } = validatePasswordField(passwordValue, formatMessage, props.confirmPasswordValue);
       if (fieldError) {
         props.handleErrorChange('password', fieldError);
       } else if (!validationApiRateLimited) {
         dispatch(fetchRealtimeValidations({ password: passwordValue }));
+      }
+      if (confirmPasswordError) {
+        props.handleErrorChange('confirm_password', confirmPasswordError); 
       }
     }
   };
@@ -65,6 +68,7 @@ const PasswordField = (props) => {
     }
     if (props.handleErrorChange) {
       props.handleErrorChange('password', '');
+      props.handleErrorChange('confirm_password', '');
       dispatch(clearRegistrationBackendError('password'));
     }
     setTimeout(() => setShowTooltip(props.showRequirements && true), 150);
@@ -155,6 +159,7 @@ PasswordField.defaultProps = {
   showRequirements: true,
   showScreenReaderText: true,
   autoComplete: null,
+  confirmPasswordValue: null,
 };
 
 PasswordField.propTypes = {
@@ -170,6 +175,7 @@ PasswordField.propTypes = {
   value: PropTypes.string.isRequired,
   autoComplete: PropTypes.string,
   showScreenReaderText: PropTypes.bool,
+  confirmPasswordValue: PropTypes.string,
 };
 
 export default PasswordField;

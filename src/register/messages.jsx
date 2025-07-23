@@ -131,6 +131,11 @@ const messages = defineMessages({
     defaultMessage: 'Password criteria has not been met',
     description: 'Error message for empty or invalid password',
   },
+  'password.do.not.match': {
+    id: 'password.do.not.match',
+    defaultMessage: 'The passwords do not match.',
+    description: 'Password not match to confirm password',
+  },
   'username.format.validation.message': {
     id: 'username.format.validation.message',
     defaultMessage: 'Usernames can only contain letters (A-Z, a-z), numerals (0-9), underscores (_), and hyphens (-). Usernames cannot contain spaces',
