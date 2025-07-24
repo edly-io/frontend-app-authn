@@ -11,7 +11,7 @@ import {
 import PropTypes from 'prop-types';
 
 import messages from './messages';
-import { LETTER_REGEX, NUMBER_REGEX } from '../data/constants';
+import { LETTER_REGEX, NUMBER_REGEX, SYMBOL_REGEX } from '../data/constants';
 import { clearRegistrationBackendError, fetchRealtimeValidations } from '../register/data/actions';
 import { validatePasswordField } from '../register/data/utils';
 
@@ -46,14 +46,18 @@ const PasswordField = (props) => {
 
     setShowTooltip(props.showRequirements && false);
     if (props.handleErrorChange) { // If rendering from register page
-      const { fieldError, confirmPasswordError } = validatePasswordField(passwordValue, formatMessage, props.confirmPasswordValue);
+      const { fieldError, confirmPasswordError } = validatePasswordField(
+        passwordValue,
+        formatMessage,
+        props.confirmPasswordValue,
+      );
       if (fieldError) {
         props.handleErrorChange('password', fieldError);
       } else if (!validationApiRateLimited) {
         dispatch(fetchRealtimeValidations({ password: passwordValue }));
       }
       if (confirmPasswordError) {
-        props.handleErrorChange('confirm_password', confirmPasswordError); 
+        props.handleErrorChange('confirm_password', confirmPasswordError);
       }
     }
   };
@@ -112,6 +116,10 @@ const PasswordField = (props) => {
       <span id="number-check" className="d-flex align-items-center">
         {NUMBER_REGEX.test(props.value) ? <Icon className="text-success mr-1" src={Check} /> : <Icon className="mr-1 text-light-700" src={Remove} />}
         {formatMessage(messages['one.number'])}
+      </span>
+      <span id="symbol-check" className="d-flex align-items-center">
+        {SYMBOL_REGEX.test(props.value) ? <Icon className="text-success mr-1" src={Check} /> : <Icon className="mr-1 text-light-700" src={Remove} />}
+        {formatMessage(messages['one.symbol'])}
       </span>
       <span id="characters-check" className="d-flex align-items-center">
         {props.value.length >= 8 ? <Icon className="text-success mr-1" src={Check} /> : <Icon className="mr-1 text-light-700" src={Remove} />}

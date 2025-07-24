@@ -1,6 +1,6 @@
 import { snakeCaseObject } from '@edx/frontend-platform';
 
-import { LETTER_REGEX, NUMBER_REGEX } from '../../data/constants';
+import { LETTER_REGEX, NUMBER_REGEX, SYMBOL_REGEX } from '../../data/constants';
 import messages from '../messages';
 import validateEmail from '../RegistrationFields/EmailField/validator';
 import validateName from '../RegistrationFields/NameField/validator';
@@ -15,7 +15,13 @@ import validateUsername from '../RegistrationFields/UsernameField/validator';
 export const validatePasswordField = (value, formatMessage, confirmPasswordValue) => {
   let fieldError = '';
   let confirmPasswordError = '';
-  if (!value || !LETTER_REGEX.test(value) || !NUMBER_REGEX.test(value) || value.length < 8) {
+  if (
+    !value
+    || !LETTER_REGEX.test(value)
+    || !NUMBER_REGEX.test(value)
+    || value.length < 8
+    || !SYMBOL_REGEX.test(value)
+  ) {
     fieldError = formatMessage(messages['password.validation.message']);
   }
   if (confirmPasswordValue && value !== confirmPasswordValue) {
@@ -78,7 +84,11 @@ export const isFormValid = (
       break;
     case 'password':
       if (!fieldErrors.password) {
-        const { fieldError, confirmPasswordError } = validatePasswordField(payload.password, formatMessage, configurableFormFields?.confirm_password);
+        const { fieldError, confirmPasswordError } = validatePasswordField(
+          payload.password,
+          formatMessage,
+          configurableFormFields?.confirm_password,
+        );
         if (fieldError) {
           fieldErrors.password = fieldError;
           isValid = false;
