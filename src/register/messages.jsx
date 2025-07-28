@@ -9,22 +9,22 @@ const messages = defineMessages({
   // Field labels
   'registration.fullname.label': {
     id: 'registration.fullname.label',
-    defaultMessage: 'Full name',
+    defaultMessage: 'Full name*',
     description: 'Label that appears above fullname field',
   },
   'registration.email.label': {
     id: 'registration.email.label',
-    defaultMessage: 'Email',
+    defaultMessage: 'Email*',
     description: 'Label that appears above email field on register page',
   },
   'registration.username.label': {
     id: 'registration.username.label',
-    defaultMessage: 'Public username',
+    defaultMessage: 'Public username*',
     description: 'Label that appears above username field',
   },
   'registration.password.label': {
     id: 'registration.password.label',
-    defaultMessage: 'Password',
+    defaultMessage: 'Password*',
     description: 'Label that appears above password field',
   },
   'registration.country.label': {
@@ -130,6 +130,11 @@ const messages = defineMessages({
     id: 'password.validation.message',
     defaultMessage: 'Password criteria has not been met',
     description: 'Error message for empty or invalid password',
+  },
+  'password.do.not.match': {
+    id: 'password.do.not.match',
+    defaultMessage: 'The passwords do not match.',
+    description: 'Password not match to confirm password',
   },
   'username.format.validation.message': {
     id: 'username.format.validation.message',

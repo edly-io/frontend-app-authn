@@ -1,6 +1,6 @@
 import { snakeCaseObject } from '@edx/frontend-platform';
 
-import { LETTER_REGEX, NUMBER_REGEX } from '../../data/constants';
+import { LETTER_REGEX, NUMBER_REGEX, SYMBOL_REGEX } from '../../data/constants';
 import messages from '../messages';
 import validateEmail from '../RegistrationFields/EmailField/validator';
 import validateName from '../RegistrationFields/NameField/validator';
@@ -12,12 +12,22 @@ import validateUsername from '../RegistrationFields/UsernameField/validator';
  * @param formatMessage
  * @returns {string}
  */
-export const validatePasswordField = (value, formatMessage) => {
+export const validatePasswordField = (value, formatMessage, confirmPasswordValue) => {
   let fieldError = '';
-  if (!value || !LETTER_REGEX.test(value) || !NUMBER_REGEX.test(value) || value.length < 8) {
+  let confirmPasswordError = '';
+  if (
+    !value
+    || !LETTER_REGEX.test(value)
+    || !NUMBER_REGEX.test(value)
+    || value.length < 8
+    || !SYMBOL_REGEX.test(value)
+  ) {
     fieldError = formatMessage(messages['password.validation.message']);
   }
-  return fieldError;
+  if (confirmPasswordValue && value !== confirmPasswordValue) {
+    confirmPasswordError = formatMessage(messages['password.do.not.match']);
+  }
+  return { fieldError, confirmPasswordError };
 };
 
 /**
@@ -74,7 +84,19 @@ export const isFormValid = (
       break;
     case 'password':
       if (!fieldErrors.password) {
-        fieldErrors.password = validatePasswordField(payload.password, formatMessage);
+        const { fieldError, confirmPasswordError } = validatePasswordField(
+          payload.password,
+          formatMessage,
+          configurableFormFields?.confirm_password,
+        );
+        if (fieldError) {
+          fieldErrors.password = fieldError;
+          isValid = false;
+        }
+        if (confirmPasswordError) {
+          fieldErrors.confirm_password = confirmPasswordError;
+          isValid = false;
+        }
       }
       if (fieldErrors.password) { isValid = false; }
       break;
