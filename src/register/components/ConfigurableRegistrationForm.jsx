@@ -25,6 +25,7 @@ const ConfigurableRegistrationForm = (props) => {
   const { formatMessage } = useIntl();
   const {
     email,
+    password,
     fieldDescriptions,
     fieldErrors,
     formFields,
@@ -100,6 +101,8 @@ const ConfigurableRegistrationForm = (props) => {
       error = fieldDescriptions[name].error_message;
     } else if (name === 'confirm_email' && value !== email) {
       error = formatMessage(messages['email.do.not.match']);
+    } else if (name === 'confirm_password' && value !== password) {
+      error = formatMessage(messages['password.do.not.match']);
     }
     setFieldErrors(prevErrors => ({ ...prevErrors, [name]: error }));
   };
@@ -216,6 +219,7 @@ const ConfigurableRegistrationForm = (props) => {
 
 ConfigurableRegistrationForm.propTypes = {
   email: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired,
   fieldDescriptions: PropTypes.shape({}),
   fieldErrors: PropTypes.shape({
     country: PropTypes.string,

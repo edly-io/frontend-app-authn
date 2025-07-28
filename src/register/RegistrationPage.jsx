@@ -344,6 +344,7 @@ const RegistrationPage = (props) => {
                 <PasswordField
                   name="password"
                   value={formFields.password}
+                  confirmPasswordValue={configurableFormFields?.confirm_password}
                   handleChange={handleOnChange}
                   handleErrorChange={handleErrorChange}
                   errorMessage={errors.password}
@@ -352,6 +353,7 @@ const RegistrationPage = (props) => {
               )}
               <ConfigurableRegistrationForm
                 email={formFields.email}
+                password={formFields.password}
                 fieldErrors={errors}
                 formFields={configurableFormFields}
                 setFieldErrors={registrationEmbedded ? setTemporaryErrors : setErrors}
