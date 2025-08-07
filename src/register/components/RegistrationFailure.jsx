@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 
 import { windowScrollTo } from '../../data/utils';
 import {
+  CROSS_TENANT_REGISTRATION,
   FORBIDDEN_REQUEST,
   INTERNAL_SERVER_ERROR,
   TPA_AUTHENTICATION_FAILURE,
@@ -20,6 +21,11 @@ const RegistrationFailureMessage = (props) => {
   const {
     context, errorCode, failureCount,
   } = props;
+  const isCrossTenantRegistration = errorCode === CROSS_TENANT_REGISTRATION;
+  const alertVariant = isCrossTenantRegistration ? 'info' : 'danger';
+  const headerMessage = isCrossTenantRegistration
+    ? messages['registration.cross.tenant.email.header']
+    : messages['registration.request.failure.header'];
 
   useEffect(() => {
     windowScrollTo({ left: 0, top: 0, behavior: 'smooth' });
@@ -36,6 +42,9 @@ const RegistrationFailureMessage = (props) => {
      break;
     case FORBIDDEN_REQUEST:
       errorMessage = formatMessage(messages['registration.rate.limit.error']);
+      break;
+    case CROSS_TENANT_REGISTRATION:
+      errorMessage = formatMessage(messages['registration.cross.tenant.email.error']);
       break;
     case TPA_AUTHENTICATION_FAILURE:
       errorMessage = formatMessage(messages['registration.tpa.authentication.failure'],
@@ -54,8 +63,8 @@ const RegistrationFailureMessage = (props) => {
   }
 
   return (
-    <Alert id="validation-errors" className="mb-5" variant="danger" icon={Error}>
-      <Alert.Heading>{formatMessage(messages['registration.request.failure.header'])}</Alert.Heading>
+    <Alert id="validation-errors" className="mb-5" variant={alertVariant} icon={Error}>
+      <Alert.Heading>{formatMessage(headerMessage)}</Alert.Heading>
       <p>{errorMessage}</p>
     </Alert>
   );

@@ -9,22 +9,22 @@ const messages = defineMessages({
   // Field labels
   'registration.fullname.label': {
     id: 'registration.fullname.label',
-    defaultMessage: 'Full name',
+    defaultMessage: 'Full name*',
     description: 'Label that appears above fullname field',
   },
   'registration.email.label': {
     id: 'registration.email.label',
-    defaultMessage: 'Email',
+    defaultMessage: 'Email*',
     description: 'Label that appears above email field on register page',
   },
   'registration.username.label': {
     id: 'registration.username.label',
-    defaultMessage: 'Public username',
+    defaultMessage: 'Public username*',
     description: 'Label that appears above username field',
   },
   'registration.password.label': {
     id: 'registration.password.label',
-    defaultMessage: 'Password',
+    defaultMessage: 'Password*',
     description: 'Label that appears above password field',
   },
   'registration.country.label': {
@@ -131,6 +131,11 @@ const messages = defineMessages({
     defaultMessage: 'Password criteria has not been met',
     description: 'Error message for empty or invalid password',
   },
+  'password.do.not.match': {
+    id: 'password.do.not.match',
+    defaultMessage: 'The passwords do not match.',
+    description: 'Password not match to confirm password',
+  },
   'username.format.validation.message': {
     id: 'username.format.validation.message',
     defaultMessage: 'Usernames can only contain letters (A-Z, a-z), numerals (0-9), underscores (_), and hyphens (-). Usernames cannot contain spaces',
@@ -168,6 +173,16 @@ const messages = defineMessages({
         + 'Please contact your learning administrator or manager in order to access {platform_name}.'
         + '{lineBreak}{lineBreak}Error Details:{lineBreak}{errorMessage}',
     description: 'Error message third party authentication pipeline fails',
+  },
+  'registration.cross.tenant.email.header': {
+    id: 'registration.cross.tenant.email.header',
+    defaultMessage: 'Account already exists',
+    description: 'Header message when a registered user tries to use the same email on another tenant',
+  },
+  'registration.cross.tenant.email.error': {
+    id: 'registration.cross.tenant.email.error',
+    defaultMessage: 'Looks like you have already registered using this email. Please sign in to access this site.',
+    description: 'Error message when a registered user tries to use the same email on another tenant',
   },
   // Terms of Service and Honor Code
   'terms.of.service.and.honor.code': {
