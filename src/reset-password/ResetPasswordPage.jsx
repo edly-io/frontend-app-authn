@@ -14,7 +14,7 @@ import {
 import { ChevronLeft } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 
 import { resetPassword, validateToken } from './data/actions';
 import {
@@ -41,6 +41,9 @@ const ResetPasswordPage = (props) => {
   const [errorCode, setErrorCode] = useState(null);
   const { token } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const track = new URLSearchParams(location.search).get('track');
+  const isNewUser = track === 'edly_panel';
 
   useEffect(() => {
     if (props.status !== TOKEN_STATE.PENDING && props.status !== PASSWORD_RESET_ERROR) {
@@ -156,7 +159,7 @@ const ResetPasswordPage = (props) => {
           <div id="main-content" className="main-content">
             <div className="mw-xs">
               <ResetPasswordFailure errorCode={errorCode} errorMsg={props.errorMsg} />
-              <h4>{formatMessage(messages['reset.password'])}</h4>
+              <h4>{formatMessage(messages[isNewUser ? 'set.password' : 'reset.password'])}</h4>
               <p className="mb-4">{formatMessage(messages['reset.password.page.instructions'])}</p>
               <Form id="set-reset-password-form" name="set-reset-password-form">
                 <PasswordField
@@ -185,7 +188,7 @@ const ResetPasswordPage = (props) => {
                   className="reset-password--button"
                   state={props.status}
                   labels={{
-                    default: formatMessage(messages['reset.password']),
+                    default: formatMessage(messages[isNewUser ? 'set.password' : 'reset.password']),
                     pending: '',
                   }}
                   onClick={e => handleSubmit(e)}
