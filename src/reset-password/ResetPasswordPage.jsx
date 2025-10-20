@@ -14,7 +14,7 @@ import {
 import { ChevronLeft } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { resetPassword, validateToken } from './data/actions';
 import {
