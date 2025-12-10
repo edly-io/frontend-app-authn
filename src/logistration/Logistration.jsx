@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
+import { emailCheckComplete, EmailCheckWidget } from '@anas_hameed/edly-saas-widget';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthService } from '@edx/frontend-platform/auth';
@@ -15,12 +16,13 @@ import PropTypes from 'prop-types';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 import BaseContainer from '../base-container';
+import { FormGroup } from '../common-components';
 import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
 import {
   tpaProvidersSelector,
 } from '../common-components/data/selectors';
 import messages from '../common-components/messages';
-import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
+import { LOGIN_PAGE, REGISTER_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
 import {
   getTpaHint, getTpaProvider, updatePathWithQueryParams,
 } from '../data/utils';
@@ -30,7 +32,7 @@ import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';
 
 const Logistration = (props) => {
-  const { selectedPage, tpaProviders } = props;
+  const { selectedPage, tpaProviders, showEmailCheck } = props;
   const tpaHint = getTpaHint();
   const {
     providers, secondaryProviders,
@@ -96,6 +98,24 @@ const Logistration = (props) => {
     return !!provider;
   };
 
+  const handleEmailCheckComplete = (redirectTo, email, errorCode) => {
+    props.emailCheckComplete(email, errorCode);
+    const targetPage = redirectTo === 'login' ? LOGIN_PAGE : REGISTER_PAGE;
+    if (selectedPage !== targetPage) {
+      navigate(updatePathWithQueryParams(targetPage));
+    }
+  };
+  if (showEmailCheck && !tpaHint && !disablePublicAccountCreation) {
+    return (
+      <EmailCheckWidget
+        onEmailCheckComplete={handleEmailCheckComplete}
+        BaseContainer={BaseContainer}
+        FormGroup={FormGroup}
+        VALID_EMAIL_REGEX={VALID_EMAIL_REGEX}
+      />
+    );
+  }
+
   return (
     <BaseContainer>
       <div>
@@ -156,9 +176,11 @@ const Logistration = (props) => {
 
 Logistration.propTypes = {
   selectedPage: PropTypes.string,
+  showEmailCheck: PropTypes.bool.isRequired,
   backupLoginForm: PropTypes.func.isRequired,
   backupRegistrationForm: PropTypes.func.isRequired,
   clearThirdPartyAuthContextErrorMessage: PropTypes.func.isRequired,
+  emailCheckComplete: PropTypes.func.isRequired,
   tpaProviders: PropTypes.shape({
     providers: PropTypes.arrayOf(PropTypes.shape({})),
     secondaryProviders: PropTypes.arrayOf(PropTypes.shape({})),
@@ -178,6 +200,7 @@ Logistration.defaultProps = {
 
 const mapStateToProps = state => ({
   tpaProviders: tpaProvidersSelector(state),
+  showEmailCheck: state.emailCheck?.showEmailCheck,
 });
 
 export default connect(
@@ -186,5 +209,6 @@ export default connect(
     backupLoginForm,
     backupRegistrationForm,
     clearThirdPartyAuthContextErrorMessage,
+    emailCheckComplete,
   },
 )(Logistration);

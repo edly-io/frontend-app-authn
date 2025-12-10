@@ -1,3 +1,4 @@
+import { emailCheckReducer, emailCheckStoreName } from '@anas_hameed/edly-saas-widget';
 import { combineReducers } from 'redux';
 
 import {
@@ -29,6 +30,7 @@ const createRootReducer = () => combineReducers({
   [loginStoreName]: loginReducer,
   [registerStoreName]: registerReducer,
   [commonComponentsStoreName]: commonComponentsReducer,
+  [emailCheckStoreName]: emailCheckReducer,
   [forgotPasswordStoreName]: forgotPasswordReducer,
   [resetPasswordStoreName]: resetPasswordReducer,
   [authnProgressiveProfilingStoreName]: authnProgressiveProfilingReducers,
