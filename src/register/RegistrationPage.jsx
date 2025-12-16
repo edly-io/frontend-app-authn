@@ -91,7 +91,13 @@ const RegistrationPage = (props) => {
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
   const tpaHint = useMemo(() => getTpaHint(), []);
 
-  const [formFields, setFormFields] = useState({ ...backedUpFormData.formFields });
+  const edlyPrefilledEmail = useSelector(state => state.emailCheck?.prefilledEmail);
+  const edlyContext = useSelector(state => state.emailCheck?.context);
+  const isNewUser = edlyContext?.is_new_user;
+  const [formFields, setFormFields] = useState({
+    ...backedUpFormData.formFields,
+    email: (isNewUser ? edlyPrefilledEmail : '') || backedUpFormData.formFields.email,
+  });
   const [configurableFormFields, setConfigurableFormFields] = useState({ ...backedUpFormData.configurableFormFields });
   const [errors, setErrors] = useState({ ...backedUpFormData.errors });
   const [errorCode, setErrorCode] = useState({ type: '', count: 0 });
@@ -326,6 +332,7 @@ const RegistrationPage = (props) => {
                 confirmEmailValue={configurableFormFields?.confirm_email}
                 handleErrorChange={handleErrorChange}
                 handleChange={handleOnChange}
+                readOnly={!!edlyPrefilledEmail && isNewUser}
                 errorMessage={errors.email}
                 helpText={[formatMessage(messages['help.text.email'])]}
                 floatingLabel={formatMessage(messages['registration.email.label'])}

@@ -74,9 +74,10 @@ const LoginPage = (props) => {
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
 
   const edlyPrefilledEmail = useSelector(state => state.emailCheck?.prefilledEmail);
+  const edlyContext = useSelector(state => state.emailCheck?.context);
   const [formFields, setFormFields] = useState({
     ...backedUpFormData.formFields,
-    emailOrUsername: edlyPrefilledEmail || backedUpFormData.formFields.emailOrUsername,
+    emailOrUsername: (!edlyContext?.is_new_user ? edlyPrefilledEmail : '') || backedUpFormData.formFields.emailOrUsername,
   });
   const [errorCode, setErrorCode] = useState({ type: '', count: 0, context: {} });
   const [errors, setErrors] = useState({ ...backedUpFormData.errors });

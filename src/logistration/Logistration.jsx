@@ -105,7 +105,7 @@ const Logistration = (props) => {
       navigate(updatePathWithQueryParams(targetPage));
     }
   };
-  if (showEmailCheck && !tpaHint && !disablePublicAccountCreation) {
+  if (showEmailCheck && !tpaHint) {
     return (
       <EmailCheckWidget
         onEmailCheckComplete={handleEmailCheckComplete}
