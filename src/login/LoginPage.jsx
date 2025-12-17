@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 
+// Todo: need to change imports when package is published to edly-io
 import { EdlyLogistrationInfo } from '@anas_hameed/edly-saas-widget';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';

@@ -1,3 +1,4 @@
+// Todo: need to change imports when package is published to edly-io
 import { emailCheckReducer, emailCheckStoreName } from '@anas_hameed/edly-saas-widget';
 import { combineReducers } from 'redux';
 
