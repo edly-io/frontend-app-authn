@@ -25,12 +25,15 @@ import {
 import messages from '../common-components/messages';
 import { LOGIN_PAGE, REGISTER_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
 import {
+  getActivationStatus,
   getTpaHint, getTpaProvider, updatePathWithQueryParams,
 } from '../data/utils';
 import { LoginPage } from '../login';
+import AccountActivationMessage from '../login/AccountActivationMessage';
 import { backupLoginForm } from '../login/data/actions';
 import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';
+import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
 
 const Logistration = (props) => {
   const { selectedPage, tpaProviders, showEmailCheck } = props;
@@ -106,13 +109,18 @@ const Logistration = (props) => {
       navigate(updatePathWithQueryParams(targetPage));
     }
   };
+
+  const activationMsgType = getActivationStatus();
   if (showEmailCheck && !tpaHint) {
     return (
       <EmailCheckWidget
         onEmailCheckComplete={handleEmailCheckComplete}
+        activationMsgType={activationMsgType}
         BaseContainer={BaseContainer}
         FormGroup={FormGroup}
         VALID_EMAIL_REGEX={VALID_EMAIL_REGEX}
+        AccountActivationMessage={AccountActivationMessage}
+        ResetPasswordSuccess={ResetPasswordSuccess}
       />
     );
   }
