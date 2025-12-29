@@ -44,6 +44,7 @@ const Logistration = (props) => {
   const { formatMessage } = useIntl();
   const [institutionLogin, setInstitutionLogin] = useState(false);
   const [key, setKey] = useState('');
+  const [redirectTo, setRedirectTo] = useState(null);
   const navigate = useNavigate();
   const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
   const hideRegistrationLink = getConfig().SHOW_REGISTRATION_LINKS === false;
@@ -104,6 +105,7 @@ const Logistration = (props) => {
 
   const handleEmailCheckComplete = (redirectTo, email, errorCode) => {
     props.emailCheckComplete(email, errorCode);
+    setRedirectTo(redirectTo);
     const targetPage = redirectTo === 'login' ? LOGIN_PAGE : REGISTER_PAGE;
     if (selectedPage !== targetPage) {
       navigate(updatePathWithQueryParams(targetPage));
@@ -155,7 +157,9 @@ const Logistration = (props) => {
                 : (!isValidTpaHint() && !hideRegistrationLink && (
                   <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={(tabKey) => handleOnSelect(tabKey, selectedPage)}>
                     <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
-                    <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
+                    {redirectTo !== 'register' && (
+                      <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
+                    )}
                   </Tabs>
                 ))}
               { key && (
