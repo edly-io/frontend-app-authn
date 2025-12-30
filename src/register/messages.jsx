@@ -174,11 +174,6 @@ const messages = defineMessages({
         + '{lineBreak}{lineBreak}Error Details:{lineBreak}{errorMessage}',
     description: 'Error message third party authentication pipeline fails',
   },
-  'registration.cross.tenant.email.error': {
-    id: 'registration.cross.tenant.email.error',
-    defaultMessage: 'Looks like you have already registered using this email. Please sign in to access this site.',
-    description: 'Error message when a registered user tries to use the same email on another tenant',
-  },
   // Terms of Service and Honor Code
   'terms.of.service.and.honor.code': {
     id: 'terms.of.service.and.honor.code',
