@@ -36,7 +36,7 @@ import { backupRegistrationForm } from '../register/data/actions';
 import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
 
 const Logistration = (props) => {
-  const { selectedPage, tpaProviders, showEmailCheck } = props;
+  const { selectedPage: selectedPageProp, tpaProviders, showEmailCheck } = props;
   const tpaHint = getTpaHint();
   const {
     providers, secondaryProviders,
@@ -48,6 +48,7 @@ const Logistration = (props) => {
   const navigate = useNavigate();
   const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
   const hideRegistrationLink = getConfig().SHOW_REGISTRATION_LINKS === false;
+  const selectedPage = redirectTo ? `/${redirectTo}` : selectedPageProp;
 
   useEffect(() => {
     const authService = getAuthService();
@@ -61,6 +62,10 @@ const Logistration = (props) => {
       navigate(updatePathWithQueryParams(LOGIN_PAGE));
     }
   }, [navigate, disablePublicAccountCreation]);
+
+  useEffect(() => {
+    setRedirectTo(null);
+  }, [selectedPageProp]);
 
   const handleInstitutionLogin = (e) => {
     sendTrackEvent('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
@@ -84,6 +89,7 @@ const Logistration = (props) => {
     } else if (tabKey === REGISTER_PAGE) {
       props.backupLoginForm();
     }
+    setRedirectTo(null);
     setKey(tabKey);
   };
 
@@ -103,13 +109,9 @@ const Logistration = (props) => {
     return !!provider;
   };
 
-  const handleEmailCheckComplete = (redirectTo, email, errorCode) => {
+  const handleEmailCheckComplete = (targetRedirect, email, errorCode) => {
     props.emailCheckComplete(email, errorCode);
-    setRedirectTo(redirectTo);
-    const targetPage = redirectTo === 'login' ? LOGIN_PAGE : REGISTER_PAGE;
-    if (selectedPage !== targetPage) {
-      navigate(updatePathWithQueryParams(targetPage));
-    }
+    setRedirectTo(targetRedirect);
   };
 
   const activationMsgType = getActivationStatus();
