@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 
+// Todo: need to change imports when package is published to edly-io
+import { EdlyLogistrationInfo } from '@anas_hameed/edly-saas-widget';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, useIntl } from '@edx/frontend-platform/i18n';
@@ -72,7 +74,12 @@ const LoginPage = (props) => {
   const activationMsgType = getActivationStatus();
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
 
-  const [formFields, setFormFields] = useState({ ...backedUpFormData.formFields });
+  const edlyPrefilledEmail = useSelector(state => state.emailCheck?.prefilledEmail);
+  const edlyContext = useSelector(state => state.emailCheck?.context);
+  const [formFields, setFormFields] = useState({
+    ...backedUpFormData.formFields,
+    emailOrUsername: (!edlyContext?.is_new_user ? edlyPrefilledEmail : '') || backedUpFormData.formFields.emailOrUsername,
+  });
   const [errorCode, setErrorCode] = useState({ type: '', count: 0, context: {} });
   const [errors, setErrors] = useState({ ...backedUpFormData.errors });
   const tpaHint = getTpaHint();
@@ -223,11 +230,13 @@ const LoginPage = (props) => {
           messageType={activationMsgType}
         />
         {showResetPasswordSuccessBanner && <ResetPasswordSuccess />}
+        {!errorCode.type && <EdlyLogistrationInfo />}
         <Form id="sign-in-form" name="sign-in-form">
           <FormGroup
             name="emailOrUsername"
             value={formFields.emailOrUsername}
             autoComplete="on"
+            readOnly={!!edlyPrefilledEmail}
             handleChange={handleOnChange}
             handleFocus={handleOnFocus}
             errorMessage={errors.emailOrUsername}
@@ -298,7 +307,9 @@ const mapStateToProps = state => {
 
 LoginPage.propTypes = {
   backedUpFormData: PropTypes.shape({
-    formFields: PropTypes.shape({}),
+    formFields: PropTypes.shape({
+      emailOrUsername: PropTypes.string,
+    }),
     errors: PropTypes.shape({}),
   }),
   loginErrorCode: PropTypes.string,

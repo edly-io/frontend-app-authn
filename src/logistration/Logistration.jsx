@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
+// Todo: need to change imports when package is published to edly-io
+import { emailCheckComplete, EmailCheckWidget } from '@anas_hameed/edly-saas-widget';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthService } from '@edx/frontend-platform/auth';
@@ -15,22 +17,26 @@ import PropTypes from 'prop-types';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 import BaseContainer from '../base-container';
+import { FormGroup } from '../common-components';
 import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
 import {
   tpaProvidersSelector,
 } from '../common-components/data/selectors';
 import messages from '../common-components/messages';
-import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
+import { LOGIN_PAGE, REGISTER_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
 import {
+  getActivationStatus,
   getTpaHint, getTpaProvider, updatePathWithQueryParams,
 } from '../data/utils';
 import { LoginPage } from '../login';
+import AccountActivationMessage from '../login/AccountActivationMessage';
 import { backupLoginForm } from '../login/data/actions';
 import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';
+import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
 
 const Logistration = (props) => {
-  const { selectedPage, tpaProviders } = props;
+  const { selectedPage, tpaProviders, showEmailCheck } = props;
   const tpaHint = getTpaHint();
   const {
     providers, secondaryProviders,
@@ -38,6 +44,7 @@ const Logistration = (props) => {
   const { formatMessage } = useIntl();
   const [institutionLogin, setInstitutionLogin] = useState(false);
   const [key, setKey] = useState('');
+  const [redirectTo, setRedirectTo] = useState(null);
   const navigate = useNavigate();
   const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
   const hideRegistrationLink = getConfig().SHOW_REGISTRATION_LINKS === false;
@@ -96,6 +103,30 @@ const Logistration = (props) => {
     return !!provider;
   };
 
+  const handleEmailCheckComplete = (redirectTo, email, errorCode) => {
+    props.emailCheckComplete(email, errorCode);
+    setRedirectTo(redirectTo);
+    const targetPage = redirectTo === 'login' ? LOGIN_PAGE : REGISTER_PAGE;
+    if (selectedPage !== targetPage) {
+      navigate(updatePathWithQueryParams(targetPage));
+    }
+  };
+
+  const activationMsgType = getActivationStatus();
+  if (showEmailCheck && !tpaHint) {
+    return (
+      <EmailCheckWidget
+        onEmailCheckComplete={handleEmailCheckComplete}
+        activationMsgType={activationMsgType}
+        BaseContainer={BaseContainer}
+        FormGroup={FormGroup}
+        VALID_EMAIL_REGEX={VALID_EMAIL_REGEX}
+        AccountActivationMessage={AccountActivationMessage}
+        ResetPasswordSuccess={ResetPasswordSuccess}
+      />
+    );
+  }
+
   return (
     <BaseContainer>
       <div>
@@ -126,7 +157,9 @@ const Logistration = (props) => {
                 : (!isValidTpaHint() && !hideRegistrationLink && (
                   <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={(tabKey) => handleOnSelect(tabKey, selectedPage)}>
                     <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
-                    <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
+                    {redirectTo !== 'register' && (
+                      <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
+                    )}
                   </Tabs>
                 ))}
               { key && (
@@ -156,9 +189,11 @@ const Logistration = (props) => {
 
 Logistration.propTypes = {
   selectedPage: PropTypes.string,
+  showEmailCheck: PropTypes.bool.isRequired,
   backupLoginForm: PropTypes.func.isRequired,
   backupRegistrationForm: PropTypes.func.isRequired,
   clearThirdPartyAuthContextErrorMessage: PropTypes.func.isRequired,
+  emailCheckComplete: PropTypes.func.isRequired,
   tpaProviders: PropTypes.shape({
     providers: PropTypes.arrayOf(PropTypes.shape({})),
     secondaryProviders: PropTypes.arrayOf(PropTypes.shape({})),
@@ -178,6 +213,7 @@ Logistration.defaultProps = {
 
 const mapStateToProps = state => ({
   tpaProviders: tpaProvidersSelector(state),
+  showEmailCheck: state.emailCheck?.showEmailCheck,
 });
 
 export default connect(
@@ -186,5 +222,6 @@ export default connect(
     backupLoginForm,
     backupRegistrationForm,
     clearThirdPartyAuthContextErrorMessage,
+    emailCheckComplete,
   },
 )(Logistration);

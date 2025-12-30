@@ -3,6 +3,8 @@ import React, {
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+// Todo: need to change imports when package is published to edly-io
+import { EdlyLogistrationInfo } from '@anas_hameed/edly-saas-widget';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -90,7 +92,13 @@ const RegistrationPage = (props) => {
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
   const tpaHint = useMemo(() => getTpaHint(), []);
 
-  const [formFields, setFormFields] = useState({ ...backedUpFormData.formFields });
+  const edlyPrefilledEmail = useSelector(state => state.emailCheck?.prefilledEmail);
+  const edlyContext = useSelector(state => state.emailCheck?.context);
+  const isNewUser = edlyContext?.is_new_user;
+  const [formFields, setFormFields] = useState({
+    ...backedUpFormData.formFields,
+    email: (isNewUser ? edlyPrefilledEmail : '') || backedUpFormData.formFields.email,
+  });
   const [configurableFormFields, setConfigurableFormFields] = useState({ ...backedUpFormData.configurableFormFields });
   const [errors, setErrors] = useState({ ...backedUpFormData.errors });
   const [errorCode, setErrorCode] = useState({ type: '', count: 0 });
@@ -307,6 +315,7 @@ const RegistrationPage = (props) => {
               failureCount={errorCode.count}
               context={{ provider: currentProvider, errorMessage: thirdPartyAuthErrorMessage }}
             />
+            {!errorCode.type && <EdlyLogistrationInfo />}
             <Form id="registration-form" name="registration-form">
               <NameField
                 name="name"
@@ -324,6 +333,7 @@ const RegistrationPage = (props) => {
                 confirmEmailValue={configurableFormFields?.confirm_email}
                 handleErrorChange={handleErrorChange}
                 handleChange={handleOnChange}
+                readOnly={!!edlyPrefilledEmail && isNewUser}
                 errorMessage={errors.email}
                 helpText={[formatMessage(messages['help.text.email'])]}
                 floatingLabel={formatMessage(messages['registration.email.label'])}
