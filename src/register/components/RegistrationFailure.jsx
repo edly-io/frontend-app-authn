@@ -21,11 +21,8 @@ const RegistrationFailureMessage = (props) => {
   const {
     context, errorCode, failureCount,
   } = props;
-  const isCrossTenantRegistration = errorCode === CROSS_TENANT_REGISTRATION;
-  const alertVariant = isCrossTenantRegistration ? 'info' : 'danger';
-  const headerMessage = isCrossTenantRegistration
-    ? messages['registration.cross.tenant.email.header']
-    : messages['registration.request.failure.header'];
+  const isInfoAlert = errorCode === CROSS_TENANT_REGISTRATION;
+  const alertVariant = isInfoAlert ? 'info' : 'danger';
 
   useEffect(() => {
     windowScrollTo({ left: 0, top: 0, behavior: 'smooth' });
@@ -64,7 +61,7 @@ const RegistrationFailureMessage = (props) => {
 
   return (
     <Alert id="validation-errors" className="mb-5" variant={alertVariant} icon={Error}>
-      <Alert.Heading>{formatMessage(headerMessage)}</Alert.Heading>
+      <Alert.Heading>{formatMessage(messages['registration.request.failure.header'])}</Alert.Heading>
       <p>{errorMessage}</p>
     </Alert>
   );
