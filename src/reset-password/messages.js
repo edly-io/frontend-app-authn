@@ -16,6 +16,12 @@ const messages = defineMessages({
     defaultMessage: 'Reset password',
     description: 'The page heading and button text for reset password page.',
   },
+  // EDLYCUSTOM: when a new user is created from edly panel, they need to set a password
+  'set.password': {
+    id: 'set.password',
+    defaultMessage: 'Set password',
+    description: 'The page heading and button text for set password page.',
+  },
   'reset.password.page.instructions': {
     id: 'reset.password.page.instructions',
     defaultMessage: 'Enter and confirm your new password.',
