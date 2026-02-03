@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, connect } from 'react-redux';
 
 // Todo: need to change imports when package is published to edly-io
 import { emailCheckComplete, EmailCheckWidget } from '@anas_hameed/edly-saas-widget';
