@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
+// Todo: need to change imports when package is published to edly-io
+import { MultiSiteBannerContent } from '@anas_hameed/edly-saas-widget';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -108,6 +110,7 @@ const ForgotPasswordPage = (props) => {
         <div id="main-content" className="main-content">
           <Form id="forget-password-form" name="forget-password-form" className="mw-xs">
             <ForgotPasswordAlert email={bannerEmail} emailError={formErrors} status={status} />
+            <MultiSiteBannerContent email={bannerEmail} />
             <h2 className="h4">
               {formatMessage(messages['forgot.password.page.heading'])}
             </h2>

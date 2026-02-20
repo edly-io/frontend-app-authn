@@ -4,6 +4,8 @@ import { Form, Icon } from '@openedx/paragon';
 import { ExpandMore } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
+import PasswordField from '../common-components/PasswordField';
+
 const FormFieldRenderer = (props) => {
   let formField = null;
   const {
@@ -118,6 +120,21 @@ const FormFieldRenderer = (props) => {
             </Form.Control.Feedback>
           )}
         </Form.Group>
+      );
+      break;
+    }
+    case 'password': {
+      formField = (
+        <PasswordField
+          name={fieldData.name}
+          value={value}
+          errorMessage={errorMessage}
+          floatingLabel={fieldData.label}
+          handleChange={(e) => onChangeHandler(e)}
+          handleBlur={handleOnBlur}
+          showRequirements={false}
+          showScreenReaderText={false}
+        />
       );
       break;
     }

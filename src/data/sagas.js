@@ -1,3 +1,5 @@
+// Todo: need to change imports when package is published to edly-io
+import { emailCheckSaga } from '@anas_hameed/edly-saas-widget';
 import { all } from 'redux-saga/effects';
 
 import { saga as commonComponentsSaga } from '../common-components';
@@ -12,6 +14,7 @@ export default function* rootSaga() {
     loginSaga(),
     registrationSaga(),
     commonComponentsSaga(),
+    emailCheckSaga(),
     forgotPasswordSaga(),
     resetPasswordSaga(),
     authnProgressiveProfilingSaga(),
