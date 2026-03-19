@@ -1,4 +1,8 @@
 // Login Error Codes
+export const TWO_FACTOR_AUTH_REQUIRED = '2fa-required';
+export const TWO_FACTOR_AUTH_INVALID_OTP = '2fa-invalid-otp';
+export const TWO_FACTOR_AUTH_SESSION_EXPIRED = '2fa-session-expired';
+export const TWO_FACTOR_AUTH_RESEND_RATE_LIMITED = '2fa-resend-rate-limited';
 export const INACTIVE_USER = 'inactive-user';
 export const INTERNAL_SERVER_ERROR = 'internal-server-error';
 export const INVALID_FORM = 'invalid-form';
