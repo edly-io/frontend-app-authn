@@ -31,10 +31,8 @@ import './index.scss';
 
 registerIcons();
 
-const store = configureStore();
-
 const MainApp = () => (
-  <AppProvider store={store}>
+  <AppProvider store={configureStore()}>
     <Helmet>
       <link rel="shortcut icon" href={getConfig().FAVICON_URL} type="image/x-icon" />
     </Helmet>
