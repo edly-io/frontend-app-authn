@@ -1,5 +1,5 @@
 import {
-  useCallback, useEffect, useMemo, useState,
+  useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -37,6 +37,7 @@ import { backupLoginFormBegin, dismissPasswordResetBanner, loginRequest } from '
 import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
+import TwoFactorAuth from './TwoFactorAuth';
 
 const LoginPage = ({
   institutionLogin,
@@ -55,6 +56,7 @@ const LoginPage = ({
     submitState,
     thirdPartyAuthContext,
     thirdPartyAuthApiStatus,
+    twoFactorAuthRequired,
   } = useSelector((state) => ({
     backedUpFormData: state.login.loginFormData,
     loginErrorCode: state.login.loginErrorCode,
@@ -65,6 +67,7 @@ const LoginPage = ({
     submitState: state.login.submitState,
     thirdPartyAuthContext: thirdPartyAuthContextSelector(state),
     thirdPartyAuthApiStatus: state.commonComponents.thirdPartyAuthApiStatus,
+    twoFactorAuthRequired: state.login.twoFactorAuthRequired,
   }));
   const {
     providers,
@@ -86,6 +89,7 @@ const LoginPage = ({
   });
   const [errors, setErrors] = useState({ ...backedUpFormData.errors });
   const tpaHint = getTpaHint();
+  const isSubmittingRef = useRef(false);
 
   useEffect(() => {
     sendPageEvent('login_and_registration', 'login');
@@ -112,6 +116,7 @@ const LoginPage = ({
 
   useEffect(() => {
     if (loginErrorCode) {
+      isSubmittingRef.current = false;
       setErrorCode(prevState => ({
         type: loginErrorCode,
         count: prevState.count + 1,
@@ -119,6 +124,12 @@ const LoginPage = ({
       }));
     }
   }, [loginErrorCode, loginErrorContext]);
+
+  useEffect(() => {
+    if (twoFactorAuthRequired) {
+      isSubmittingRef.current = false;
+    }
+  }, [twoFactorAuthRequired]);
 
   useEffect(() => {
     if (thirdPartyErrorMessage) {
@@ -153,6 +164,13 @@ const LoginPage = ({
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (twoFactorAuthRequired) {
+      return;
+    }
+    if (isSubmittingRef.current) {
+      return;
+    }
+
     if (showResetPasswordSuccessBanner) {
       dispatch(dismissPasswordResetBanner());
     }
@@ -169,7 +187,7 @@ const LoginPage = ({
       return;
     }
 
-    // add query params to the payload
+    isSubmittingRef.current = true;
     const payload = {
       email_or_username: formData.emailOrUsername,
       password: formData.password,
@@ -228,6 +246,24 @@ const LoginPage = ({
       />
     );
   }
+
+  if (twoFactorAuthRequired) {
+    return (
+      <>
+        <Helmet>
+          <title>{formatMessage(messages['2fa.page.title'])}</title>
+        </Helmet>
+        <RedirectLogistration
+          success={loginResult.success}
+          redirectUrl={loginResult.redirectUrl}
+          finishAuthUrl={finishAuthUrl}
+        />
+        <h4 className="mt-3">{formatMessage(messages['2fa.page.title'])}</h4>
+        <TwoFactorAuth />
+      </>
+    );
+  }
+
   return (
     <>
       <Helmet>
