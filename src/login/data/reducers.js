@@ -2,6 +2,9 @@ import {
   BACKUP_LOGIN_DATA,
   DISMISS_PASSWORD_RESET_BANNER,
   LOGIN_REQUEST,
+  TWO_FACTOR_AUTH_REQUIRED_ACTION,
+  TWO_FACTOR_AUTH_VERIFY,
+  TWO_FACTOR_AUTH_RESEND,
 } from './actions';
 import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
 import { RESET_PASSWORD } from '../../reset-password';
@@ -21,6 +24,12 @@ export const defaultState = {
   shouldBackupState: false,
   showResetPasswordSuccessBanner: false,
   submitState: DEFAULT_STATE,
+  twoFactorAuthRequired: false,
+  twoFactorAuthMaskedEmail: '',
+  twoFactorAuthSubmitState: DEFAULT_STATE,
+  twoFactorAuthErrorCode: '',
+  twoFactorAuthResendState: DEFAULT_STATE,
+  twoFactorAuthResendSuccess: false,
 };
 
 const reducer = (state = defaultState, action = {}) => {
@@ -55,6 +64,53 @@ const reducer = (state = defaultState, action = {}) => {
         submitState: DEFAULT_STATE,
       };
     }
+    case TWO_FACTOR_AUTH_REQUIRED_ACTION:
+      return {
+        ...state,
+        submitState: DEFAULT_STATE,
+        twoFactorAuthRequired: true,
+        twoFactorAuthMaskedEmail: action.payload.maskedEmail || '',
+        twoFactorAuthErrorCode: '',
+        twoFactorAuthResendState: DEFAULT_STATE,
+        twoFactorAuthResendSuccess: false,
+      };
+    case TWO_FACTOR_AUTH_VERIFY.BEGIN:
+      return {
+        ...state,
+        twoFactorAuthSubmitState: PENDING_STATE,
+        twoFactorAuthErrorCode: '',
+      };
+    case TWO_FACTOR_AUTH_VERIFY.SUCCESS:
+      return {
+        ...state,
+        twoFactorAuthSubmitState: DEFAULT_STATE,
+        loginResult: { redirectUrl: action.payload.redirectUrl, success: true },
+      };
+    case TWO_FACTOR_AUTH_VERIFY.FAILURE:
+      return {
+        ...state,
+        twoFactorAuthSubmitState: DEFAULT_STATE,
+        twoFactorAuthErrorCode: action.payload.errorCode,
+      };
+    case TWO_FACTOR_AUTH_RESEND.BEGIN:
+      return {
+        ...state,
+        twoFactorAuthResendState: PENDING_STATE,
+        twoFactorAuthResendSuccess: false,
+        twoFactorAuthErrorCode: '',
+      };
+    case TWO_FACTOR_AUTH_RESEND.SUCCESS:
+      return {
+        ...state,
+        twoFactorAuthResendState: DEFAULT_STATE,
+        twoFactorAuthResendSuccess: true,
+      };
+    case TWO_FACTOR_AUTH_RESEND.FAILURE:
+      return {
+        ...state,
+        twoFactorAuthResendState: DEFAULT_STATE,
+        twoFactorAuthErrorCode: action.payload.errorCode,
+      };
     case RESET_PASSWORD.SUCCESS:
       return {
         ...state,

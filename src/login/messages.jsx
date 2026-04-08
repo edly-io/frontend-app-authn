@@ -206,6 +206,87 @@ const messages = defineMessages({
         + '{lineBreak}{lineBreak}Error Details:{lineBreak}{errorMessage}',
     description: 'Error message third party authentication pipeline fails',
   },
+  // Two Factor Auth
+  '2fa.page.title': {
+    id: '2fa.page.title',
+    defaultMessage: 'Verify your identity',
+    description: '2FA page heading',
+  },
+  '2fa.description': {
+    id: '2fa.description',
+    defaultMessage: 'We sent a 6-digit verification code to your email. Enter it below to continue.',
+    description: '2FA description when masked email is unavailable',
+  },
+  '2fa.description.with.email': {
+    id: '2fa.description.with.email',
+    defaultMessage: 'We sent a 6-digit verification code to {maskedEmail}. Enter it below to continue.',
+    description: '2FA description showing the masked email address',
+  },
+  '2fa.otp.label': {
+    id: '2fa.otp.label',
+    defaultMessage: 'Verification code',
+    description: 'Label for the OTP input field',
+  },
+  '2fa.otp.validation.empty': {
+    id: '2fa.otp.validation.empty',
+    defaultMessage: 'Enter the verification code',
+    description: 'Validation message when OTP field is empty',
+  },
+  '2fa.otp.validation.format': {
+    id: '2fa.otp.validation.format',
+    defaultMessage: 'Verification code must be 6 digits',
+    description: 'Validation message when OTP format is invalid',
+  },
+  '2fa.verify.button': {
+    id: '2fa.verify.button',
+    defaultMessage: 'Verify',
+    description: 'Submit button label for OTP verification form',
+  },
+  '2fa.resend.button': {
+    id: '2fa.resend.button',
+    defaultMessage: "Didn't receive a code? Resend",
+    description: 'Button to resend the OTP',
+  },
+  '2fa.resend.button.pending': {
+    id: '2fa.resend.button.pending',
+    defaultMessage: 'Sending...',
+    description: 'Resend button label while request is in flight',
+  },
+  '2fa.resend.success': {
+    id: '2fa.resend.success',
+    defaultMessage: 'A new verification code has been sent to your email.',
+    description: 'Success message after OTP is resent',
+  },
+  '2fa.error.heading': {
+    id: '2fa.error.heading',
+    defaultMessage: 'Verification failed',
+    description: 'Heading for 2FA error alert',
+  },
+  '2fa.error.invalid.otp': {
+    id: '2fa.error.invalid.otp',
+    defaultMessage: 'The verification code you entered is incorrect or has expired. Please try again.',
+    description: 'Error when OTP is wrong or expired',
+  },
+  '2fa.error.session.expired': {
+    id: '2fa.error.session.expired',
+    defaultMessage: 'Your session has expired. Please sign in again.',
+    description: 'Error when the 2FA session has expired',
+  },
+  '2fa.error.resend.rate.limited': {
+    id: '2fa.error.resend.rate.limited',
+    defaultMessage: 'Too many resend requests. Please wait a few minutes before trying again.',
+    description: 'Error when resend OTP is rate limited',
+  },
+  '2fa.error.too.many.attempts': {
+    id: '2fa.error.too.many.attempts',
+    defaultMessage: 'Too many verification attempts. Please wait a few minutes before trying again.',
+    description: 'Error when OTP verification is rate limited',
+  },
+  '2fa.error.internal': {
+    id: '2fa.error.internal',
+    defaultMessage: 'An error occurred. Please try again.',
+    description: 'Generic 2FA error message',
+  },
 });
 
 export default messages;
