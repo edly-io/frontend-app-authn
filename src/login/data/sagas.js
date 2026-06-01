@@ -1,23 +1,23 @@
 import { camelCaseObject } from '@edx/frontend-platform';
 import { logError, logInfo } from '@edx/frontend-platform/logging';
 import {
-  call, put, takeLatest, takeLeading,
+  call, put, takeLeading,
 } from 'redux-saga/effects';
 
 import {
   LOGIN_REQUEST,
-  TWO_FACTOR_AUTH_VERIFY,
   TWO_FACTOR_AUTH_RESEND,
+  TWO_FACTOR_AUTH_VERIFY,
   loginRequestBegin,
   loginRequestFailure,
   loginRequestSuccess,
   twoFactorAuthRequired,
-  twoFactorAuthVerifyBegin,
-  twoFactorAuthVerifySuccess,
-  twoFactorAuthVerifyFailure,
   twoFactorAuthResendBegin,
-  twoFactorAuthResendSuccess,
   twoFactorAuthResendFailure,
+  twoFactorAuthResendSuccess,
+  twoFactorAuthVerifyBegin,
+  twoFactorAuthVerifyFailure,
+  twoFactorAuthVerifySuccess,
 } from './actions';
 import {
   FORBIDDEN_REQUEST,
@@ -27,8 +27,8 @@ import {
 } from './constants';
 import {
   loginRequest,
-  verifyOtp,
   resendOtp,
+  verifyOtp,
 } from './service';
 
 export function* handleLoginRequest(action) {
