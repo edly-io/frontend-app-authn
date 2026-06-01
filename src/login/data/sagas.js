@@ -6,11 +6,11 @@ import {
 
 import {
   LOGIN_REQUEST,
+  TWO_FACTOR_AUTH_RESEND,
+  TWO_FACTOR_AUTH_VERIFY,
   loginRequestBegin,
   loginRequestFailure,
   loginRequestSuccess,
-  TWO_FACTOR_AUTH_RESEND,
-  TWO_FACTOR_AUTH_VERIFY,
   twoFactorAuthRequired,
   twoFactorAuthResendBegin,
   twoFactorAuthResendFailure,

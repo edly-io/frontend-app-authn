@@ -3,8 +3,8 @@ import {
   DISMISS_PASSWORD_RESET_BANNER,
   LOGIN_REQUEST,
   TWO_FACTOR_AUTH_REQUIRED_ACTION,
-  TWO_FACTOR_AUTH_VERIFY,
   TWO_FACTOR_AUTH_RESEND,
+  TWO_FACTOR_AUTH_VERIFY,
 } from './actions';
 import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
 import { RESET_PASSWORD } from '../../reset-password';
