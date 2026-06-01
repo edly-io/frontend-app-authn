@@ -22,6 +22,7 @@ import {
 import {
   FORBIDDEN_REQUEST,
   INTERNAL_SERVER_ERROR,
+  TWO_FACTOR_AUTH_DISABLED,
   TWO_FACTOR_AUTH_REQUIRED as TWO_FACTOR_AUTH_REQUIRED_CODE,
 } from './constants';
 import {
@@ -73,11 +74,13 @@ export function* handleTwoFactorAuthVerify(action) {
     }
   } catch (e) {
     if (e.response) {
-      const { status } = e.response;
+      const { status, data } = e.response;
       if (status === 400) {
         yield put(twoFactorAuthVerifyFailure('2fa-invalid-otp'));
       } else if (status === 401) {
         yield put(twoFactorAuthVerifyFailure('2fa-session-expired'));
+      } else if (status === 403 && data?.error_code === TWO_FACTOR_AUTH_DISABLED) {
+        yield put(loginRequestFailure({ errorCode: TWO_FACTOR_AUTH_DISABLED }));
       } else if (status === 429) {
         yield put(twoFactorAuthVerifyFailure(FORBIDDEN_REQUEST));
       } else {
@@ -97,7 +100,9 @@ export function* handleTwoFactorAuthResend() {
     yield call(resendOtp);
     yield put(twoFactorAuthResendSuccess());
   } catch (e) {
-    if (e.response && e.response.status === 429) {
+    if (e.response?.status === 403 && e.response?.data?.error_code === TWO_FACTOR_AUTH_DISABLED) {
+      yield put(loginRequestFailure({ errorCode: TWO_FACTOR_AUTH_DISABLED }));
+    } else if (e.response && e.response.status === 429) {
       yield put(twoFactorAuthResendFailure('2fa-resend-rate-limited'));
     } else {
       yield put(twoFactorAuthResendFailure(INTERNAL_SERVER_ERROR));
