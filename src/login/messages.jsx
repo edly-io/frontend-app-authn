@@ -287,6 +287,11 @@ const messages = defineMessages({
     defaultMessage: 'An error occurred. Please try again.',
     description: 'Generic 2FA error message',
   },
+  '2fa.disabled.message': {
+    id: '2fa.disabled.message',
+    defaultMessage: 'Two-factor verification is disabled for this site. Please sign in again.',
+    description: 'Error shown when 2FA is disabled while user is on the verification step',
+  },
 });
 
 export default messages;

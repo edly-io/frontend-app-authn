@@ -1,33 +1,37 @@
 import { camelCaseObject } from '@edx/frontend-platform';
 import { logError, logInfo } from '@edx/frontend-platform/logging';
 import {
-  call, put, takeLatest, takeLeading,
+  call, put, takeLeading,
 } from 'redux-saga/effects';
 
 import {
   LOGIN_REQUEST,
-  TWO_FACTOR_AUTH_VERIFY,
-  TWO_FACTOR_AUTH_RESEND,
   loginRequestBegin,
   loginRequestFailure,
   loginRequestSuccess,
+  TWO_FACTOR_AUTH_RESEND,
+  TWO_FACTOR_AUTH_VERIFY,
   twoFactorAuthRequired,
-  twoFactorAuthVerifyBegin,
-  twoFactorAuthVerifySuccess,
-  twoFactorAuthVerifyFailure,
   twoFactorAuthResendBegin,
-  twoFactorAuthResendSuccess,
   twoFactorAuthResendFailure,
+  twoFactorAuthResendSuccess,
+  twoFactorAuthVerifyBegin,
+  twoFactorAuthVerifyFailure,
+  twoFactorAuthVerifySuccess,
 } from './actions';
 import {
   FORBIDDEN_REQUEST,
   INTERNAL_SERVER_ERROR,
+  TWO_FACTOR_AUTH_DISABLED,
+  TWO_FACTOR_AUTH_INVALID_OTP,
   TWO_FACTOR_AUTH_REQUIRED as TWO_FACTOR_AUTH_REQUIRED_CODE,
+  TWO_FACTOR_AUTH_RESEND_RATE_LIMITED,
+  TWO_FACTOR_AUTH_SESSION_EXPIRED,
 } from './constants';
 import {
   loginRequest,
-  verifyOtp,
   resendOtp,
+  verifyOtp,
 } from './service';
 
 export function* handleLoginRequest(action) {
@@ -69,15 +73,17 @@ export function* handleTwoFactorAuthVerify(action) {
     if (success) {
       yield put(twoFactorAuthVerifySuccess(redirectUrl));
     } else {
-      yield put(twoFactorAuthVerifyFailure('2fa-invalid-otp'));
+      yield put(twoFactorAuthVerifyFailure(TWO_FACTOR_AUTH_INVALID_OTP));
     }
   } catch (e) {
     if (e.response) {
-      const { status } = e.response;
+      const { status, data } = e.response;
       if (status === 400) {
-        yield put(twoFactorAuthVerifyFailure('2fa-invalid-otp'));
+        yield put(twoFactorAuthVerifyFailure(TWO_FACTOR_AUTH_INVALID_OTP));
       } else if (status === 401) {
-        yield put(twoFactorAuthVerifyFailure('2fa-session-expired'));
+        yield put(twoFactorAuthVerifyFailure(TWO_FACTOR_AUTH_SESSION_EXPIRED));
+      } else if (status === 403 && data?.error_code === TWO_FACTOR_AUTH_DISABLED) {
+        yield put(loginRequestFailure({ errorCode: TWO_FACTOR_AUTH_DISABLED }));
       } else if (status === 429) {
         yield put(twoFactorAuthVerifyFailure(FORBIDDEN_REQUEST));
       } else {
@@ -97,8 +103,10 @@ export function* handleTwoFactorAuthResend() {
     yield call(resendOtp);
     yield put(twoFactorAuthResendSuccess());
   } catch (e) {
-    if (e.response && e.response.status === 429) {
-      yield put(twoFactorAuthResendFailure('2fa-resend-rate-limited'));
+    if (e.response?.status === 403 && e.response?.data?.error_code === TWO_FACTOR_AUTH_DISABLED) {
+      yield put(loginRequestFailure({ errorCode: TWO_FACTOR_AUTH_DISABLED }));
+    } else if (e.response && e.response.status === 429) {
+      yield put(twoFactorAuthResendFailure(TWO_FACTOR_AUTH_RESEND_RATE_LIMITED));
     } else {
       yield put(twoFactorAuthResendFailure(INTERNAL_SERVER_ERROR));
       logError(e);

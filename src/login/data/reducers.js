@@ -3,8 +3,8 @@ import {
   DISMISS_PASSWORD_RESET_BANNER,
   LOGIN_REQUEST,
   TWO_FACTOR_AUTH_REQUIRED_ACTION,
-  TWO_FACTOR_AUTH_VERIFY,
   TWO_FACTOR_AUTH_RESEND,
+  TWO_FACTOR_AUTH_VERIFY,
 } from './actions';
 import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
 import { RESET_PASSWORD } from '../../reset-password';
@@ -49,11 +49,23 @@ const reducer = (state = defaultState, action = {}) => {
         ...state,
         showResetPasswordSuccessBanner: false,
         submitState: PENDING_STATE,
+        twoFactorAuthRequired: false,
+        twoFactorAuthMaskedEmail: '',
+        twoFactorAuthSubmitState: DEFAULT_STATE,
+        twoFactorAuthErrorCode: '',
+        twoFactorAuthResendState: DEFAULT_STATE,
+        twoFactorAuthResendSuccess: false,
       };
     case LOGIN_REQUEST.SUCCESS:
       return {
         ...state,
         loginResult: action.payload,
+        twoFactorAuthRequired: false,
+        twoFactorAuthMaskedEmail: '',
+        twoFactorAuthSubmitState: DEFAULT_STATE,
+        twoFactorAuthErrorCode: '',
+        twoFactorAuthResendState: DEFAULT_STATE,
+        twoFactorAuthResendSuccess: false,
       };
     case LOGIN_REQUEST.FAILURE: {
       const { email, loginError, redirectUrl } = action.payload;
@@ -62,6 +74,12 @@ const reducer = (state = defaultState, action = {}) => {
         loginErrorCode: loginError.errorCode,
         loginErrorContext: { ...loginError.context, email, redirectUrl },
         submitState: DEFAULT_STATE,
+        twoFactorAuthRequired: false,
+        twoFactorAuthMaskedEmail: '',
+        twoFactorAuthSubmitState: DEFAULT_STATE,
+        twoFactorAuthErrorCode: '',
+        twoFactorAuthResendState: DEFAULT_STATE,
+        twoFactorAuthResendSuccess: false,
       };
     }
     case TWO_FACTOR_AUTH_REQUIRED_ACTION:
