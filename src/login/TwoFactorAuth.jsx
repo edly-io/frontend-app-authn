@@ -8,7 +8,13 @@ import {
 import { CheckCircle, Error } from '@openedx/paragon/icons';
 
 import { PENDING_STATE } from '../data/constants';
-import { twoFactorAuthVerifyRequest, twoFactorAuthResendRequest } from './data/actions';
+import { twoFactorAuthResendRequest, twoFactorAuthVerifyRequest } from './data/actions';
+import {
+  FORBIDDEN_REQUEST,
+  TWO_FACTOR_AUTH_INVALID_OTP,
+  TWO_FACTOR_AUTH_RESEND_RATE_LIMITED,
+  TWO_FACTOR_AUTH_SESSION_EXPIRED,
+} from './data/constants';
 import messages from './messages';
 import { windowScrollTo } from '../data/utils';
 
@@ -84,13 +90,13 @@ const TwoFactorAuth = () => {
 
   const getErrorMessage = () => {
     switch (errorCode) {
-      case '2fa-invalid-otp':
+      case TWO_FACTOR_AUTH_INVALID_OTP:
         return formatMessage(messages['2fa.error.invalid.otp']);
-      case '2fa-session-expired':
+      case TWO_FACTOR_AUTH_SESSION_EXPIRED:
         return formatMessage(messages['2fa.error.session.expired']);
-      case '2fa-resend-rate-limited':
+      case TWO_FACTOR_AUTH_RESEND_RATE_LIMITED:
         return formatMessage(messages['2fa.error.resend.rate.limited']);
-      case 'forbidden-request':
+      case FORBIDDEN_REQUEST:
         return formatMessage(messages['2fa.error.too.many.attempts']);
       default:
         return formatMessage(messages['2fa.error.internal']);
