@@ -11,6 +11,7 @@ export const NUDGE_PASSWORD_CHANGE = 'nudge-password-change';
 export const REQUIRE_PASSWORD_CHANGE = 'require-password-change';
 export const ALLOWED_DOMAIN_LOGIN_ERROR = 'allowed-domain-login-error';
 export const TPA_AUTHENTICATION_FAILURE = 'tpa-authentication-failure';
+export const REQUIRE_OTP_VERIFICATION = 'require-otp-verification';
 
 // Account Activation Message
 export const ACCOUNT_ACTIVATION_MESSAGE = {

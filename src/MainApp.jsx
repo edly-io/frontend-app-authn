@@ -18,6 +18,7 @@ import {
   REGISTER_EMBEDDED_PAGE,
   REGISTER_PAGE,
   RESET_PAGE,
+  TWO_FACTOR_AUTH,
 } from './data/constants';
 import { updatePathWithQueryParams } from './data/utils';
 import { ForgotPasswordPage } from './forgot-password';
@@ -26,6 +27,7 @@ import { ProgressiveProfiling } from './progressive-profiling';
 import { RecommendationsPage } from './recommendations';
 import { RegistrationPage } from './register';
 import { ResetPasswordPage } from './reset-password';
+import { TwoFactorAuthPage } from './two-factor-auth';
 
 import './index.scss';
 
@@ -54,6 +56,7 @@ const MainApp = () => (
       <Route path={PASSWORD_RESET_CONFIRM} element={<ResetPasswordPage />} />
       <Route path={AUTHN_PROGRESSIVE_PROFILING} element={<ProgressiveProfiling />} />
       <Route path={RECOMMENDATIONS} element={<RecommendationsPage />} />
+      <Route path={TWO_FACTOR_AUTH} element={<UnAuthOnlyRoute><TwoFactorAuthPage /></UnAuthOnlyRoute>} />
       <Route path={PAGE_NOT_FOUND} element={<NotFoundPage />} />
       <Route path="*" element={<Navigate replace to={PAGE_NOT_FOUND} />} />
     </Routes>

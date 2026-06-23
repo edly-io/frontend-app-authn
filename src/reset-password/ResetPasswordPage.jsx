@@ -27,7 +27,7 @@ import ResetPasswordFailure from './ResetPasswordFailure';
 import BaseContainer from '../base-container';
 import { PasswordField } from '../common-components';
 import {
-  LETTER_REGEX, LOGIN_PAGE, NUMBER_REGEX, RESET_PAGE,
+  LOGIN_PAGE, LOWERCASE_REGEX, MIN_PASSWORD_LENGTH, NUMBER_REGEX, RESET_PAGE, SYMBOL_REGEX, UPPERCASE_REGEX,
 } from '../data/constants';
 import { getAllPossibleQueryParams, updatePathWithQueryParams, windowScrollTo } from '../data/utils';
 
@@ -71,7 +71,14 @@ const ResetPasswordPage = (props) => {
   const validateInput = (name, value) => {
     switch (name) {
       case 'newPassword':
-        if (!value || !LETTER_REGEX.test(value) || !NUMBER_REGEX.test(value) || value.length < 8) {
+        if (
+          !value
+          || !UPPERCASE_REGEX.test(value)
+          || !LOWERCASE_REGEX.test(value)
+          || !NUMBER_REGEX.test(value)
+          || !SYMBOL_REGEX.test(value)
+          || value.length < MIN_PASSWORD_LENGTH
+        ) {
           formErrors.newPassword = formatMessage(messages['password.validation.message']);
         } else {
           validatePasswordFromBackend(value);

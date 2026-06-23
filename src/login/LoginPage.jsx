@@ -2,6 +2,7 @@ import {
   useCallback, useEffect, useMemo, useState,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 
 // Todo: need to change imports when package is published to edly-io
 import { EdlyLogistrationInfo } from '@anas_hameed/edly-saas-widget';
@@ -26,7 +27,7 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
-import { PENDING_STATE, RESET_PAGE } from '../data/constants';
+import { PENDING_STATE, RESET_PAGE, TWO_FACTOR_AUTH } from '../data/constants';
 import {
   getActivationStatus,
   getAllPossibleQueryParams,
@@ -36,7 +37,7 @@ import {
 } from '../data/utils';
 import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
 import { backupLoginFormBegin, dismissPasswordResetBanner, loginRequest } from './data/actions';
-import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
+import { INVALID_FORM, REQUIRE_OTP_VERIFICATION, TPA_AUTHENTICATION_FAILURE } from './data/constants';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
 
@@ -118,6 +119,12 @@ const LoginPage = ({
   }, [backupFormState, shouldBackupState, formFields, errors]);
 
   useEffect(() => {
+    if (loginErrorCode === REQUIRE_OTP_VERIFICATION) {
+      // A 2FA challenge is not a login failure - it's a deferred-login signal, so it's
+      // handled by navigating to the OTP step (see the <Navigate> guard below) instead
+      // of falling through to the LoginFailure banner like every other error code.
+      return;
+    }
     if (loginErrorCode) {
       setErrorCode(prevState => ({
         type: loginErrorCode,
@@ -235,6 +242,20 @@ const LoginPage = ({
       />
     );
   }
+
+  if (loginErrorCode === REQUIRE_OTP_VERIFICATION) {
+    return (
+      <Navigate
+        to={TWO_FACTOR_AUTH}
+        state={{
+          sessionId: loginErrorContext.sessionId,
+          otpEmail: loginErrorContext.otpEmail,
+        }}
+        replace
+      />
+    );
+  }
+
   return (
     <>
       <Helmet>

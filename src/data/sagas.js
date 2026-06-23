@@ -8,6 +8,7 @@ import { saga as loginSaga } from '../login';
 import { saga as authnProgressiveProfilingSaga } from '../progressive-profiling';
 import { saga as registrationSaga } from '../register';
 import { saga as resetPasswordSaga } from '../reset-password';
+import { saga as twoFactorAuthSaga } from '../two-factor-auth';
 
 export default function* rootSaga() {
   yield all([
@@ -18,5 +19,6 @@ export default function* rootSaga() {
     forgotPasswordSaga(),
     resetPasswordSaga(),
     authnProgressiveProfilingSaga(),
+    twoFactorAuthSaga(),
   ]);
 }

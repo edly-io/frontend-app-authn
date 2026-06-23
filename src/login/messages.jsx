@@ -166,28 +166,28 @@ const messages = defineMessages({
     defaultMessage: 'click here to reset it.',
     description: 'Reset password link text for incorrect email or password credentials before blocking account',
   },
-  // Vulnerable password change prompt
+  // Password expiry change prompt
   'password.security.nudge.title': {
     id: 'password.security.nudge.title',
-    defaultMessage: 'Password security',
-    description: 'Title for prompt that nudges user to change their vulnerable password',
+    defaultMessage: 'Password update required',
+    description: 'Title for prompt that nudges user to change their soon-to-expire password',
   },
   'password.security.block.title': {
     id: 'password.security.block.title',
-    defaultMessage: 'Password change required',
-    description: 'Title for prompt that asks user to change their vulnerable password',
+    defaultMessage: 'Password update required',
+    description: 'Title for prompt that asks user to change their expired password',
   },
   'password.security.nudge.body': {
     id: 'password.security.nudge.body',
-    defaultMessage: 'Our system detected that your password is vulnerable. '
+    defaultMessage: 'To help keep your account secure, your password needs to be updated as part of our security policy. '
                     + 'We recommend you change it so that your account stays secure.',
-    description: 'Message copy for prompt that nudges user to change their vulnerable password',
+    description: 'Message copy for prompt that nudges user to change their soon-to-expire password',
   },
   'password.security.block.body': {
     id: 'password.security.block.body',
-    defaultMessage: 'Our system detected that your password is vulnerable. '
-                    + 'Change your password so that your account stays secure.',
-    description: 'Message copy for prompt that asks user to change their vulnerable password',
+    defaultMessage: 'To help keep your account secure, your password needs to be updated as part of our security policy. '
+                    + 'Please create a new password to continue using your account.',
+    description: 'Message copy for prompt that asks user to change their expired password',
   },
   'password.security.close.button': {
     id: 'password.security.close.button',
@@ -196,7 +196,7 @@ const messages = defineMessages({
   },
   'password.security.redirect.to.reset.password.button': {
     id: 'password.security.redirect.to.reset.password.button',
-    defaultMessage: 'Reset your password',
+    defaultMessage: 'Update Password',
     description: 'Button to redirect users to Reset Password page',
   },
   'login.tpa.authentication.failure': {

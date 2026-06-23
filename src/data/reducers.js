@@ -26,6 +26,10 @@ import {
   reducer as resetPasswordReducer,
   storeName as resetPasswordStoreName,
 } from '../reset-password';
+import {
+  reducer as twoFactorAuthReducer,
+  storeName as twoFactorAuthStoreName,
+} from '../two-factor-auth';
 
 const createRootReducer = () => combineReducers({
   [loginStoreName]: loginReducer,
@@ -35,5 +39,6 @@ const createRootReducer = () => combineReducers({
   [forgotPasswordStoreName]: forgotPasswordReducer,
   [resetPasswordStoreName]: resetPasswordReducer,
   [authnProgressiveProfilingStoreName]: authnProgressiveProfilingReducers,
+  [twoFactorAuthStoreName]: twoFactorAuthReducer,
 });
 export default createRootReducer;

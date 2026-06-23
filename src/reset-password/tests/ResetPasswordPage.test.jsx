@@ -74,7 +74,7 @@ describe('ResetPasswordPage', () => {
   // ******** form submission tests ********
 
   it('with valid inputs resetPassword action is dispatched', async () => {
-    const password = 'test-password-1';
+    const password = 'Test-password-1';
 
     store = mockStore({
       ...initialState,
@@ -187,7 +187,8 @@ describe('ResetPasswordPage', () => {
 
   it('should call validation on password field when blur event fires', () => {
     const resetPasswordPage = render(reduxWrapper(<ResetPasswordPage {...props} />));
-    const expectedText = 'Password criteria has not been metPassword must contain at least 8 characters, at least one letter, and at least one number';
+    const expectedText = 'Password criteria has not been metPassword must contain at least 12 characters, including an '
+      + 'uppercase letter, a lowercase letter, a number, and a special character';
     const newPasswordInput = resetPasswordPage.container.querySelector('input#newPassword');
     newPasswordInput.value = 'test-password';
     fireEvent.change(newPasswordInput);

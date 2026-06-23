@@ -56,10 +56,15 @@ const messages = defineMessages({
     defaultMessage: 'Hide password',
     description: 'aria label for hide password icon on password field',
   },
-  'one.letter': {
-    id: 'one.letter',
-    defaultMessage: '1 letter',
-    description: 'password requirement to have 1 letter',
+  'one.uppercase': {
+    id: 'one.uppercase',
+    defaultMessage: '1 uppercase letter',
+    description: 'password requirement to have 1 uppercase letter',
+  },
+  'one.lowercase': {
+    id: 'one.lowercase',
+    defaultMessage: '1 lowercase letter',
+    description: 'password requirement to have 1 lowercase letter',
   },
   'one.number': {
     id: 'one.number',
@@ -71,14 +76,15 @@ const messages = defineMessages({
     defaultMessage: '1 symbol',
     description: 'Password requirement for at least one symbol',
   },
-  'eight.characters': {
-    id: 'eight.characters',
-    defaultMessage: '8 characters',
-    description: 'password requirement to have a minimum of 8 characters',
+  'twelve.characters': {
+    id: 'twelve.characters',
+    defaultMessage: '12 characters',
+    description: 'password requirement to have a minimum of 12 characters',
   },
   'password.sr.only.helping.text': {
     id: 'password.sr.only.helping.text',
-    defaultMessage: 'Password must contain at least 8 characters, at least one letter, and at least one number',
+    defaultMessage: 'Password must contain at least 12 characters, including an uppercase letter, '
+      + 'a lowercase letter, a number, and a special character',
     description: 'Password helping text for the sr-only class',
   },
   // third party auth
