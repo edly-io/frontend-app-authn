@@ -53,7 +53,7 @@ const messages = defineMessages({
   },
   'two.factor.auth.error.otp-attempts-exceeded': {
     id: 'two.factor.auth.error.otp-attempts-exceeded',
-    defaultMessage: 'Too many incorrect attempts. Please request a new code.',
+    defaultMessage: 'Too many incorrect attempts. Please try again later.',
     description: 'Error shown when the maximum OTP attempts have been exceeded.',
   },
   'two.factor.auth.error.otp-incorrect': {

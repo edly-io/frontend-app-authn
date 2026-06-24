@@ -179,7 +179,10 @@ const LoginFailureMessage = (props) => {
         />
       );
     case REQUIRE_PASSWORD_CHANGE:
-      return <ChangePasswordPrompt />;
+      // verifiedEmail (from context.verified_email, camelCased by the login saga)
+      // lets the modal trigger the reset email directly to the address the user
+      // already proved they own, instead of sending them to re-type it.
+      return <ChangePasswordPrompt verifiedEmail={context.verifiedEmail} />;
     case TPA_AUTHENTICATION_FAILURE:
       errorMessage = (
         <p>
@@ -221,6 +224,7 @@ LoginFailureMessage.propTypes = {
     errorMessage: PropTypes.string,
     email: PropTypes.string,
     redirectUrl: PropTypes.string,
+    verifiedEmail: PropTypes.string,
   }),
   errorCode: PropTypes.string.isRequired,
   errorCount: PropTypes.number.isRequired,

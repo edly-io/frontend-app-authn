@@ -199,6 +199,12 @@ const messages = defineMessages({
     defaultMessage: 'Update Password',
     description: 'Button to redirect users to Reset Password page',
   },
+  'password.security.back.to.sign.in.button': {
+    id: 'password.security.back.to.sign.in.button',
+    defaultMessage: 'Back to Sign In',
+    description: 'Button shown after the password-reset email has been sent server-side, '
+      + 'letting the user leave the expired-password block modal once they are done',
+  },
   'login.tpa.authentication.failure': {
     id: 'login.tpa.authentication.failure',
     defaultMessage: 'We are sorry, you are not authorized to access {platform_name} via this channel. '

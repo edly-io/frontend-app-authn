@@ -1,8 +1,11 @@
+import { Provider } from 'react-redux';
+
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 import {
   render, screen,
 } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import configureStore from 'redux-mock-store';
 
 import {
   ACCOUNT_LOCKED_OUT,
@@ -24,8 +27,11 @@ jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthService: jest.fn(),
 }));
 
+const mockStore = configureStore();
+
 describe('LoginFailureMessage', () => {
   let props = {};
+  const store = mockStore({ forgotPassword: { status: '', submitState: '' } });
 
   beforeAll(() => {
     Object.defineProperty(window, 'matchMedia', {
@@ -297,7 +303,9 @@ describe('LoginFailureMessage', () => {
     render(
       <IntlProvider locale="en">
         <MemoryRouter>
-          <LoginFailureMessage {...props} />
+          <Provider store={store}>
+            <LoginFailureMessage {...props} />
+          </Provider>
         </MemoryRouter>
       </IntlProvider>,
     );
@@ -323,7 +331,9 @@ describe('LoginFailureMessage', () => {
     render(
       <IntlProvider locale="en">
         <MemoryRouter>
-          <LoginFailureMessage {...props} />
+          <Provider store={store}>
+            <LoginFailureMessage {...props} />
+          </Provider>
         </MemoryRouter>
       </IntlProvider>,
     );
