@@ -16,8 +16,8 @@ import { resendOtpRequest, verifyOtpRequest } from './service';
 export function* handleVerifyOtp(action) {
   try {
     yield put(verifyOtpBegin());
-    const { sessionId, otpCode } = action.payload;
-    const { success, redirectUrl, passwordExpiryNudge } = yield call(verifyOtpRequest, sessionId, otpCode);
+    const { sessionId, otpCode, next } = action.payload;
+    const { success, redirectUrl, passwordExpiryNudge } = yield call(verifyOtpRequest, sessionId, otpCode, next);
     if (!success) {
       // The backend returns its specific failure codes (otp-expired, otp-attempts-exceeded,
       // otp-session-not-found, …) as 400s, handled in the catch below. A 200 with success:false

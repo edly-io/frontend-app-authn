@@ -15,7 +15,7 @@ import messages from './messages';
 import BaseContainer from '../base-container';
 import { RedirectLogistration } from '../common-components';
 import { LOGIN_PAGE, PENDING_STATE } from '../data/constants';
-import { updatePathWithQueryParams } from '../data/utils';
+import { getAllPossibleQueryParams, updatePathWithQueryParams } from '../data/utils';
 import ChangePasswordPrompt from '../login/ChangePasswordPrompt';
 import { cancelOtpRequest } from './data/service';
 
@@ -31,6 +31,7 @@ const TwoFactorAuthPage = () => {
 
   const sessionId = location.state?.sessionId;
   const email = location.state?.otpEmail || location.state?.email;
+  const { next } = getAllPossibleQueryParams();
 
   const {
     submitState,
@@ -71,7 +72,7 @@ const TwoFactorAuthPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     setResendConfirmation(false);
-    dispatch(verifyOtp(sessionId, otpCode));
+    dispatch(verifyOtp(sessionId, otpCode, next));
   };
 
   const handleResend = (event) => {

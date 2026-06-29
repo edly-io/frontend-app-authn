@@ -246,7 +246,7 @@ const LoginPage = ({
   if (loginErrorCode === REQUIRE_OTP_VERIFICATION) {
     return (
       <Navigate
-        to={TWO_FACTOR_AUTH}
+        to={updatePathWithQueryParams(TWO_FACTOR_AUTH)}
         state={{
           sessionId: loginErrorContext.sessionId,
           otpEmail: loginErrorContext.otpEmail,

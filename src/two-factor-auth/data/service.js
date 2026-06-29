@@ -6,11 +6,11 @@ const requestConfig = {
   isPublic: true,
 };
 
-export async function verifyOtpRequest(sessionId, otpCode) {
+export async function verifyOtpRequest(sessionId, otpCode, next) {
   const { data } = await getAuthenticatedHttpClient()
     .post(
       `${getConfig().LMS_BASE_URL}/api/v1/otp/verify/`,
-      { session_id: sessionId, otp_code: otpCode },
+      { session_id: sessionId, otp_code: otpCode, next },
       requestConfig,
     )
     .catch((e) => { throw (e); });

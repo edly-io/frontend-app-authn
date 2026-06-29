@@ -89,7 +89,21 @@ describe('TwoFactorAuthPage', () => {
     fireEvent.change(input, { target: { value: '654321' } });
     fireEvent.click(screen.getByText('Verify'));
 
-    expect(dispatchSpy).toHaveBeenCalledWith(verifyOtp('session-123', '654321'));
+    expect(dispatchSpy).toHaveBeenCalledWith(verifyOtp('session-123', '654321', undefined));
+  });
+
+  it('dispatches verifyOtp with the next param read from the URL query string', () => {
+    delete window.location;
+    window.location = { search: '?next=%2Fauthoring%2Fcourse%2Fabc' };
+    render(reduxWrapper(<TwoFactorAuthPage />));
+    const input = screen.getByLabelText('Verification code');
+
+    fireEvent.change(input, { target: { value: '654321' } });
+    fireEvent.click(screen.getByText('Verify'));
+
+    expect(dispatchSpy).toHaveBeenCalledWith(verifyOtp('session-123', '654321', '/authoring/course/abc'));
+
+    window.location.search = '';
   });
 
   it('dispatches resendOtp and starts the cooldown when "Resend code" is clicked', () => {
