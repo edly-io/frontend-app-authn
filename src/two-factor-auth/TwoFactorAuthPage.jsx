@@ -8,22 +8,26 @@ import {
   Alert, Form, Hyperlink, StatefulButton,
 } from '@openedx/paragon';
 import { Helmet } from 'react-helmet';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import { resendOtp, resetOtpError, verifyOtp } from './data/actions';
 import messages from './messages';
 import BaseContainer from '../base-container';
 import { RedirectLogistration } from '../common-components';
 import { LOGIN_PAGE, PENDING_STATE } from '../data/constants';
+import { updatePathWithQueryParams } from '../data/utils';
 import ChangePasswordPrompt from '../login/ChangePasswordPrompt';
 import { cancelOtpRequest } from './data/service';
-
-const RESEND_COOLDOWN_SECONDS = getConfig().TWO_FA_RESEND_COOLDOWN_SECONDS || 60;
 
 const TwoFactorAuthPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
+
+  // Read at component-render time (rather than module-eval time) so an async/runtime
+  // config load is picked up; defaults to 60s if the key isn't wired into this site's config.
+  const resendCooldownSeconds = getConfig().TWO_FA_RESEND_COOLDOWN_SECONDS || 60;
 
   const sessionId = location.state?.sessionId;
   const email = location.state?.otpEmail || location.state?.email;
@@ -73,14 +77,14 @@ const TwoFactorAuthPage = () => {
   const handleResend = (event) => {
     event.preventDefault();
     dispatch(resendOtp(sessionId));
-    setResendCooldown(RESEND_COOLDOWN_SECONDS);
+    setResendCooldown(resendCooldownSeconds);
   };
 
   const handleCancel = (event) => {
     event.preventDefault();
     cancelOtpRequest(sessionId);
     dispatch(resetOtpError());
-    window.location.href = LOGIN_PAGE;
+    navigate(updatePathWithQueryParams(LOGIN_PAGE));
   };
 
   const handleOtpChange = (event) => {

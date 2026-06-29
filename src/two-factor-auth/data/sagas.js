@@ -10,7 +10,7 @@ import {
   verifyOtpFailure,
   verifyOtpSuccess,
 } from './actions';
-import { OTP_INCORRECT, OTP_INVALID_REQUEST } from './constants';
+import { OTP_INVALID_REQUEST } from './constants';
 import { resendOtpRequest, verifyOtpRequest } from './service';
 
 export function* handleVerifyOtp(action) {
@@ -19,7 +19,11 @@ export function* handleVerifyOtp(action) {
     const { sessionId, otpCode } = action.payload;
     const { success, redirectUrl, passwordExpiryNudge } = yield call(verifyOtpRequest, sessionId, otpCode);
     if (!success) {
-      yield put(verifyOtpFailure(OTP_INCORRECT));
+      // The backend returns its specific failure codes (otp-expired, otp-attempts-exceeded,
+      // otp-session-not-found, …) as 400s, handled in the catch below. A 200 with success:false
+      // is an unexpected/defensive case, so fall back to the generic code instead of asserting
+      // "incorrect code".
+      yield put(verifyOtpFailure(OTP_INVALID_REQUEST));
       return;
     }
     yield put(verifyOtpSuccess(redirectUrl, passwordExpiryNudge));

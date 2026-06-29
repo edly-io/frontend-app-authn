@@ -79,6 +79,10 @@ const ChangePasswordPrompt = ({ variant, redirectUrl, verifiedEmail }) => {
       onClose={close}
       size={isMobileView ? 'sm' : 'md'}
       hasCloseButton={false}
+      // With a verifiedEmail, the "block" variant's only way forward is the in-modal reset
+      // button (no redirect-on-dismiss fallback) - block backdrop/ESC dismissal so a mandatory
+      // modal can't be closed without the user having a path forward.
+      isBlocking={variant === 'block' && !!verifiedEmail}
     >
       <ModalDialog.Header>
         <ModalDialog.Title>
