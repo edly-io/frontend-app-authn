@@ -11,9 +11,10 @@ import {
 import PropTypes from 'prop-types';
 
 import messages from './messages';
+import { NUMBER_REGEX } from '../data/constants';
 import {
-  LOWERCASE_REGEX, MIN_PASSWORD_LENGTH, NUMBER_REGEX, SYMBOL_REGEX, UPPERCASE_REGEX,
-} from '../data/constants';
+  LOWERCASE_REGEX, MIN_PASSWORD_LENGTH, SYMBOL_REGEX, UPPERCASE_REGEX,
+} from '../data/passwordPolicy';
 import { clearRegistrationBackendError, fetchRealtimeValidations } from '../register/data/actions';
 import { validatePasswordField } from '../register/data/utils';
 

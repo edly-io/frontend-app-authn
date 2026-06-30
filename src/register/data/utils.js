@@ -1,8 +1,9 @@
 import { snakeCaseObject } from '@edx/frontend-platform';
 
+import { NUMBER_REGEX } from '../../data/constants';
 import {
-  LOWERCASE_REGEX, MIN_PASSWORD_LENGTH, NUMBER_REGEX, SYMBOL_REGEX, UPPERCASE_REGEX,
-} from '../../data/constants';
+  LOWERCASE_REGEX, MIN_PASSWORD_LENGTH, SYMBOL_REGEX, UPPERCASE_REGEX,
+} from '../../data/passwordPolicy';
 import messages from '../messages';
 import validateEmail from '../RegistrationFields/EmailField/validator';
 import validateName from '../RegistrationFields/NameField/validator';

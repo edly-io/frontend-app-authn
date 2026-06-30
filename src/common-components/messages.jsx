@@ -56,15 +56,10 @@ const messages = defineMessages({
     defaultMessage: 'Hide password',
     description: 'aria label for hide password icon on password field',
   },
-  'one.uppercase': {
-    id: 'one.uppercase',
-    defaultMessage: '1 uppercase letter',
-    description: 'password requirement to have 1 uppercase letter',
-  },
-  'one.lowercase': {
-    id: 'one.lowercase',
-    defaultMessage: '1 lowercase letter',
-    description: 'password requirement to have 1 lowercase letter',
+  'one.letter': {
+    id: 'one.letter',
+    defaultMessage: '1 letter',
+    description: 'password requirement to have 1 letter',
   },
   'one.number': {
     id: 'one.number',
@@ -75,6 +70,24 @@ const messages = defineMessages({
     id: 'one.symbol',
     defaultMessage: '1 symbol',
     description: 'Password requirement for at least one symbol',
+  },
+  'eight.characters': {
+    id: 'eight.characters',
+    defaultMessage: '8 characters',
+    description: 'password requirement to have a minimum of 8 characters',
+  },
+  // Our stronger password policy needs separate uppercase/lowercase requirements and a
+  // higher minimum length - added as new keys rather than repurposing one.letter/
+  // eight.characters above, so we don't touch translations for strings we don't own.
+  'one.uppercase': {
+    id: 'one.uppercase',
+    defaultMessage: '1 uppercase letter',
+    description: 'password requirement to have 1 uppercase letter',
+  },
+  'one.lowercase': {
+    id: 'one.lowercase',
+    defaultMessage: '1 lowercase letter',
+    description: 'password requirement to have 1 lowercase letter',
   },
   'twelve.characters': {
     id: 'twelve.characters',

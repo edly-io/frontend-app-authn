@@ -27,13 +27,7 @@ export const FAILURE_STATE = 'failure';
 export const FORBIDDEN_STATE = 'forbidden';
 export const EMBEDDED = 'embedded';
 
-export const UPPERCASE_REGEX = /[A-Z]/;
-export const LOWERCASE_REGEX = /[a-z]/;
 export const NUMBER_REGEX = /\d/;
-// Mirrors the backend's SpecialCharacterValidator character set (edly_features_app.validators)
-// so the displayed "1 symbol" requirement agrees with what the server will actually accept.
-export const SYMBOL_REGEX = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~`]/;
-export const MIN_PASSWORD_LENGTH = 12;
 export const VALID_EMAIL_REGEX = '(^[-!#$%&\'*+/=?^_`{}|~0-9A-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9A-Z]+)*'
                                  + '|^"([\\001-\\010\\013\\014\\016-\\037!#-\\[\\]-\\177]|\\\\[\\001-\\011\\013\\014\\016-\\177])*"'
                                  + ')@((?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\\.)+)(?:[A-Z0-9-]{2,63})'

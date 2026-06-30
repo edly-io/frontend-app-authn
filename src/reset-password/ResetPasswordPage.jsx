@@ -26,9 +26,10 @@ import messages from './messages';
 import ResetPasswordFailure from './ResetPasswordFailure';
 import BaseContainer from '../base-container';
 import { PasswordField } from '../common-components';
+import { LOGIN_PAGE, NUMBER_REGEX, RESET_PAGE } from '../data/constants';
 import {
-  LOGIN_PAGE, LOWERCASE_REGEX, MIN_PASSWORD_LENGTH, NUMBER_REGEX, RESET_PAGE, SYMBOL_REGEX, UPPERCASE_REGEX,
-} from '../data/constants';
+  LOWERCASE_REGEX, MIN_PASSWORD_LENGTH, SYMBOL_REGEX, UPPERCASE_REGEX,
+} from '../data/passwordPolicy';
 import { getAllPossibleQueryParams, updatePathWithQueryParams, windowScrollTo } from '../data/utils';
 
 const ResetPasswordPage = (props) => {
