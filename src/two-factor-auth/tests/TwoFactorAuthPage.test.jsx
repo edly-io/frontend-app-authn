@@ -1,13 +1,11 @@
-import { Provider } from 'react-redux';
-
 import { mergeConfig } from '@edx/frontend-platform';
-import { IntlProvider } from '@edx/frontend-platform/i18n';
 import {
   fireEvent, render, screen,
 } from '@testing-library/react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
+import reduxWrapper from '../../testUtils';
 import { resendOtp, verifyOtp } from '../data/actions';
 import { cancelOtpRequest } from '../data/service';
 import TwoFactorAuthPage from '../TwoFactorAuthPage';
@@ -39,14 +37,6 @@ describe('TwoFactorAuthPage', () => {
   let store = {};
   let dispatchSpy;
 
-  const reduxWrapper = children => (
-    <IntlProvider locale="en">
-      <MemoryRouter>
-        <Provider store={store}>{children}</Provider>
-      </MemoryRouter>
-    </IntlProvider>
-  );
-
   beforeEach(() => {
     mergeConfig({ SITE_NAME: 'Edly' });
     mockedNavigate.mockClear();
@@ -60,21 +50,21 @@ describe('TwoFactorAuthPage', () => {
 
   it('redirects to the login page when there is no sessionId in router state', () => {
     useLocation.mockReturnValue({ state: {} });
-    const { container } = render(reduxWrapper(<TwoFactorAuthPage />));
+    const { container } = render(reduxWrapper(store, <TwoFactorAuthPage />));
 
     // <Navigate> renders nothing - the OTP form should not be present.
     expect(container.querySelector('#two-factor-auth-form')).toBeNull();
   });
 
   it('renders the OTP form when a sessionId is present', () => {
-    render(reduxWrapper(<TwoFactorAuthPage />));
+    render(reduxWrapper(store, <TwoFactorAuthPage />));
 
     expect(screen.getByLabelText('Verification code')).toBeDefined();
     expect(screen.getByText('learner@example.com', { exact: false })).toBeDefined();
   });
 
   it('strips non-digit characters and caps the OTP input at 6 digits', () => {
-    render(reduxWrapper(<TwoFactorAuthPage />));
+    render(reduxWrapper(store, <TwoFactorAuthPage />));
     const input = screen.getByLabelText('Verification code');
 
     fireEvent.change(input, { target: { value: 'a1b2c3d4e5f6g7' } });
@@ -83,7 +73,7 @@ describe('TwoFactorAuthPage', () => {
   });
 
   it('dispatches verifyOtp with the sessionId and entered code on submit', () => {
-    render(reduxWrapper(<TwoFactorAuthPage />));
+    render(reduxWrapper(store, <TwoFactorAuthPage />));
     const input = screen.getByLabelText('Verification code');
 
     fireEvent.change(input, { target: { value: '654321' } });
@@ -95,7 +85,7 @@ describe('TwoFactorAuthPage', () => {
   it('dispatches verifyOtp with the next param read from the URL query string', () => {
     delete window.location;
     window.location = { search: '?next=%2Fauthoring%2Fcourse%2Fabc' };
-    render(reduxWrapper(<TwoFactorAuthPage />));
+    render(reduxWrapper(store, <TwoFactorAuthPage />));
     const input = screen.getByLabelText('Verification code');
 
     fireEvent.change(input, { target: { value: '654321' } });
@@ -107,7 +97,7 @@ describe('TwoFactorAuthPage', () => {
   });
 
   it('dispatches resendOtp and starts the cooldown when "Resend code" is clicked', () => {
-    render(reduxWrapper(<TwoFactorAuthPage />));
+    render(reduxWrapper(store, <TwoFactorAuthPage />));
 
     fireEvent.click(screen.getByText('Resend code'));
 
@@ -116,7 +106,7 @@ describe('TwoFactorAuthPage', () => {
   });
 
   it('cancels the OTP session and navigates back to login with query params preserved', () => {
-    render(reduxWrapper(<TwoFactorAuthPage />));
+    render(reduxWrapper(store, <TwoFactorAuthPage />));
 
     fireEvent.click(screen.getByText('Use a different account'));
 
@@ -129,7 +119,7 @@ describe('TwoFactorAuthPage', () => {
       twoFactorAuth: { ...defaultTwoFactorAuthState, errorCode: 'otp-expired' },
     });
 
-    render(reduxWrapper(<TwoFactorAuthPage />));
+    render(reduxWrapper(store, <TwoFactorAuthPage />));
 
     expect(screen.getByText('This code has expired. Please request a new one.')).toBeDefined();
   });
@@ -139,7 +129,7 @@ describe('TwoFactorAuthPage', () => {
       twoFactorAuth: { ...defaultTwoFactorAuthState, errorCode: 'some-unmapped-code' },
     });
 
-    render(reduxWrapper(<TwoFactorAuthPage />));
+    render(reduxWrapper(store, <TwoFactorAuthPage />));
 
     expect(screen.getByText('Something went wrong. Please try again.')).toBeDefined();
   });

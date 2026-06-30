@@ -1,12 +1,10 @@
-import { Provider } from 'react-redux';
-
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 import {
   render, screen,
 } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
+import reduxWrapper from '../../testUtils';
 import {
   ACCOUNT_LOCKED_OUT,
   ALLOWED_DOMAIN_LOGIN_ERROR,
@@ -300,15 +298,7 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
-    render(
-      <IntlProvider locale="en">
-        <MemoryRouter>
-          <Provider store={store}>
-            <LoginFailureMessage {...props} />
-          </Provider>
-        </MemoryRouter>
-      </IntlProvider>,
-    );
+    render(reduxWrapper(store, <LoginFailureMessage {...props} />));
 
     const message = 'Our system detected that your password is vulnerable. '
                          + 'We recommend you change it so that your account stays secure.';
@@ -328,15 +318,7 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
-    render(
-      <IntlProvider locale="en">
-        <MemoryRouter>
-          <Provider store={store}>
-            <LoginFailureMessage {...props} />
-          </Provider>
-        </MemoryRouter>
-      </IntlProvider>,
-    );
+    render(reduxWrapper(store, <LoginFailureMessage {...props} />));
 
     expect(screen.getByText(
       'Password change required',
