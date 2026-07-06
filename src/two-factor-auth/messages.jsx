@@ -58,7 +58,7 @@ const messages = defineMessages({
   },
   'two.factor.auth.error.otp-incorrect': {
     id: 'two.factor.auth.error.otp-incorrect',
-    defaultMessage: 'That code is incorrect. Please try again.',
+    defaultMessage: 'The code is incorrect. Please try again or request a new one.',
     description: 'Error shown when the submitted OTP code is incorrect.',
   },
   'two.factor.auth.error.otp-resend-cooldown': {

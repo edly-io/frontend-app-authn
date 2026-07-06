@@ -3,6 +3,7 @@ import { AsyncActionType } from '../../data/utils';
 export const VERIFY_OTP = new AsyncActionType('TWO_FACTOR_AUTH', 'VERIFY_OTP');
 export const RESEND_OTP = new AsyncActionType('TWO_FACTOR_AUTH', 'RESEND_OTP');
 export const RESET_OTP_ERROR = 'TWO_FACTOR_AUTH__RESET_OTP_ERROR';
+export const RESET_TWO_FACTOR_AUTH = 'TWO_FACTOR_AUTH__RESET_TWO_FACTOR_AUTH';
 
 export const verifyOtp = (sessionId, otpCode, next) => ({
   type: VERIFY_OTP.BASE,
@@ -43,4 +44,8 @@ export const resendOtpFailure = (errorCode) => ({
 
 export const resetOtpError = () => ({
   type: RESET_OTP_ERROR,
+});
+
+export const resetTwoFactorAuth = () => ({
+  type: RESET_TWO_FACTOR_AUTH,
 });

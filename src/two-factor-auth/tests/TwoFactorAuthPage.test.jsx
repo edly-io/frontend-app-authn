@@ -6,7 +6,9 @@ import { useLocation } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import reduxWrapper from '../../testUtils';
-import { resendOtp, verifyOtp } from '../data/actions';
+import { resetEmailCheck } from '../../data/actions';
+import { resendOtp, resetTwoFactorAuth, verifyOtp } from '../data/actions';
+import { clearLoginError } from '../../login/data/actions';
 import { cancelOtpRequest } from '../data/service';
 import TwoFactorAuthPage from '../TwoFactorAuthPage';
 
@@ -102,7 +104,7 @@ describe('TwoFactorAuthPage', () => {
     fireEvent.click(screen.getByText('Resend code'));
 
     expect(dispatchSpy).toHaveBeenCalledWith(resendOtp('session-123'));
-    expect(screen.getByText('Resend code (60s)', { exact: false })).toBeDefined();
+    expect(screen.getByText('Resend code (180s)', { exact: false })).toBeDefined();
   });
 
   it('cancels the OTP session and navigates back to login with query params preserved', () => {
@@ -111,6 +113,9 @@ describe('TwoFactorAuthPage', () => {
     fireEvent.click(screen.getByText('Use a different account'));
 
     expect(cancelOtpRequest).toHaveBeenCalledWith('session-123');
+    expect(dispatchSpy).toHaveBeenCalledWith(resetTwoFactorAuth());
+    expect(dispatchSpy).toHaveBeenCalledWith(resetEmailCheck());
+    expect(dispatchSpy).toHaveBeenCalledWith(clearLoginError());
     expect(mockedNavigate).toHaveBeenCalledWith('/login');
   });
 
@@ -132,5 +137,15 @@ describe('TwoFactorAuthPage', () => {
     render(reduxWrapper(store, <TwoFactorAuthPage />));
 
     expect(screen.getByText('Something went wrong. Please try again.')).toBeDefined();
+  });
+
+  it('shows the correct error message for an incorrect OTP code', () => {
+    store = mockStore({
+      twoFactorAuth: { ...defaultTwoFactorAuthState, errorCode: 'otp-incorrect' },
+    });
+
+    render(reduxWrapper(store, <TwoFactorAuthPage />));
+
+    expect(screen.getByText('The code is incorrect. Please try again or request a new one.')).toBeDefined();
   });
 });

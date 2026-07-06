@@ -30,12 +30,17 @@ import {
   reducer as twoFactorAuthReducer,
   storeName as twoFactorAuthStoreName,
 } from '../two-factor-auth';
+import { RESET_EMAIL_CHECK } from './constants';
+
+const resettableEmailCheckReducer = (state, action) => (
+  action.type === RESET_EMAIL_CHECK ? emailCheckReducer(undefined, action) : emailCheckReducer(state, action)
+);
 
 const createRootReducer = () => combineReducers({
   [loginStoreName]: loginReducer,
   [registerStoreName]: registerReducer,
   [commonComponentsStoreName]: commonComponentsReducer,
-  [emailCheckStoreName]: emailCheckReducer,
+  [emailCheckStoreName]: resettableEmailCheckReducer,
   [forgotPasswordStoreName]: forgotPasswordReducer,
   [resetPasswordStoreName]: resetPasswordReducer,
   [authnProgressiveProfilingStoreName]: authnProgressiveProfilingReducers,

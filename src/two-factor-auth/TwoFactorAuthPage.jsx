@@ -10,13 +10,15 @@ import {
 import { Helmet } from 'react-helmet';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
-import { resendOtp, resetOtpError, verifyOtp } from './data/actions';
+import { resendOtp, resetTwoFactorAuth, verifyOtp } from './data/actions';
 import messages from './messages';
 import BaseContainer from '../base-container';
 import { RedirectLogistration } from '../common-components';
 import { LOGIN_PAGE, PENDING_STATE } from '../data/constants';
+import { resetEmailCheck } from '../data/actions';
 import { getAllPossibleQueryParams, updatePathWithQueryParams } from '../data/utils';
 import ChangePasswordPrompt from '../login/ChangePasswordPrompt';
+import { clearLoginError } from '../login/data/actions';
 import { cancelOtpRequest } from './data/service';
 
 const TwoFactorAuthPage = () => {
@@ -26,8 +28,8 @@ const TwoFactorAuthPage = () => {
   const location = useLocation();
 
   // Read at component-render time (rather than module-eval time) so an async/runtime
-  // config load is picked up; defaults to 60s if the key isn't wired into this site's config.
-  const resendCooldownSeconds = getConfig().TWO_FA_RESEND_COOLDOWN_SECONDS || 60;
+  // config load is picked up; defaults to 180s if the key isn't wired into this site's config.
+  const resendCooldownSeconds = getConfig().TWO_FA_RESEND_COOLDOWN_SECONDS || 180;
 
   const sessionId = location.state?.sessionId;
   const email = location.state?.otpEmail || location.state?.email;
@@ -84,7 +86,9 @@ const TwoFactorAuthPage = () => {
   const handleCancel = (event) => {
     event.preventDefault();
     cancelOtpRequest(sessionId);
-    dispatch(resetOtpError());
+    dispatch(resetTwoFactorAuth());
+    dispatch(resetEmailCheck());
+    dispatch(clearLoginError());
     navigate(updatePathWithQueryParams(LOGIN_PAGE));
   };
 

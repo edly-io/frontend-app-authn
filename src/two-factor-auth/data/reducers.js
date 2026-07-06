@@ -1,6 +1,7 @@
 import {
   RESEND_OTP,
   RESET_OTP_ERROR,
+  RESET_TWO_FACTOR_AUTH,
   VERIFY_OTP,
 } from './actions';
 import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
@@ -58,6 +59,8 @@ const reducer = (state = defaultState, action = {}) => {
         ...state,
         errorCode: '',
       };
+    case RESET_TWO_FACTOR_AUTH:
+      return { ...defaultState };
     default:
       return state;
   }
