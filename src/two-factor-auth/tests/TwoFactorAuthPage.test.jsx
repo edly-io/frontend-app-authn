@@ -1,6 +1,6 @@
 import { mergeConfig } from '@edx/frontend-platform';
 import {
-  fireEvent, render, screen,
+  act, fireEvent, render, screen,
 } from '@testing-library/react';
 import { useLocation } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
@@ -147,5 +147,51 @@ describe('TwoFactorAuthPage', () => {
     render(reduxWrapper(store, <TwoFactorAuthPage />));
 
     expect(screen.getByText('The code is incorrect. Please try again or request a new one.')).toBeDefined();
+  });
+
+  it('navigates to the redirectUrl via window.location.href on successful verify', () => {
+    const originalLocation = window.location;
+    delete window.location;
+    window.location = { href: '' };
+
+    store = mockStore({
+      twoFactorAuth: {
+        ...defaultTwoFactorAuthState,
+        success: true,
+        redirectUrl: 'http://local.openedx.io:8000/dashboard',
+        passwordExpiryNudge: false,
+      },
+    });
+
+    act(() => {
+      render(reduxWrapper(store, <TwoFactorAuthPage />));
+    });
+
+    expect(window.location.href).toBe('http://local.openedx.io:8000/dashboard');
+
+    window.location = originalLocation;
+  });
+
+  it('does not navigate when success is true but passwordExpiryNudge is also true', () => {
+    const originalLocation = window.location;
+    delete window.location;
+    window.location = { href: '' };
+
+    store = mockStore({
+      twoFactorAuth: {
+        ...defaultTwoFactorAuthState,
+        success: true,
+        redirectUrl: 'http://local.openedx.io:8000/dashboard',
+        passwordExpiryNudge: true,
+      },
+    });
+
+    act(() => {
+      render(reduxWrapper(store, <TwoFactorAuthPage />));
+    });
+
+    expect(window.location.href).toBe('');
+
+    window.location = originalLocation;
   });
 });

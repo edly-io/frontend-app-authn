@@ -13,7 +13,6 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { resendOtp, resetTwoFactorAuth, verifyOtp } from './data/actions';
 import messages from './messages';
 import BaseContainer from '../base-container';
-import { RedirectLogistration } from '../common-components';
 import { LOGIN_PAGE, PENDING_STATE } from '../data/constants';
 import { resetEmailCheck } from '../data/actions';
 import { getAllPossibleQueryParams, updatePathWithQueryParams } from '../data/utils';
@@ -67,6 +66,16 @@ const TwoFactorAuthPage = () => {
     }
   }, [success, passwordExpiryNudge]);
 
+  // Navigate after a successful OTP verify in an effect (not during render) so the
+  // assignment is guaranteed to fire exactly once after React commits the update,
+  // regardless of concurrent-mode render scheduling or the resendCooldown timer
+  // triggering interleaved state updates.
+  useEffect(() => {
+    if (success && !passwordExpiryNudge && redirectUrl) {
+      window.location.href = redirectUrl;
+    }
+  }, [success, passwordExpiryNudge, redirectUrl]);
+
   if (!sessionId) {
     return <Navigate to={LOGIN_PAGE} replace />;
   }
@@ -102,10 +111,8 @@ const TwoFactorAuthPage = () => {
       <Helmet>
         <title>{formatMessage(messages['two.factor.auth.page.title'], { siteName: getConfig().SITE_NAME })}</title>
       </Helmet>
-      {success && passwordExpiryNudge ? (
+      {success && passwordExpiryNudge && (
         <ChangePasswordPrompt variant="nudge" redirectUrl={redirectUrl} />
-      ) : (
-        <RedirectLogistration success={success} redirectUrl={redirectUrl} />
       )}
       <div className="mw-xs mt-3 mb-2">
         <h2 className="text-primary">{formatMessage(messages['two.factor.auth.page.heading'])}</h2>
