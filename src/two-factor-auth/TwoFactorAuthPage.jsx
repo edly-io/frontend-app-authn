@@ -14,12 +14,12 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { resendOtp, resetTwoFactorAuth, verifyOtp } from './data/actions';
 import messages from './messages';
 import BaseContainer from '../base-container';
-import { LOGIN_PAGE, PENDING_STATE } from '../data/constants';
 import { resetEmailCheck } from '../data/actions';
+import { LOGIN_PAGE, PENDING_STATE } from '../data/constants';
 import { getAllPossibleQueryParams, updatePathWithQueryParams } from '../data/utils';
 import ChangePasswordPrompt from '../login/ChangePasswordPrompt';
-import { clearLoginError } from '../login/data/actions';
 import { cancelOtpRequest } from './data/service';
+import { clearLoginError } from '../login/data/actions';
 
 const TwoFactorAuthPage = () => {
   const { formatMessage } = useIntl();
@@ -115,84 +115,86 @@ const TwoFactorAuthPage = () => {
       {success && passwordExpiryNudge && (
         <ChangePasswordPrompt variant="nudge" redirectUrl={redirectUrl} />
       )}
-      <div className="mw-xs mt-3 mb-2">
-        <h2 className="text-primary">{formatMessage(messages['two.factor.auth.page.heading'])}</h2>
-        <p>{formatMessage(messages['two.factor.auth.page.description'], { email })}</p>
-        {errorCode && (
-          <Alert id="two-factor-auth-errors" className="mb-3" variant="danger" icon={Error}>
-            <Alert.Heading>
-              {formatMessage(
-                errorCode === 'otp-resend-cooldown'
-                  ? messages['two.factor.auth.error.resend.heading']
-                  : messages['two.factor.auth.error.heading'],
-              )}
-            </Alert.Heading>
-            <p>
-              {formatMessage(
-                messages[`two.factor.auth.error.${errorCode}`] || messages['two.factor.auth.error.invalid-request'],
-              )}
-            </p>
-          </Alert>
-        )}
-        {resendState !== PENDING_STATE && resendConfirmation && !errorCode && (
-          <Alert id="two-factor-auth-resend-success" className="mb-3" variant="success" icon={CheckCircle}>
-            <Alert.Heading>{formatMessage(messages['two.factor.auth.resend.success.heading'])}</Alert.Heading>
-            <p>{formatMessage(messages['two.factor.auth.resend.success'])}</p>
-          </Alert>
-        )}
-        <Form id="two-factor-auth-form" name="two-factor-auth-form" onSubmit={handleSubmit}>
-          <Form.Group>
-            <Form.Label htmlFor="otp-code">{formatMessage(messages['two.factor.auth.code.label'])}</Form.Label>
-            <Form.Control
-              id="otp-code"
-              name="otp-code"
-              type="text"
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              maxLength={6}
-              value={otpCode}
-              onChange={handleOtpChange}
-            />
-          </Form.Group>
-          <StatefulButton
-            name="verify-otp"
-            id="verify-otp"
-            type="submit"
-            variant="brand"
-            className="login-button-width"
-            state={submitState}
-            disabled={otpCode.length !== 6}
-            labels={{
-              default: formatMessage(messages['two.factor.auth.submit.button']),
-              pending: '',
-            }}
-            onMouseDown={(event) => event.preventDefault()}
-          />
-          <div className="mt-3">
-            <Hyperlink
-              isInline
-              variant="muted"
-              destination="#"
-              onClick={(event) => {
-                if (resendCooldown > 0) {
-                  event.preventDefault();
-                  return;
-                }
-                setResendConfirmation(true);
-                handleResend(event);
+      <div id="main-content" className="main-content">
+        <div className="mw-xs mt-3 mb-2">
+          <h2 className="text-primary">{formatMessage(messages['two.factor.auth.page.heading'])}</h2>
+          <p>{formatMessage(messages['two.factor.auth.page.description'], { email })}</p>
+          {errorCode && (
+            <Alert id="two-factor-auth-errors" className="mb-3" variant="danger" icon={Error}>
+              <Alert.Heading>
+                {formatMessage(
+                  errorCode === 'otp-resend-cooldown'
+                    ? messages['two.factor.auth.error.resend.heading']
+                    : messages['two.factor.auth.error.heading'],
+                )}
+              </Alert.Heading>
+              <p>
+                {formatMessage(
+                  messages[`two.factor.auth.error.${errorCode}`] || messages['two.factor.auth.error.invalid-request'],
+                )}
+              </p>
+            </Alert>
+          )}
+          {resendState !== PENDING_STATE && resendConfirmation && !errorCode && (
+            <Alert id="two-factor-auth-resend-success" className="mb-3" variant="success" icon={CheckCircle}>
+              <Alert.Heading>{formatMessage(messages['two.factor.auth.resend.success.heading'])}</Alert.Heading>
+              <p>{formatMessage(messages['two.factor.auth.resend.success'])}</p>
+            </Alert>
+          )}
+          <Form id="two-factor-auth-form" name="two-factor-auth-form" onSubmit={handleSubmit}>
+            <Form.Group>
+              <Form.Label htmlFor="otp-code">{formatMessage(messages['two.factor.auth.code.label'])}</Form.Label>
+              <Form.Control
+                id="otp-code"
+                name="otp-code"
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                maxLength={6}
+                value={otpCode}
+                onChange={handleOtpChange}
+              />
+            </Form.Group>
+            <StatefulButton
+              name="verify-otp"
+              id="verify-otp"
+              type="submit"
+              variant="brand"
+              className="login-button-width"
+              state={submitState}
+              disabled={otpCode.length !== 6}
+              labels={{
+                default: formatMessage(messages['two.factor.auth.submit.button']),
+                pending: '',
               }}
-            >
-              {resendCooldown > 0
-                ? `${formatMessage(messages['two.factor.auth.resend.button'])} (${resendCooldown}s)`
-                : formatMessage(messages['two.factor.auth.resend.button'])}
-            </Hyperlink>
-          </div>
-          <div className="mt-2">
-            <Hyperlink isInline variant="muted" destination="#" onClick={handleCancel}>
-              {formatMessage(messages['two.factor.auth.cancel.link'])}
-            </Hyperlink>
-          </div>
-        </Form>
+              onMouseDown={(event) => event.preventDefault()}
+            />
+            <div className="mt-3">
+              <Hyperlink
+                isInline
+                variant="muted"
+                destination="#"
+                onClick={(event) => {
+                  if (resendCooldown > 0) {
+                    event.preventDefault();
+                    return;
+                  }
+                  setResendConfirmation(true);
+                  handleResend(event);
+                }}
+              >
+                {resendCooldown > 0
+                  ? `${formatMessage(messages['two.factor.auth.resend.button'])} (${resendCooldown}s)`
+                  : formatMessage(messages['two.factor.auth.resend.button'])}
+              </Hyperlink>
+            </div>
+            <div className="mt-2">
+              <Hyperlink isInline variant="muted" destination="#" onClick={handleCancel}>
+                {formatMessage(messages['two.factor.auth.cancel.link'])}
+              </Hyperlink>
+            </div>
+          </Form>
+        </div>
       </div>
     </BaseContainer>
   );
