@@ -7,6 +7,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Alert, Form, Hyperlink, StatefulButton,
 } from '@openedx/paragon';
+import { CheckCircle, Error } from '@openedx/paragon/icons';
 import { Helmet } from 'react-helmet';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
@@ -118,15 +119,25 @@ const TwoFactorAuthPage = () => {
         <h2 className="text-primary">{formatMessage(messages['two.factor.auth.page.heading'])}</h2>
         <p>{formatMessage(messages['two.factor.auth.page.description'], { email })}</p>
         {errorCode && (
-          <Alert id="two-factor-auth-errors" className="mb-3" variant="danger">
-            {formatMessage(
-              messages[`two.factor.auth.error.${errorCode}`] || messages['two.factor.auth.error.invalid-request'],
-            )}
+          <Alert id="two-factor-auth-errors" className="mb-3" variant="danger" icon={Error}>
+            <Alert.Heading>
+              {formatMessage(
+                errorCode === 'otp-resend-cooldown'
+                  ? messages['two.factor.auth.error.resend.heading']
+                  : messages['two.factor.auth.error.heading'],
+              )}
+            </Alert.Heading>
+            <p>
+              {formatMessage(
+                messages[`two.factor.auth.error.${errorCode}`] || messages['two.factor.auth.error.invalid-request'],
+              )}
+            </p>
           </Alert>
         )}
         {resendState !== PENDING_STATE && resendConfirmation && !errorCode && (
-          <Alert id="two-factor-auth-resend-success" className="mb-3" variant="info">
-            {formatMessage(messages['two.factor.auth.resend.success'])}
+          <Alert id="two-factor-auth-resend-success" className="mb-3" variant="success" icon={CheckCircle}>
+            <Alert.Heading>{formatMessage(messages['two.factor.auth.resend.success.heading'])}</Alert.Heading>
+            <p>{formatMessage(messages['two.factor.auth.resend.success'])}</p>
           </Alert>
         )}
         <Form id="two-factor-auth-form" name="two-factor-auth-form" onSubmit={handleSubmit}>

@@ -31,6 +31,11 @@ const messages = defineMessages({
     defaultMessage: 'Resend code',
     description: 'Resend OTP code button text.',
   },
+  'two.factor.auth.resend.success.heading': {
+    id: 'two.factor.auth.resend.success.heading',
+    defaultMessage: 'Check your email',
+    description: 'Heading of the alert shown after a successful OTP resend.',
+  },
   'two.factor.auth.resend.success': {
     id: 'two.factor.auth.resend.success',
     defaultMessage: 'A new verification code has been sent.',
@@ -40,6 +45,16 @@ const messages = defineMessages({
     id: 'two.factor.auth.cancel.link',
     defaultMessage: 'Use a different account',
     description: 'Link text to cancel the OTP flow and return to the login page.',
+  },
+  'two.factor.auth.error.heading': {
+    id: 'two.factor.auth.error.heading',
+    defaultMessage: "We couldn't verify your code.",
+    description: 'Heading of the alert shown when OTP verification fails.',
+  },
+  'two.factor.auth.error.resend.heading': {
+    id: 'two.factor.auth.error.resend.heading',
+    defaultMessage: "We couldn't send a new code.",
+    description: 'Heading of the alert shown when an OTP resend fails.',
   },
   'two.factor.auth.error.otp-session-not-found': {
     id: 'two.factor.auth.error.otp-session-not-found',
