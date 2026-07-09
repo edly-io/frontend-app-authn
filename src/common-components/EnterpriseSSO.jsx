@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 
 import messages from './messages';
 import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
+import { getTpaProviderIconUrl } from '../data/utils';
 
 /**
  * This component renders the Single sign-on (SSO) button only for the tpa provider passed
@@ -49,7 +50,7 @@ const EnterpriseSSO = (props) => {
               >
                 {tpaProvider.iconImage ? (
                   <div aria-hidden="true">
-                    <img className="btn-tpa__image-icon" src={tpaProvider.iconImage} alt={`icon ${tpaProvider.name}`} />
+                    <img className="btn-tpa__image-icon" src={getTpaProviderIconUrl(tpaProvider.iconImage)} alt={`icon ${tpaProvider.name}`} />
                     <span className="pl-2" aria-hidden="true">{ tpaProvider.name }</span>
                   </div>
                 )
