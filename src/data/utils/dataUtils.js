@@ -1,4 +1,5 @@
 // Utility functions
+import { getConfig } from '@edx/frontend-platform';
 import * as QueryString from 'query-string';
 
 import { AUTH_PARAMS } from '../constants';
@@ -80,4 +81,11 @@ export const windowScrollTo = (options) => {
 export const isHostAvailableInQueryParams = () => {
   const queryParams = getAllPossibleQueryParams();
   return 'host' in queryParams;
+};
+
+export const getTpaProviderIconUrl = (iconImage) => {
+  if (!iconImage) {
+    return iconImage;
+  }
+  return /^https?:\/\//i.test(iconImage) ? iconImage : `${getConfig().LMS_BASE_URL}${iconImage}`;
 };

@@ -3,6 +3,7 @@ export {
   getTpaHint,
   getAllPossibleQueryParams,
   getActivationStatus,
+  getTpaProviderIconUrl,
   isHostAvailableInQueryParams,
   updatePathWithQueryParams,
   windowScrollTo,
