@@ -6,6 +6,7 @@ import { Alert } from '@openedx/paragon';
 import { useLocation } from 'react-router-dom';
 
 import messages from './messages';
+import { isPanelFirstTimePasswordSet } from '../data/utils';
 
 const ResetPasswordSuccess = () => {
   const { formatMessage } = useIntl();
@@ -15,7 +16,7 @@ const ResetPasswordSuccess = () => {
   // time gets a distinct "You're All Set!" welcome banner instead of the reset-password one.
   // Derived from the URL (rather than taken as a prop) because this component is also rendered
   // by the external EmailCheckWidget (@anas_hameed/edly-saas-widget), which invokes it with no props.
-  const isNewUser = new URLSearchParams(location.search).get('track') === 'edly_panel';
+  const isNewUser = isPanelFirstTimePasswordSet(location.search);
 
   if (isNewUser) {
     return (

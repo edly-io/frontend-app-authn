@@ -1,7 +1,7 @@
 // Utility functions
 import * as QueryString from 'query-string';
 
-import { AUTH_PARAMS } from '../constants';
+import { AUTH_PARAMS, PANEL_TRACK_VALUE, TRACK_PARAM } from '../constants';
 
 export const getTpaProvider = (tpaHintProvider, primaryProviders, secondaryProviders) => {
   let tpaProvider = null;
@@ -81,3 +81,10 @@ export const isHostAvailableInQueryParams = () => {
   const queryParams = getAllPossibleQueryParams();
   return 'host' in queryParams;
 };
+
+// EDLYCUSTOM: true when `search` (a location.search string) carries the edly panel
+// first-time-password-set marker. Shared by ResetPasswordPage and ResetPasswordSuccess so the
+// predicate isn't duplicated across components.
+export const isPanelFirstTimePasswordSet = (search) => (
+  new URLSearchParams(search).get(TRACK_PARAM) === PANEL_TRACK_VALUE
+);
