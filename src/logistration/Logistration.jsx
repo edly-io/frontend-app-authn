@@ -40,6 +40,7 @@ const Logistration = (props) => {
   const { selectedPage: selectedPageProp, showEmailCheck } = props;
   const tpaHint = getTpaHint();
   const tpaProviders = useSelector(tpaProvidersSelector);
+  const currentProvider = useSelector(state => state.commonComponents.thirdPartyAuthContext.currentProvider);
   const dispatch = useDispatch();
   const {
     providers,
@@ -120,7 +121,7 @@ const Logistration = (props) => {
   };
 
   const activationMsgType = getActivationStatus();
-  if (showEmailCheck && !tpaHint) {
+  if (showEmailCheck && !tpaHint && !currentProvider) {
     return (
       <EmailCheckWidget
         onEmailCheckComplete={handleEmailCheckComplete}
