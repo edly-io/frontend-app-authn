@@ -31,6 +31,13 @@ export async function resetPassword(payload, token, queryParams) {
     url.searchParams.append('is_account_recovery', true);
   }
 
+  // EDLYCUSTOM: lets the backend distinguish a new user's first-time password set
+  // (edly panel invite) from a regular password reset, so it can skip the generic
+  // "your password was reset" notification email for first-time sets.
+  if (queryParams.track) {
+    url.searchParams.append('track', queryParams.track);
+  }
+
   const { data } = await getHttpClient()
     .post(url.href, formurlencoded(payload), requestConfig)
     .catch((e) => {
