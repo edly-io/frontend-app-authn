@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector, connect } from 'react-redux';
 
 // Todo: need to change imports when package is published to edly-io
-import { emailCheckComplete, EmailCheckWidget } from '@anas_hameed/edly-saas-widget';
+import { emailCheckComplete, EmailCheckWidget } from '@anas_hameed/edly-saas-widget/src';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthService } from '@edx/frontend-platform/auth';
@@ -18,8 +18,9 @@ import { Navigate, useNavigate } from 'react-router-dom';
 
 import BaseContainer from '../base-container';
 import { FormGroup } from '../common-components';
-import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
+import { clearThirdPartyAuthContextErrorMessage, getThirdPartyAuthContext } from '../common-components/data/actions';
 import {
+  thirdPartyAuthContextSelector,
   tpaProvidersSelector,
 } from '../common-components/data/selectors';
 import messages from '../common-components/messages';
@@ -40,6 +41,7 @@ const Logistration = (props) => {
   const { selectedPage: selectedPageProp, showEmailCheck } = props;
   const tpaHint = getTpaHint();
   const tpaProviders = useSelector(tpaProvidersSelector);
+  const { currentProvider } = useSelector(thirdPartyAuthContextSelector);
   const dispatch = useDispatch();
   const {
     providers,
@@ -120,7 +122,7 @@ const Logistration = (props) => {
   };
 
   const activationMsgType = getActivationStatus();
-  if (showEmailCheck && !tpaHint) {
+  if (showEmailCheck && !tpaHint && !currentProvider) {
     return (
       <EmailCheckWidget
         onEmailCheckComplete={handleEmailCheckComplete}
@@ -130,6 +132,7 @@ const Logistration = (props) => {
         VALID_EMAIL_REGEX={VALID_EMAIL_REGEX}
         AccountActivationMessage={AccountActivationMessage}
         ResetPasswordSuccess={ResetPasswordSuccess}
+        fetchTpaContext={getThirdPartyAuthContext}
       />
     );
   }
