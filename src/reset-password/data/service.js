@@ -30,6 +30,9 @@ export async function resetPassword(payload, token, queryParams) {
   if (queryParams.is_account_recovery) {
     url.searchParams.append('is_account_recovery', true);
   }
+  if (queryParams.welcome) {
+    url.searchParams.append('welcome', queryParams.welcome);
+  }
 
   const { data } = await getHttpClient()
     .post(url.href, formurlencoded(payload), requestConfig)

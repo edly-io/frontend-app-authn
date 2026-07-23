@@ -35,6 +35,8 @@ const ResetPasswordPage = (props) => {
   const { formatMessage } = useIntl();
   const newPasswordError = formatMessage(messages['password.validation.message']);
 
+  const isWelcomeFlow = new URLSearchParams(window.location.search).get('welcome') === 'true';
+
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [formErrors, setFormErrors] = useState({});
@@ -156,8 +158,8 @@ const ResetPasswordPage = (props) => {
           <div id="main-content" className="main-content">
             <div className="mw-xs">
               <ResetPasswordFailure errorCode={errorCode} errorMsg={props.errorMsg} />
-              <h4>{formatMessage(messages['reset.password'])}</h4>
-              <p className="mb-4">{formatMessage(messages['reset.password.page.instructions'])}</p>
+              <h4>{formatMessage(isWelcomeFlow ? messages['set.password'] : messages['reset.password'])}</h4>
+              <p className="mb-4">{formatMessage(isWelcomeFlow ? messages['set.password.page.instructions'] : messages['reset.password.page.instructions'])}</p>
               <Form id="set-reset-password-form" name="set-reset-password-form">
                 <PasswordField
                   name="newPassword"
@@ -185,7 +187,7 @@ const ResetPasswordPage = (props) => {
                   className="reset-password--button"
                   state={props.status}
                   labels={{
-                    default: formatMessage(messages['reset.password']),
+                    default: formatMessage(isWelcomeFlow ? messages['set.password'] : messages['reset.password']),
                     pending: '',
                   }}
                   onClick={e => handleSubmit(e)}

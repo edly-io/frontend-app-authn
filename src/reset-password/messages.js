@@ -16,6 +16,16 @@ const messages = defineMessages({
     defaultMessage: 'Reset password',
     description: 'The page heading and button text for reset password page.',
   },
+  'set.password': {
+    id: 'set.password',
+    defaultMessage: 'Set your password',
+    description: 'Heading and button text when setting password for the first time from a welcome email.',
+  },
+  'set.password.page.instructions': {
+    id: 'set.password.page.instructions',
+    defaultMessage: 'Welcome! Please set a password to activate your account.',
+    description: 'Instructions shown to newly created users setting their password for the first time.',
+  },
   'reset.password.page.instructions': {
     id: 'reset.password.page.instructions',
     defaultMessage: 'Enter and confirm your new password.',
