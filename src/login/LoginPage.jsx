@@ -24,7 +24,7 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
-import { PENDING_STATE, RESET_PAGE } from '../data/constants';
+import { LEGACY_ACCOUNT_PAGE, PENDING_STATE, RESET_PAGE } from '../data/constants';
 import {
   getActivationStatus,
   getAllPossibleQueryParams,
@@ -295,6 +295,14 @@ const LoginPage = ({
             onClick={trackForgotPasswordLinkClick}
           >
             {formatMessage(messages['forgot.password'])}
+          </Link>
+          <Link
+            id="legacy-account"
+            name="legacy-account"
+            className="btn btn-link font-weight-500 text-body"
+            to={updatePathWithQueryParams(LEGACY_ACCOUNT_PAGE)}
+          >
+            {formatMessage(messages['legacy.account.link.text'])}
           </Link>
           <ThirdPartyAuth
             currentProvider={currentProvider}

@@ -6,6 +6,11 @@ const messages = defineMessages({
     defaultMessage: 'Register | {siteName}',
     description: 'register page title',
   },
+  'legacy.account.link.text': {
+    id: 'legacy.account.link.text',
+    defaultMessage: 'Already have an account on legacy Rwaq?',
+    description: 'Link that takes a legacy-platform user to the set-password screen.',
+  },
   // Field labels
   'registration.fullname.label': {
     id: 'registration.fullname.label',

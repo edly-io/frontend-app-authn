@@ -3,6 +3,7 @@ export const LOGIN_PAGE = '/login';
 export const REGISTER_PAGE = '/register';
 export const REGISTER_EMBEDDED_PAGE = '/register-embedded';
 export const RESET_PAGE = '/reset';
+export const LEGACY_ACCOUNT_PAGE = '/legacy-account';
 export const AUTHN_PROGRESSIVE_PROFILING = '/welcome';
 export const DEFAULT_REDIRECT_URL = '/dashboard';
 export const RECOMMENDATIONS = '/recommendations';

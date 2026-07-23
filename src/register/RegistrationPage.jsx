@@ -11,6 +11,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
+import { Link } from 'react-router-dom';
 
 import ConfigurableRegistrationForm from './components/ConfigurableRegistrationForm';
 import RegistrationFailure from './components/RegistrationFailure';
@@ -41,10 +42,10 @@ import { getThirdPartyAuthContext as getRegistrationDataFromBackend } from '../c
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
 import {
-  COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
+  COMPLETE_STATE, LEGACY_ACCOUNT_PAGE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
 import {
-  getAllPossibleQueryParams, getTpaHint, getTpaProvider, isHostAvailableInQueryParams, setCookie,
+  getAllPossibleQueryParams, getTpaHint, getTpaProvider, isHostAvailableInQueryParams, setCookie, updatePathWithQueryParams,
 } from '../data/utils';
 
 /**
@@ -373,6 +374,16 @@ const RegistrationPage = (props) => {
                 onClick={handleSubmit}
                 onMouseDown={(e) => e.preventDefault()}
               />
+              {!registrationEmbedded && (
+                <Link
+                  id="legacy-account"
+                  name="legacy-account"
+                  className="btn btn-link font-weight-500 text-body"
+                  to={updatePathWithQueryParams(LEGACY_ACCOUNT_PAGE)}
+                >
+                  {formatMessage(messages['legacy.account.link.text'])}
+                </Link>
+              )}
               {!registrationEmbedded && (
                 <ThirdPartyAuth
                   currentProvider={currentProvider}
