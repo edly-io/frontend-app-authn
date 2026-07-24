@@ -53,7 +53,9 @@ const MainApp = () => (
       />
       <Route path={REGISTER_PAGE} element={<UnAuthOnlyRoute><Logistration /></UnAuthOnlyRoute>} />
       <Route path={RESET_PAGE} element={<UnAuthOnlyRoute><ForgotPasswordPage /></UnAuthOnlyRoute>} />
-      <Route path={LEGACY_ACCOUNT_PAGE} element={<UnAuthOnlyRoute><LegacyAccountPage /></UnAuthOnlyRoute>} />
+      {getConfig().ENABLE_LEGACY_ACCOUNT_FLOW && (
+        <Route path={LEGACY_ACCOUNT_PAGE} element={<UnAuthOnlyRoute><LegacyAccountPage /></UnAuthOnlyRoute>} />
+      )}
       <Route path={PASSWORD_RESET_CONFIRM} element={<ResetPasswordPage />} />
       <Route path={AUTHN_PROGRESSIVE_PROFILING} element={<ProgressiveProfiling />} />
       <Route path={RECOMMENDATIONS} element={<RecommendationsPage />} />

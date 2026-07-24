@@ -375,7 +375,7 @@ const RegistrationPage = (props) => {
                 onClick={handleSubmit}
                 onMouseDown={(e) => e.preventDefault()}
               />
-              {!registrationEmbedded && (
+              {!registrationEmbedded && getConfig().ENABLE_LEGACY_ACCOUNT_FLOW && (
                 <Alert variant="info" icon={InfoOutline} className="mt-3 mb-2" id="legacy-account">
                   {formatMessage(messages['legacy.account.link.text'], {
                     old: (chunks) => (

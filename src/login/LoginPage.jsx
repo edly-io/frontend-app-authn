@@ -297,23 +297,25 @@ const LoginPage = ({
           >
             {formatMessage(messages['forgot.password'])}
           </Link>
-          <Alert variant="info" icon={InfoOutline} className="mt-3 mb-2" id="legacy-account">
-            {formatMessage(messages['legacy.account.link.text'], {
-              old: (chunks) => (
-                <Hyperlink destination={LEGACY_PLATFORM_URL} target="_blank" isInline>{chunks}</Hyperlink>
-              ),
-              nl: () => <br />,
-              here: (chunks) => (
-                <Link
-                  to={updatePathWithQueryParams(LEGACY_ACCOUNT_PAGE)}
-                  className="font-weight-bold"
-                  style={{ textDecoration: 'underline' }}
-                >
-                  {chunks}
-                </Link>
-              ),
-            })}
-          </Alert>
+          {getConfig().ENABLE_LEGACY_ACCOUNT_FLOW && (
+            <Alert variant="info" icon={InfoOutline} className="mt-3 mb-2" id="legacy-account">
+              {formatMessage(messages['legacy.account.link.text'], {
+                old: (chunks) => (
+                  <Hyperlink destination={LEGACY_PLATFORM_URL} target="_blank" isInline>{chunks}</Hyperlink>
+                ),
+                nl: () => <br />,
+                here: (chunks) => (
+                  <Link
+                    to={updatePathWithQueryParams(LEGACY_ACCOUNT_PAGE)}
+                    className="font-weight-bold"
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    {chunks}
+                  </Link>
+                ),
+              })}
+            </Alert>
+          )}
           <ThirdPartyAuth
             currentProvider={currentProvider}
             providers={providers}
