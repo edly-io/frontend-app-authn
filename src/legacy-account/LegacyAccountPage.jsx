@@ -15,11 +15,9 @@ import { requestLegacySetPassword } from './service';
 import BaseContainer from '../base-container';
 import { FormGroup } from '../common-components';
 import {
-  COMPLETE_STATE, DEFAULT_STATE, LOGIN_PAGE, PENDING_STATE, RESET_PAGE, VALID_EMAIL_REGEX,
+  COMPLETE_STATE, DEFAULT_STATE, LEGACY_PLATFORM_URL, LOGIN_PAGE, PENDING_STATE, RESET_PAGE, VALID_EMAIL_REGEX,
 } from '../data/constants';
 import { updatePathWithQueryParams, windowScrollTo } from '../data/utils';
-
-const LEGACY_PLATFORM_URL = 'https://old.rwaq.org';
 
 const LegacyAccountPage = () => {
   const { formatMessage } = useIntl();

@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Form, StatefulButton } from '@openedx/paragon';
+import { Alert, Form, Hyperlink, StatefulButton } from '@openedx/paragon';
+import { InfoOutline } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
@@ -24,7 +25,7 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
-import { LEGACY_ACCOUNT_PAGE, PENDING_STATE, RESET_PAGE } from '../data/constants';
+import { LEGACY_ACCOUNT_PAGE, LEGACY_PLATFORM_URL, PENDING_STATE, RESET_PAGE } from '../data/constants';
 import {
   getActivationStatus,
   getAllPossibleQueryParams,
@@ -296,14 +297,16 @@ const LoginPage = ({
           >
             {formatMessage(messages['forgot.password'])}
           </Link>
-          <Link
-            id="legacy-account"
-            name="legacy-account"
-            className="btn btn-link font-weight-500 text-body"
-            to={updatePathWithQueryParams(LEGACY_ACCOUNT_PAGE)}
-          >
-            {formatMessage(messages['legacy.account.link.text'])}
-          </Link>
+          <Alert variant="info" icon={InfoOutline} className="mt-3 mb-2" id="legacy-account">
+            {formatMessage(messages['legacy.account.link.text'], {
+              old: (chunks) => (
+                <Hyperlink destination={LEGACY_PLATFORM_URL} target="_blank" isInline>{chunks}</Hyperlink>
+              ),
+              here: (chunks) => (
+                <Link to={updatePathWithQueryParams(LEGACY_ACCOUNT_PAGE)} className="font-weight-bold">{chunks}</Link>
+              ),
+            })}
+          </Alert>
           <ThirdPartyAuth
             currentProvider={currentProvider}
             providers={providers}

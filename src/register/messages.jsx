@@ -8,8 +8,8 @@ const messages = defineMessages({
   },
   'legacy.account.link.text': {
     id: 'legacy.account.link.text',
-    defaultMessage: 'Already have an account on legacy Rwaq?',
-    description: 'Link that takes a legacy-platform user to the set-password screen.',
+    defaultMessage: 'Already have an account on <old>Old Rwaq platform</old>? <here>Click here</here>.',
+    description: 'Prompt for legacy-platform users. <old> links to the old platform; <here> opens the set-password screen.',
   },
   // Field labels
   'registration.fullname.label': {

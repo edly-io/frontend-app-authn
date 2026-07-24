@@ -11,6 +11,9 @@ export const PASSWORD_RESET_CONFIRM = '/password_reset_confirm/:token/';
 export const PAGE_NOT_FOUND = '/notfound';
 export const ENTERPRISE_LOGIN_URL = '/enterprise/login';
 
+// External URL of the legacy ("old") Rwaq platform, linked from the legacy-account flow.
+export const LEGACY_PLATFORM_URL = 'https://old.rwaq.org';
+
 // Constants
 export const SUPPORTED_ICON_CLASSES = ['apple', 'facebook', 'google', 'microsoft'];
 
