@@ -381,8 +381,15 @@ const RegistrationPage = (props) => {
                     old: (chunks) => (
                       <Hyperlink destination={LEGACY_PLATFORM_URL} target="_blank" isInline>{chunks}</Hyperlink>
                     ),
+                    nl: () => <br />,
                     here: (chunks) => (
-                      <Link to={updatePathWithQueryParams(LEGACY_ACCOUNT_PAGE)} className="font-weight-bold">{chunks}</Link>
+                      <Link
+                        to={updatePathWithQueryParams(LEGACY_ACCOUNT_PAGE)}
+                        className="font-weight-bold"
+                        style={{ textDecoration: 'underline' }}
+                      >
+                        {chunks}
+                      </Link>
                     ),
                   })}
                 </Alert>
