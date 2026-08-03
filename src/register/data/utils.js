@@ -1,6 +1,9 @@
 import { snakeCaseObject } from '@edx/frontend-platform';
 
-import { LETTER_REGEX, NUMBER_REGEX, SYMBOL_REGEX } from '../../data/constants';
+import { NUMBER_REGEX } from '../../data/constants';
+import {
+  LOWERCASE_REGEX, MIN_PASSWORD_LENGTH, SYMBOL_REGEX, UPPERCASE_REGEX,
+} from '../../data/passwordPolicy';
 import messages from '../messages';
 import validateEmail from '../RegistrationFields/EmailField/validator';
 import validateName from '../RegistrationFields/NameField/validator';
@@ -17,9 +20,10 @@ export const validatePasswordField = (value, formatMessage, confirmPasswordValue
   let confirmPasswordError = '';
   if (
     !value
-    || !LETTER_REGEX.test(value)
+    || !UPPERCASE_REGEX.test(value)
+    || !LOWERCASE_REGEX.test(value)
     || !NUMBER_REGEX.test(value)
-    || value.length < 8
+    || value.length < MIN_PASSWORD_LENGTH
     || !SYMBOL_REGEX.test(value)
   ) {
     fieldError = formatMessage(messages['password.validation.message']);

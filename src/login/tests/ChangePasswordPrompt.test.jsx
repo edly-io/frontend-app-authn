@@ -1,12 +1,12 @@
 import { getConfig } from '@edx/frontend-platform';
-import { IntlProvider } from '@edx/frontend-platform/i18n';
 import {
   fireEvent, render, screen,
 } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-import { MemoryRouter } from 'react-router-dom';
+import configureStore from 'redux-mock-store';
 
 import { RESET_PAGE } from '../../data/constants';
+import reduxWrapper from '../../testUtils';
 import ChangePasswordPrompt from '../ChangePasswordPrompt';
 
 const mockedNavigator = jest.fn();
@@ -16,8 +16,11 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigator,
 }));
 
+const mockStore = configureStore();
+
 describe('ChangePasswordPromptTests', () => {
   let props = {};
+  let store = {};
 
   beforeAll(() => {
     Object.defineProperty(window, 'matchMedia', {
@@ -26,6 +29,11 @@ describe('ChangePasswordPromptTests', () => {
         matches: query,
       })),
     });
+  });
+
+  beforeEach(() => {
+    mockedNavigator.mockClear();
+    store = mockStore({ forgotPassword: { status: '', submitState: '' } });
   });
 
   it('[nudge modal] should redirect to next url when user clicks close button', () => {
@@ -38,30 +46,18 @@ describe('ChangePasswordPromptTests', () => {
     delete window.location;
     window.location = { href: getConfig().BASE_URL };
 
-    render(
-      <IntlProvider locale="en">
-        <MemoryRouter>
-          <ChangePasswordPrompt {...props} />
-        </MemoryRouter>
-      </IntlProvider>,
-    );
+    render(reduxWrapper(store, <ChangePasswordPrompt {...props} />));
 
     fireEvent.click(screen.getByText('Close'));
     expect(window.location.href).toBe(dashboardUrl);
   });
 
-  it('[block modal] should redirect to reset password page when user clicks outside modal', async () => {
+  it('[block modal, no verifiedEmail] should redirect to reset password page when user clicks outside modal', async () => {
     props = {
       variant: 'block',
     };
 
-    render(
-      <IntlProvider locale="en">
-        <MemoryRouter>
-          <ChangePasswordPrompt {...props} />
-        </MemoryRouter>
-      </IntlProvider>,
-    );
+    render(reduxWrapper(store, <ChangePasswordPrompt {...props} />));
 
     await act(async () => {
       await fireEvent.click(screen.getByText(
@@ -71,5 +67,16 @@ describe('ChangePasswordPromptTests', () => {
     });
 
     expect(mockedNavigator).toHaveBeenCalledWith(RESET_PAGE);
+  });
+
+  it('[block modal, no verifiedEmail] "Update Password" should link to the reset password page', () => {
+    props = {
+      variant: 'block',
+    };
+
+    render(reduxWrapper(store, <ChangePasswordPrompt {...props} />));
+
+    const updatePasswordLink = screen.getByText('Update Password');
+    expect(updatePasswordLink.getAttribute('href')).toBe(RESET_PAGE);
   });
 });

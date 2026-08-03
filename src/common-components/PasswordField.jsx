@@ -11,7 +11,10 @@ import {
 import PropTypes from 'prop-types';
 
 import messages from './messages';
-import { LETTER_REGEX, NUMBER_REGEX, SYMBOL_REGEX } from '../data/constants';
+import { NUMBER_REGEX } from '../data/constants';
+import {
+  LOWERCASE_REGEX, MIN_PASSWORD_LENGTH, SYMBOL_REGEX, UPPERCASE_REGEX,
+} from '../data/passwordPolicy';
 import { clearRegistrationBackendError, fetchRealtimeValidations } from '../register/data/actions';
 import { validatePasswordField } from '../register/data/utils';
 
@@ -109,9 +112,13 @@ const PasswordField = (props) => {
   const placement = window.innerWidth < 768 ? 'top' : 'left';
   const tooltip = (
     <Tooltip id={`password-requirement-${placement}`}>
-      <span id="letter-check" className="d-flex align-items-center">
-        {LETTER_REGEX.test(props.value) ? <Icon className="text-success mr-1" src={Check} /> : <Icon className="mr-1 text-light-700" src={Remove} />}
-        {formatMessage(messages['one.letter'])}
+      <span id="uppercase-check" className="d-flex align-items-center">
+        {UPPERCASE_REGEX.test(props.value) ? <Icon className="text-success mr-1" src={Check} /> : <Icon className="mr-1 text-light-700" src={Remove} />}
+        {formatMessage(messages['one.uppercase'])}
+      </span>
+      <span id="lowercase-check" className="d-flex align-items-center">
+        {LOWERCASE_REGEX.test(props.value) ? <Icon className="text-success mr-1" src={Check} /> : <Icon className="mr-1 text-light-700" src={Remove} />}
+        {formatMessage(messages['one.lowercase'])}
       </span>
       <span id="number-check" className="d-flex align-items-center">
         {NUMBER_REGEX.test(props.value) ? <Icon className="text-success mr-1" src={Check} /> : <Icon className="mr-1 text-light-700" src={Remove} />}
@@ -122,8 +129,8 @@ const PasswordField = (props) => {
         {formatMessage(messages['one.symbol'])}
       </span>
       <span id="characters-check" className="d-flex align-items-center">
-        {props.value.length >= 8 ? <Icon className="text-success mr-1" src={Check} /> : <Icon className="mr-1 text-light-700" src={Remove} />}
-        {formatMessage(messages['eight.characters'])}
+        {props.value.length >= MIN_PASSWORD_LENGTH ? <Icon className="text-success mr-1" src={Check} /> : <Icon className="mr-1 text-light-700" src={Remove} />}
+        {formatMessage(messages['twelve.characters'])}
       </span>
     </Tooltip>
   );

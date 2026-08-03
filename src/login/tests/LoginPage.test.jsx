@@ -7,12 +7,12 @@ import {
   fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, mockNavigate } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import { COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE } from '../../data/constants';
 import { backupLoginFormBegin, dismissPasswordResetBanner, loginRequest } from '../data/actions';
-import { INTERNAL_SERVER_ERROR } from '../data/constants';
+import { INTERNAL_SERVER_ERROR, REQUIRE_OTP_VERIFICATION } from '../data/constants';
 import LoginPage from '../LoginPage';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
@@ -22,6 +22,21 @@ jest.mock('@edx/frontend-platform/analytics', () => ({
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthService: jest.fn(),
 }));
+jest.mock('react-router-dom', () => {
+  const mockNavigation = jest.fn();
+
+  // eslint-disable-next-line react/prop-types
+  const Navigate = ({ to }) => {
+    mockNavigation(to);
+    return <div />;
+  };
+
+  return {
+    ...jest.requireActual('react-router-dom'),
+    Navigate,
+    mockNavigate: mockNavigation,
+  };
+});
 
 const mockStore = configureStore();
 
@@ -87,6 +102,7 @@ describe('LoginPage', () => {
       handleInstitutionLogin: jest.fn(),
       institutionLogin: false,
     };
+    mockNavigate.mockClear();
   });
 
   // ******** test login form submission ********
@@ -835,5 +851,22 @@ describe('LoginPage', () => {
     const { container } = render(reduxWrapper(<LoginPage {...props} />));
     expect(container.querySelector('input#emailOrUsername').value).toEqual('john_doe');
     expect(container.querySelector('input#password').value).toEqual('test-password');
+  });
+
+  it('navigates to the OTP page with query params preserved when 2FA verification is required', () => {
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: '?next=%2Fauthoring%2Fcourse%2Fabc' };
+    store = mockStore({
+      ...initialState,
+      login: {
+        ...initialState.login,
+        loginErrorCode: REQUIRE_OTP_VERIFICATION,
+        loginErrorContext: { sessionId: 'session-123', otpEmail: 'learner@example.com' },
+      },
+    });
+
+    render(reduxWrapper(<LoginPage {...props} />));
+
+    expect(mockNavigate).toHaveBeenCalledWith('/verify-otp?next=%2Fauthoring%2Fcourse%2Fabc');
   });
 });

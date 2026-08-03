@@ -102,12 +102,16 @@ describe('PasswordField', () => {
       jest.runAllTimers();
     });
 
-    const letterCheckIcon = document.querySelector('#letter-check span');
+    const uppercaseCheckIcon = document.querySelector('#uppercase-check span');
+    const lowercaseCheckIcon = document.querySelector('#lowercase-check span');
     const numberCheckIcon = document.querySelector('#number-check span');
     const charactersCheckIcon = document.querySelector('#characters-check span');
 
-    expect(letterCheckIcon).toBeTruthy();
-    expect(letterCheckIcon.className).toContain('pgn__icon mr-1 text-light-700');
+    expect(uppercaseCheckIcon).toBeTruthy();
+    expect(uppercaseCheckIcon.className).toContain('pgn__icon mr-1 text-light-700');
+
+    expect(lowercaseCheckIcon).toBeTruthy();
+    expect(lowercaseCheckIcon.className).toContain('pgn__icon mr-1 text-light-700');
 
     expect(numberCheckIcon).toBeTruthy();
     expect(numberCheckIcon.className).toContain('pgn__icon mr-1 text-light-700');
@@ -117,6 +121,10 @@ describe('PasswordField', () => {
   });
 
   it('should update password requirement checks', async () => {
+    props = {
+      ...props,
+      value: 'Password123!',
+    };
     const { getByLabelText } = render(reduxWrapper(<PasswordField {...props} />));
     const passwordInput = getByLabelText('Password');
     jest.useFakeTimers();
@@ -125,12 +133,16 @@ describe('PasswordField', () => {
       jest.runAllTimers();
     });
 
-    const letterCheckIcon = document.querySelector('#letter-check span');
+    const uppercaseCheckIcon = document.querySelector('#uppercase-check span');
+    const lowercaseCheckIcon = document.querySelector('#lowercase-check span');
     const numberCheckIcon = document.querySelector('#number-check span');
     const charactersCheckIcon = document.querySelector('#characters-check span');
 
-    expect(letterCheckIcon).toBeTruthy();
-    expect(letterCheckIcon.className).toContain('pgn__icon text-success mr-1');
+    expect(uppercaseCheckIcon).toBeTruthy();
+    expect(uppercaseCheckIcon.className).toContain('pgn__icon text-success mr-1');
+
+    expect(lowercaseCheckIcon).toBeTruthy();
+    expect(lowercaseCheckIcon.className).toContain('pgn__icon text-success mr-1');
 
     expect(numberCheckIcon).toBeTruthy();
     expect(numberCheckIcon.className).toContain('pgn__icon text-success mr-1');
@@ -251,11 +263,11 @@ describe('PasswordField', () => {
     fireEvent.blur(passwordField, {
       target: {
         name: 'password',
-        value: 'password123',
+        value: 'Password123!',
       },
     });
 
-    expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations({ password: 'password123' }));
+    expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations({ password: 'Password123!' }));
   });
 
   it('should use password value from prop when password icon is focused out (blur due to icon)', () => {

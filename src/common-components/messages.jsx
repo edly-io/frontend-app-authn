@@ -76,9 +76,28 @@ const messages = defineMessages({
     defaultMessage: '8 characters',
     description: 'password requirement to have a minimum of 8 characters',
   },
+  // Our stronger password policy needs separate uppercase/lowercase requirements and a
+  // higher minimum length - added as new keys rather than repurposing one.letter/
+  // eight.characters above, so we don't touch translations for strings we don't own.
+  'one.uppercase': {
+    id: 'one.uppercase',
+    defaultMessage: '1 uppercase letter',
+    description: 'password requirement to have 1 uppercase letter',
+  },
+  'one.lowercase': {
+    id: 'one.lowercase',
+    defaultMessage: '1 lowercase letter',
+    description: 'password requirement to have 1 lowercase letter',
+  },
+  'twelve.characters': {
+    id: 'twelve.characters',
+    defaultMessage: '12 characters',
+    description: 'password requirement to have a minimum of 12 characters',
+  },
   'password.sr.only.helping.text': {
     id: 'password.sr.only.helping.text',
-    defaultMessage: 'Password must contain at least 8 characters, at least one letter, and at least one number',
+    defaultMessage: 'Password must contain at least 12 characters, including an uppercase letter, '
+      + 'a lowercase letter, a number, and a special character',
     description: 'Password helping text for the sr-only class',
   },
   // third party auth

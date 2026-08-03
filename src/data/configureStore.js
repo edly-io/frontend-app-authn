@@ -8,9 +8,7 @@ import thunkMiddleware from 'redux-thunk';
 import createRootReducer from './reducers';
 import rootSaga from './sagas';
 
-const sagaMiddleware = createSagaMiddleware();
-
-function composeMiddleware() {
+function composeMiddleware(sagaMiddleware) {
   if (getConfig().ENVIRONMENT === 'development') {
     const loggerMiddleware = createLogger({
       collapsed: true,
@@ -22,10 +20,11 @@ function composeMiddleware() {
 }
 
 export default function configureStore(initialState = {}) {
+  const sagaMiddleware = createSagaMiddleware();
   const store = createStore(
     createRootReducer(),
     initialState,
-    composeMiddleware(),
+    composeMiddleware(sagaMiddleware),
   );
   sagaMiddleware.run(rootSaga);
 

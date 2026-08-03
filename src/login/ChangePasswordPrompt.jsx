@@ -2,25 +2,27 @@ import React, { useEffect, useState } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  ActionRow, ModalDialog, useToggle,
-} from '@openedx/paragon';
+import { ActionRow, ModalDialog, useToggle } from '@openedx/paragon';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
 
 import messages from './messages';
+import VerifiedPasswordReset from './VerifiedPasswordReset';
 import { DEFAULT_REDIRECT_URL, RESET_PAGE } from '../data/constants';
 import { updatePathWithQueryParams } from '../data/utils';
 import useMobileResponsive from '../data/utils/useMobileResponsive';
 
-const ChangePasswordPrompt = ({ variant, redirectUrl }) => {
+const ChangePasswordPrompt = ({ variant, redirectUrl, verifiedEmail }) => {
   const isMobileView = useMobileResponsive();
   const [redirectToResetPasswordPage, setRedirectToResetPasswordPage] = useState(false);
+  const isVerifiedReset = variant === 'block' && !!verifiedEmail;
   const handlers = {
     handleToggleOff: () => {
       if (variant === 'block') {
-        setRedirectToResetPasswordPage(true);
+        if (!verifiedEmail) {
+          setRedirectToResetPasswordPage(true);
+        }
       } else {
         window.location.href = redirectUrl || getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
       }
@@ -39,11 +41,15 @@ const ChangePasswordPrompt = ({ variant, redirectUrl }) => {
 
   return (
     <ModalDialog
-      title="Password security"
+      title="Password update required"
       isOpen={isOpen}
       onClose={close}
       size={isMobileView ? 'sm' : 'md'}
       hasCloseButton={false}
+      // With a verifiedEmail, the "block" variant's only way forward is the in-modal reset
+      // button (no redirect-on-dismiss fallback) - block backdrop/ESC dismissal so a mandatory
+      // modal can't be closed without the user having a path forward.
+      isBlocking={isVerifiedReset}
     >
       <ModalDialog.Header>
         <ModalDialog.Title>
@@ -54,26 +60,30 @@ const ChangePasswordPrompt = ({ variant, redirectUrl }) => {
         {formatMessage(messages[`password.security.${variant}.body`])}
       </ModalDialog.Body>
       <ModalDialog.Footer>
-        <ActionRow className={classNames(
-          { 'd-flex flex-column': isMobileView },
-        )}
-        >
-          {variant === 'nudge' ? (
-            <ModalDialog.CloseButton id="password-security-close" variant="tertiary">
-              {formatMessage(messages['password.security.close.button'])}
-            </ModalDialog.CloseButton>
-          ) : null}
-          <Link
-            id="password-security-reset-password"
-            className={classNames(
-              'btn btn-primary',
-              { 'w-100': isMobileView },
-            )}
-            to={updatePathWithQueryParams(RESET_PAGE)}
+        {isVerifiedReset ? (
+          <VerifiedPasswordReset verifiedEmail={verifiedEmail} isMobileView={isMobileView} />
+        ) : (
+          <ActionRow className={classNames(
+            { 'd-flex flex-column': isMobileView },
+          )}
           >
-            {formatMessage(messages['password.security.redirect.to.reset.password.button'])}
-          </Link>
-        </ActionRow>
+            {variant === 'nudge' ? (
+              <ModalDialog.CloseButton id="password-security-close" variant="tertiary">
+                {formatMessage(messages['password.security.close.button'])}
+              </ModalDialog.CloseButton>
+            ) : null}
+            <Link
+              id="password-security-reset-password"
+              className={classNames(
+                'btn btn-primary',
+                { 'w-100': isMobileView },
+              )}
+              to={updatePathWithQueryParams(RESET_PAGE)}
+            >
+              {formatMessage(messages['password.security.redirect.to.reset.password.button'])}
+            </Link>
+          </ActionRow>
+        )}
       </ModalDialog.Footer>
     </ModalDialog>
   );
@@ -82,11 +92,13 @@ const ChangePasswordPrompt = ({ variant, redirectUrl }) => {
 ChangePasswordPrompt.defaultProps = {
   variant: 'block',
   redirectUrl: null,
+  verifiedEmail: null,
 };
 
 ChangePasswordPrompt.propTypes = {
   variant: PropTypes.oneOf(['nudge', 'block']),
   redirectUrl: PropTypes.string,
+  verifiedEmail: PropTypes.string,
 };
 
 export default ChangePasswordPrompt;

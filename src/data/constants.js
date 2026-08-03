@@ -4,6 +4,7 @@ export const REGISTER_PAGE = '/register';
 export const REGISTER_EMBEDDED_PAGE = '/register-embedded';
 export const RESET_PAGE = '/reset';
 export const AUTHN_PROGRESSIVE_PROFILING = '/welcome';
+export const TWO_FACTOR_AUTH = '/verify-otp';
 export const DEFAULT_REDIRECT_URL = '/dashboard';
 export const RECOMMENDATIONS = '/recommendations';
 export const PASSWORD_RESET_CONFIRM = '/password_reset_confirm/:token/';
@@ -26,9 +27,7 @@ export const FAILURE_STATE = 'failure';
 export const FORBIDDEN_STATE = 'forbidden';
 export const EMBEDDED = 'embedded';
 
-export const LETTER_REGEX = /[a-zA-Z]/;
 export const NUMBER_REGEX = /\d/;
-export const SYMBOL_REGEX = /[!@#$%^&*]/;
 export const VALID_EMAIL_REGEX = '(^[-!#$%&\'*+/=?^_`{}|~0-9A-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9A-Z]+)*'
                                  + '|^"([\\001-\\010\\013\\014\\016-\\037!#-\\[\\]-\\177]|\\\\[\\001-\\011\\013\\014\\016-\\177])*"'
                                  + ')@((?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\\.)+)(?:[A-Z0-9-]{2,63})'
@@ -38,3 +37,4 @@ export const VALID_EMAIL_REGEX = '(^[-!#$%&\'*+/=?^_`{}|~0-9A-Z]+(\\.[-!#$%&\'*+
 // things like auto-enrollment upon login and registration.
 export const AUTH_PARAMS = ['course_id', 'enrollment_action', 'course_mode', 'email_opt_in', 'purchase_workflow', 'next', 'register_for_free', 'track', 'is_account_recovery', 'variant', 'host', 'cta'];
 export const REDIRECT = 'redirect';
+export const RESET_EMAIL_CHECK = 'RESET_EMAIL_CHECK';

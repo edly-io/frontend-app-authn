@@ -2,8 +2,9 @@ import { IntlProvider } from '@edx/frontend-platform/i18n';
 import {
   render, screen,
 } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import configureStore from 'redux-mock-store';
 
+import reduxWrapper from '../../testUtils';
 import {
   ACCOUNT_LOCKED_OUT,
   ALLOWED_DOMAIN_LOGIN_ERROR,
@@ -24,8 +25,11 @@ jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthService: jest.fn(),
 }));
 
+const mockStore = configureStore();
+
 describe('LoginFailureMessage', () => {
   let props = {};
+  const store = mockStore({ forgotPassword: { status: '', submitState: '' } });
 
   beforeAll(() => {
     Object.defineProperty(window, 'matchMedia', {
@@ -294,13 +298,7 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
-    render(
-      <IntlProvider locale="en">
-        <MemoryRouter>
-          <LoginFailureMessage {...props} />
-        </MemoryRouter>
-      </IntlProvider>,
-    );
+    render(reduxWrapper(store, <LoginFailureMessage {...props} />));
 
     const message = 'Our system detected that your password is vulnerable. '
                          + 'We recommend you change it so that your account stays secure.';
@@ -320,13 +318,7 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
-    render(
-      <IntlProvider locale="en">
-        <MemoryRouter>
-          <LoginFailureMessage {...props} />
-        </MemoryRouter>
-      </IntlProvider>,
-    );
+    render(reduxWrapper(store, <LoginFailureMessage {...props} />));
 
     expect(screen.getByText(
       'Password change required',
