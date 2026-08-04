@@ -7,7 +7,7 @@ import {
   fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-import { MemoryRouter, mockNavigate } from 'react-router-dom';
+import { MemoryRouter, mockNavigate, mockNavigateState } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import { COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE } from '../../data/constants';
@@ -24,10 +24,12 @@ jest.mock('@edx/frontend-platform/auth', () => ({
 }));
 jest.mock('react-router-dom', () => {
   const mockNavigation = jest.fn();
+  const mockNavigationState = jest.fn();
 
   // eslint-disable-next-line react/prop-types
-  const Navigate = ({ to }) => {
+  const Navigate = ({ to, state }) => {
     mockNavigation(to);
+    mockNavigationState(state);
     return <div />;
   };
 
@@ -35,6 +37,7 @@ jest.mock('react-router-dom', () => {
     ...jest.requireActual('react-router-dom'),
     Navigate,
     mockNavigate: mockNavigation,
+    mockNavigateState: mockNavigationState,
   };
 });
 
@@ -103,6 +106,7 @@ describe('LoginPage', () => {
       institutionLogin: false,
     };
     mockNavigate.mockClear();
+    mockNavigateState.mockClear();
   });
 
   // ******** test login form submission ********
@@ -861,12 +865,15 @@ describe('LoginPage', () => {
       login: {
         ...initialState.login,
         loginErrorCode: REQUIRE_OTP_VERIFICATION,
-        loginErrorContext: { sessionId: 'session-123', otpEmail: 'learner@example.com' },
+        loginErrorContext: { sessionId: 'session-123', otpEmail: 'learner@example.com', resendCooldownSeconds: 150 },
       },
     });
 
     render(reduxWrapper(<LoginPage {...props} />));
 
     expect(mockNavigate).toHaveBeenCalledWith('/verify-otp?next=%2Fauthoring%2Fcourse%2Fabc');
+    // The OTP page needs this to show its resend cooldown countdown from first render
+    // instead of only after a resend attempt is rejected - see TwoFactorAuthPage.
+    expect(mockNavigateState).toHaveBeenCalledWith(expect.objectContaining({ resendCooldownSeconds: 150 }));
   });
 });

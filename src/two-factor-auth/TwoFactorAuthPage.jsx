@@ -45,7 +45,11 @@ const TwoFactorAuthPage = () => {
   } = useSelector((state) => state.twoFactorAuth);
 
   const [otpCode, setOtpCode] = useState('');
-  const [resendCooldown, setResendCooldown] = useState(0);
+  // Initialized from the backend's remaining cooldown on the code that was *just sent*
+  // (computed server-side from the session's last-send time), not a flat 0 - otherwise
+  // the resend button/countdown only appears after a resend attempt already got
+  // rejected with 'otp-resend-cooldown', instead of being disabled from the start.
+  const [resendCooldown, setResendCooldown] = useState(Number(location.state?.resendCooldownSeconds) || 0);
   const [resendConfirmation, setResendConfirmation] = useState(false);
 
   useEffect(() => {

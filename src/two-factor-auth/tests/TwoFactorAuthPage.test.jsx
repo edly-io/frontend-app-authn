@@ -107,6 +107,34 @@ describe('TwoFactorAuthPage', () => {
     expect(screen.getByText('Resend code (180s)', { exact: false })).toBeDefined();
   });
 
+  it('shows a live resend cooldown immediately when the initial send included one', () => {
+    // The backend computes this from the OTP session's last-send time and hands it
+    // over on the same response that carries sessionId/otpEmail - the countdown must
+    // render from that on first paint, not only after a resend attempt is rejected
+    // with 'otp-resend-cooldown'.
+    useLocation.mockReturnValue({
+      state: { sessionId: 'session-123', otpEmail: 'learner@example.com', resendCooldownSeconds: 150 },
+    });
+    render(reduxWrapper(store, <TwoFactorAuthPage />));
+
+    const resendLink = screen.getByText('Resend code (150s)', { exact: false });
+    expect(resendLink).toBeDefined();
+
+    // Clicking during the cooldown must not fire a resend request.
+    fireEvent.click(resendLink);
+    expect(dispatchSpy).not.toHaveBeenCalledWith(resendOtp('session-123'));
+  });
+
+  it('does not show a cooldown when the initial send response carried none', () => {
+    // Backward-compatible default: no resendCooldownSeconds in state (e.g. an older
+    // backend response) must not crash and must leave the resend button enabled.
+    render(reduxWrapper(store, <TwoFactorAuthPage />));
+
+    expect(screen.getByText('Resend code')).toBeDefined();
+    fireEvent.click(screen.getByText('Resend code'));
+    expect(dispatchSpy).toHaveBeenCalledWith(resendOtp('session-123'));
+  });
+
   it('cancels the OTP session and navigates back to login with query params preserved', () => {
     render(reduxWrapper(store, <TwoFactorAuthPage />));
 

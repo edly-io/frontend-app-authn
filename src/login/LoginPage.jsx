@@ -249,6 +249,7 @@ const LoginPage = ({
         state={{
           sessionId: loginErrorContext.sessionId,
           otpEmail: loginErrorContext.otpEmail,
+          resendCooldownSeconds: loginErrorContext.resendCooldownSeconds,
         }}
         replace
       />
