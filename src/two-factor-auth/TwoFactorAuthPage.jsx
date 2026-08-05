@@ -21,19 +21,42 @@ import ChangePasswordPrompt from '../login/ChangePasswordPrompt';
 import { cancelOtpRequest } from './data/service';
 import { clearLoginError } from '../login/data/actions';
 
+const RESEND_DEADLINE_STORAGE_PREFIX = 'two-factor-auth-resend-deadline:';
+
+// sessionStorage can throw (e.g. Safari private mode, storage disabled) - on this
+// auth-critical page that must degrade to "no persisted deadline", not a crash.
+const getStoredResendDeadline = (sessionId) => {
+  try {
+    const stored = Number(sessionStorage.getItem(`${RESEND_DEADLINE_STORAGE_PREFIX}${sessionId}`));
+    return stored > 0 ? stored : null;
+  } catch {
+    return null;
+  }
+};
+
+const setStoredResendDeadline = (sessionId, deadline) => {
+  try {
+    sessionStorage.setItem(`${RESEND_DEADLINE_STORAGE_PREFIX}${sessionId}`, String(deadline));
+  } catch {
+    // Best-effort persistence; a refresh will just re-arm the full cooldown instead.
+  }
+};
+
+const secondsUntil = (deadline) => Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+
 const TwoFactorAuthPage = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Read at component-render time (rather than module-eval time) so an async/runtime
-  // config load is picked up; defaults to 180s if the key isn't wired into this site's config.
-  const resendCooldownSeconds = getConfig().TWO_FA_RESEND_COOLDOWN_SECONDS || 180;
-
   const sessionId = location.state?.sessionId;
   const email = location.state?.otpEmail || location.state?.email;
   const { next } = getAllPossibleQueryParams();
+  // The LMS computes this from the OTP session's last-send time and hands it over on the
+  // same response that carries sessionId/otpEmail - it only seeds the very first cooldown,
+  // before any resend has happened on this page.
+  const initialCooldownSeconds = Number(location.state?.resendCooldownSeconds) || 0;
 
   const {
     submitState,
@@ -42,23 +65,50 @@ const TwoFactorAuthPage = () => {
     redirectUrl,
     success,
     passwordExpiryNudge,
+    resendCooldownDeadline,
   } = useSelector((state) => state.twoFactorAuth);
 
   const [otpCode, setOtpCode] = useState('');
-  // Initialized from the backend's remaining cooldown on the code that was *just sent*
-  // (computed server-side from the session's last-send time), not a flat 0 - otherwise
-  // the resend button/countdown only appears after a resend attempt already got
-  // rejected with 'otp-resend-cooldown', instead of being disabled from the start.
-  const [resendCooldown, setResendCooldown] = useState(Number(location.state?.resendCooldownSeconds) || 0);
+  // Seeded from a persisted absolute deadline (sessionStorage, keyed by sessionId) when
+  // one exists - e.g. a page refresh mid-countdown - falling back to initialCooldownSeconds
+  // on a genuinely fresh mount. Read-only: the initializer must not itself write storage,
+  // since React may invoke it more than once per mount.
+  const [cooldownSeconds, setCooldownSeconds] = useState(() => {
+    const storedDeadline = getStoredResendDeadline(sessionId);
+    return storedDeadline ? secondsUntil(storedDeadline) : initialCooldownSeconds;
+  });
   const [resendConfirmation, setResendConfirmation] = useState(false);
 
+  // Persist the very first cooldown deadline once, on mount - skipped if a deadline is
+  // already stored (a refresh, handled by the initializer above) or if there's no cooldown
+  // to persist. This is what makes a refresh compute *remaining* time instead of restarting
+  // the full duration on every mount.
   useEffect(() => {
-    if (resendCooldown <= 0) {
+    if (getStoredResendDeadline(sessionId) || initialCooldownSeconds <= 0) {
+      return;
+    }
+    setStoredResendDeadline(sessionId, Date.now() + initialCooldownSeconds * 1000);
+  }, [sessionId, initialCooldownSeconds]);
+
+  // Re-arm the cooldown from the resend API's response (not a build-time default) every
+  // time a resend succeeds. resendCooldownDeadline is an absolute timestamp computed in the
+  // saga, so it changes on every successful resend even when the duration is identical -
+  // that's what makes this effect fire again on a second resend.
+  useEffect(() => {
+    if (!resendCooldownDeadline) {
+      return;
+    }
+    setStoredResendDeadline(sessionId, resendCooldownDeadline);
+    setCooldownSeconds(secondsUntil(resendCooldownDeadline));
+  }, [resendCooldownDeadline, sessionId]);
+
+  useEffect(() => {
+    if (cooldownSeconds <= 0) {
       return undefined;
     }
-    const timer = setTimeout(() => setResendCooldown((prev) => prev - 1), 1000);
+    const timer = setTimeout(() => setCooldownSeconds((prev) => prev - 1), 1000);
     return () => clearTimeout(timer);
-  }, [resendCooldown]);
+  }, [cooldownSeconds]);
 
   useEffect(() => {
     // The login CSRF token rotates once OTP verification completes the login, so
@@ -73,7 +123,7 @@ const TwoFactorAuthPage = () => {
 
   // Navigate after a successful OTP verify in an effect (not during render) so the
   // assignment is guaranteed to fire exactly once after React commits the update,
-  // regardless of concurrent-mode render scheduling or the resendCooldown timer
+  // regardless of concurrent-mode render scheduling or the cooldownSeconds timer
   // triggering interleaved state updates.
   useEffect(() => {
     if (success && !passwordExpiryNudge && redirectUrl) {
@@ -94,7 +144,6 @@ const TwoFactorAuthPage = () => {
   const handleResend = (event) => {
     event.preventDefault();
     dispatch(resendOtp(sessionId));
-    setResendCooldown(resendCooldownSeconds);
   };
 
   const handleCancel = (event) => {
@@ -127,7 +176,7 @@ const TwoFactorAuthPage = () => {
             <Alert id="two-factor-auth-errors" className="mb-3" variant="danger" icon={Error}>
               <Alert.Heading>
                 {formatMessage(
-                  errorCode === 'otp-resend-cooldown'
+                  errorCode === 'otp-resend-cooldown' || errorCode === 'otp-delivery-failed'
                     ? messages['two.factor.auth.error.resend.heading']
                     : messages['two.factor.auth.error.heading'],
                 )}
@@ -179,7 +228,7 @@ const TwoFactorAuthPage = () => {
                 variant="muted"
                 destination="#"
                 onClick={(event) => {
-                  if (resendCooldown > 0) {
+                  if (cooldownSeconds > 0) {
                     event.preventDefault();
                     return;
                   }
@@ -187,8 +236,8 @@ const TwoFactorAuthPage = () => {
                   handleResend(event);
                 }}
               >
-                {resendCooldown > 0
-                  ? `${formatMessage(messages['two.factor.auth.resend.button'])} (${resendCooldown}s)`
+                {cooldownSeconds > 0
+                  ? `${formatMessage(messages['two.factor.auth.resend.button'])} (${cooldownSeconds}s)`
                   : formatMessage(messages['two.factor.auth.resend.button'])}
               </Hyperlink>
             </div>

@@ -88,7 +88,7 @@ describe('handleResendOtp', () => {
 
   it('should dispatch resendOtpSuccess on a successful resend', async () => {
     const resendOtpRequest = jest.spyOn(api, 'resendOtpRequest').mockImplementation(
-      () => Promise.resolve({ success: true }),
+      () => Promise.resolve({ success: true, resendCooldownSeconds: 0 }),
     );
 
     const dispatched = [];
@@ -96,9 +96,29 @@ describe('handleResendOtp', () => {
 
     expect(dispatched).toEqual([
       actions.resendOtpBegin(),
-      actions.resendOtpSuccess(),
+      actions.resendOtpSuccess(0),
     ]);
     resendOtpRequest.mockClear();
+  });
+
+  it('should compute an absolute deadline from the cooldown returned by the resend response', async () => {
+    // The deadline (not the raw duration) is what the reducer stores, so it changes on
+    // every successful resend even when the backend returns the same duration twice.
+    const now = 1700000000000;
+    jest.spyOn(Date, 'now').mockReturnValue(now);
+    const resendOtpRequest = jest.spyOn(api, 'resendOtpRequest').mockImplementation(
+      () => Promise.resolve({ success: true, resendCooldownSeconds: 45 }),
+    );
+
+    const dispatched = [];
+    await runSaga({ dispatch: (action) => dispatched.push(action) }, handleResendOtp, params);
+
+    expect(dispatched).toEqual([
+      actions.resendOtpBegin(),
+      actions.resendOtpSuccess(now + 45000),
+    ]);
+    resendOtpRequest.mockClear();
+    Date.now.mockRestore();
   });
 
   it('should dispatch the backend error_code on a rejected resend', async () => {

@@ -31,7 +31,10 @@ export async function resendOtpRequest(sessionId) {
     )
     .catch((e) => { throw (e); });
 
-  return { success: data.success || false };
+  return {
+    success: data.success || false,
+    resendCooldownSeconds: Number(data.resend_cooldown_seconds) || 0,
+  };
 }
 
 export async function cancelOtpRequest(sessionId) {

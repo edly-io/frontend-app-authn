@@ -67,12 +67,14 @@ describe('two factor auth reducer', () => {
     });
   });
 
-  it('should reset resendState to default on RESEND_OTP.SUCCESS', () => {
+  it('should reset resendState and set resendCooldownDeadline on RESEND_OTP.SUCCESS', () => {
     const state = { ...defaultState, resendState: PENDING_STATE };
+    const action = { type: RESEND_OTP.SUCCESS, payload: { resendCooldownDeadline: 1700000045000 } };
 
-    expect(reducer(state, { type: RESEND_OTP.SUCCESS })).toEqual({
+    expect(reducer(state, action)).toEqual({
       ...state,
       resendState: DEFAULT_STATE,
+      resendCooldownDeadline: 1700000045000,
     });
   });
 

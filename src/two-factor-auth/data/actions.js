@@ -33,8 +33,9 @@ export const resendOtpBegin = () => ({
   type: RESEND_OTP.BEGIN,
 });
 
-export const resendOtpSuccess = () => ({
+export const resendOtpSuccess = (resendCooldownDeadline) => ({
   type: RESEND_OTP.SUCCESS,
+  payload: { resendCooldownDeadline },
 });
 
 export const resendOtpFailure = (errorCode) => ({
