@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
 // Todo: need to change imports when package is published to edly-io
-import { EdlyLogistrationInfo } from '@anas_hameed/edly-saas-widget';
+import { EdlyLogistrationInfo } from '@edly-io/edly-saas-widget';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
