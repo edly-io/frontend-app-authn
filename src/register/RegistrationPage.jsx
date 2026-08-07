@@ -3,7 +3,6 @@ import React, {
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-// Todo: need to change imports when package is published to edly-io
 import { EdlyLogistrationInfo } from '@edly-io/edly-saas-widget';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';

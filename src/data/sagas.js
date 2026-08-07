@@ -1,4 +1,3 @@
-// Todo: need to change imports when package is published to edly-io
 import { emailCheckSaga } from '@edly-io/edly-saas-widget';
 import { all } from 'redux-saga/effects';
 
