@@ -1,3 +1,29 @@
 .login-button-width {
     min-width: 6rem;
 }
+
+.btn-social.btn-oa2-paypeople-oauth2 {
+  width: 100%;
+  flex-grow: 1;
+  margin-right: 0 !important;
+  justify-content: center;
+  height: 50px;
+  border-radius: var(--pgn-size-btn-border-radius-sm);
+
+  [data-paragon-theme-variant=dark] & {
+    background: var(--pgn-color-primary-base);
+  }
+
+  &:hover {
+    background: var(--pgn-color-gray-100);
+  }
+
+  .notranslate {
+    display: none;
+  }
+
+  .btn-tpa__image-icon {
+    max-width: 120px;
+    max-height: none;
+  }
+}
