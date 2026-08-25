@@ -37,8 +37,12 @@ export function* handleResendOtp(action) {
   try {
     yield put(resendOtpBegin());
     const { sessionId } = action.payload;
-    yield call(resendOtpRequest, sessionId);
-    yield put(resendOtpSuccess());
+    const { resendCooldownSeconds } = yield call(resendOtpRequest, sessionId);
+    // Store an absolute deadline (not just the duration) so the reducer's value changes
+    // on every successful resend, even if the backend returns the same duration twice in
+    // a row - that's what makes the page's re-arm effect fire again on a second resend.
+    const resendCooldownDeadline = resendCooldownSeconds > 0 ? Date.now() + resendCooldownSeconds * 1000 : 0;
+    yield put(resendOtpSuccess(resendCooldownDeadline));
   } catch (e) {
     const errorCode = e.response?.data?.error_code || OTP_INVALID_REQUEST;
     yield put(resendOtpFailure(errorCode));

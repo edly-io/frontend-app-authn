@@ -46,8 +46,10 @@ describe('two factor auth service', () => {
   });
 
   describe('resendOtpRequest', () => {
-    it('posts the session id and returns the parsed response', async () => {
-      postMock.mockReturnValue({ catch: () => ({ data: { success: true } }) });
+    it('posts the session id and returns the parsed response, including the cooldown', async () => {
+      postMock.mockReturnValue({
+        catch: () => ({ data: { success: true, resend_cooldown_seconds: 45 } }),
+      });
 
       const result = await resendOtpRequest('session-123');
 
@@ -56,7 +58,15 @@ describe('two factor auth service', () => {
         { session_id: 'session-123' },
         expect.objectContaining({ isPublic: true }),
       );
-      expect(result).toEqual({ success: true });
+      expect(result).toEqual({ success: true, resendCooldownSeconds: 45 });
+    });
+
+    it('defaults resendCooldownSeconds to 0 when missing from the response', async () => {
+      postMock.mockReturnValue({ catch: () => ({ data: { success: true } }) });
+
+      const result = await resendOtpRequest('session-123');
+
+      expect(result).toEqual({ success: true, resendCooldownSeconds: 0 });
     });
   });
 

@@ -33,6 +33,7 @@ const defaultTwoFactorAuthState = {
   redirectUrl: '',
   success: false,
   passwordExpiryNudge: false,
+  resendCooldownDeadline: 0,
 };
 
 describe('TwoFactorAuthPage', () => {
@@ -43,6 +44,9 @@ describe('TwoFactorAuthPage', () => {
     mergeConfig({ SITE_NAME: 'Edly' });
     mockedNavigate.mockClear();
     cancelOtpRequest.mockClear();
+    // Each test starts with a clean slate - the resend cooldown deadline is persisted
+    // here keyed by sessionId, and would otherwise leak between tests.
+    sessionStorage.clear();
     useLocation.mockReturnValue({
       state: { sessionId: 'session-123', otpEmail: 'learner@example.com' },
     });
@@ -98,13 +102,79 @@ describe('TwoFactorAuthPage', () => {
     window.location.search = '';
   });
 
-  it('dispatches resendOtp and starts the cooldown when "Resend code" is clicked', () => {
+  it('dispatches resendOtp when "Resend code" is clicked', () => {
     render(reduxWrapper(store, <TwoFactorAuthPage />));
 
     fireEvent.click(screen.getByText('Resend code'));
 
     expect(dispatchSpy).toHaveBeenCalledWith(resendOtp('session-123'));
-    expect(screen.getByText('Resend code (180s)', { exact: false })).toBeDefined();
+    // The cooldown no longer starts optimistically from a build-time default - it only
+    // re-arms once the resend API's response lands; see the test below.
+    expect(screen.getByText('Resend code')).toBeDefined();
+  });
+
+  it('shows the live resend cooldown once the resend response carries a cooldown deadline', () => {
+    const now = 1700000000000;
+    jest.spyOn(Date, 'now').mockReturnValue(now);
+    store = mockStore({
+      twoFactorAuth: { ...defaultTwoFactorAuthState, resendCooldownDeadline: now + 45000 },
+    });
+
+    render(reduxWrapper(store, <TwoFactorAuthPage />));
+
+    expect(screen.getByText('Resend code (45s)', { exact: false })).toBeDefined();
+
+    Date.now.mockRestore();
+  });
+
+  it('computes remaining cooldown from a persisted deadline instead of restarting it on remount', () => {
+    // Simulates a page refresh: the component unmounts and a fresh instance mounts with
+    // the same (now stale) location.state, some time after the first mount.
+    const now = 1700000000000;
+    jest.spyOn(Date, 'now').mockReturnValue(now);
+    useLocation.mockReturnValue({
+      state: { sessionId: 'session-123', otpEmail: 'learner@example.com', resendCooldownSeconds: 150 },
+    });
+
+    const { unmount } = render(reduxWrapper(store, <TwoFactorAuthPage />));
+    expect(screen.getByText('Resend code (150s)', { exact: false })).toBeDefined();
+    unmount();
+
+    // 100 seconds elapse while the page is reloaded.
+    Date.now.mockReturnValue(now + 100000);
+    render(reduxWrapper(store, <TwoFactorAuthPage />));
+
+    expect(screen.getByText('Resend code (50s)', { exact: false })).toBeDefined();
+
+    Date.now.mockRestore();
+  });
+
+  it('shows a live resend cooldown immediately when the initial send included one', () => {
+    // The backend computes this from the OTP session's last-send time and hands it
+    // over on the same response that carries sessionId/otpEmail - the countdown must
+    // render from that on first paint, not only after a resend attempt is rejected
+    // with 'otp-resend-cooldown'.
+    useLocation.mockReturnValue({
+      state: { sessionId: 'session-123', otpEmail: 'learner@example.com', resendCooldownSeconds: 150 },
+    });
+    render(reduxWrapper(store, <TwoFactorAuthPage />));
+
+    const resendLink = screen.getByText('Resend code (150s)', { exact: false });
+    expect(resendLink).toBeDefined();
+
+    // Clicking during the cooldown must not fire a resend request.
+    fireEvent.click(resendLink);
+    expect(dispatchSpy).not.toHaveBeenCalledWith(resendOtp('session-123'));
+  });
+
+  it('does not show a cooldown when the initial send response carried none', () => {
+    // Backward-compatible default: no resendCooldownSeconds in state (e.g. an older
+    // backend response) must not crash and must leave the resend button enabled.
+    render(reduxWrapper(store, <TwoFactorAuthPage />));
+
+    expect(screen.getByText('Resend code')).toBeDefined();
+    fireEvent.click(screen.getByText('Resend code'));
+    expect(dispatchSpy).toHaveBeenCalledWith(resendOtp('session-123'));
   });
 
   it('cancels the OTP session and navigates back to login with query params preserved', () => {
@@ -137,6 +207,19 @@ describe('TwoFactorAuthPage', () => {
     render(reduxWrapper(store, <TwoFactorAuthPage />));
 
     expect(screen.getByText('Something went wrong. Please try again.')).toBeDefined();
+  });
+
+  it('shows the delivery-failed message and the resend heading for otp-delivery-failed', () => {
+    store = mockStore({
+      twoFactorAuth: { ...defaultTwoFactorAuthState, errorCode: 'otp-delivery-failed' },
+    });
+
+    render(reduxWrapper(store, <TwoFactorAuthPage />));
+
+    expect(screen.getByText("We couldn't send a new code.")).toBeDefined();
+    expect(
+      screen.getByText("We couldn't send your verification code. Please try again in a moment."),
+    ).toBeDefined();
   });
 
   it('shows the correct error message for an incorrect OTP code', () => {

@@ -81,6 +81,11 @@ const messages = defineMessages({
     defaultMessage: 'Please wait a little longer before requesting another code.',
     description: 'Error shown when a resend is attempted during the cooldown period.',
   },
+  'two.factor.auth.error.otp-delivery-failed': {
+    id: 'two.factor.auth.error.otp-delivery-failed',
+    defaultMessage: "We couldn't send your verification code. Please try again in a moment.",
+    description: 'Error shown when the backend fails to deliver a resent OTP code.',
+  },
   'two.factor.auth.error.invalid-request': {
     id: 'two.factor.auth.error.invalid-request',
     defaultMessage: 'Something went wrong. Please try again.',

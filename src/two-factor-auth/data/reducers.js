@@ -13,6 +13,7 @@ export const defaultState = {
   redirectUrl: '',
   success: false,
   passwordExpiryNudge: false,
+  resendCooldownDeadline: 0,
 };
 
 const reducer = (state = defaultState, action = {}) => {
@@ -47,6 +48,7 @@ const reducer = (state = defaultState, action = {}) => {
       return {
         ...state,
         resendState: DEFAULT_STATE,
+        resendCooldownDeadline: action.payload.resendCooldownDeadline,
       };
     case RESEND_OTP.FAILURE:
       return {
