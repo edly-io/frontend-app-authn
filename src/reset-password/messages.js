@@ -79,6 +79,23 @@ const messages = defineMessages({
     defaultMessage: 'Your password has been reset. Sign in to your account.',
     description: 'Reset password success message',
   },
+  // EDLYCUSTOM: shown instead of the reset.password.success.* alert when a new user (created
+  // from edly panel) sets their password for the first time.
+  'set.password.success.heading': {
+    id: 'set.password.success.heading',
+    defaultMessage: 'You\'re All Set!',
+    description: 'Heading for alert box when a new user sets their password for the first time',
+  },
+  'set.password.success': {
+    id: 'set.password.success',
+    defaultMessage: 'Your password has been created. {signInLink} to get started.',
+    description: 'Set password success message with a placeholder for the sign in link',
+  },
+  'set.password.success.sign.in.link': {
+    id: 'set.password.success.sign.in.link',
+    defaultMessage: 'Sign in to your account',
+    description: 'Sign in link text shown in the set password success message',
+  },
   'internal.server.error': {
     id: 'internal.server.error',
     defaultMessage: 'An error has occurred. Try refreshing the page, or check your internet connection.',

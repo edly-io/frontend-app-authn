@@ -4,6 +4,7 @@ export {
   getAllPossibleQueryParams,
   getActivationStatus,
   isHostAvailableInQueryParams,
+  isPanelFirstTimePasswordSet,
   updatePathWithQueryParams,
   windowScrollTo,
 } from './dataUtils';

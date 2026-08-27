@@ -2,6 +2,8 @@ import { getConfig } from '@edx/frontend-platform';
 import { getHttpClient } from '@edx/frontend-platform/auth';
 import formurlencoded from 'form-urlencoded';
 
+import { TRACK_PARAM } from '../../data/constants';
+
 // eslint-disable-next-line import/prefer-default-export
 export async function validateToken(token) {
   const requestConfig = {
@@ -29,6 +31,13 @@ export async function resetPassword(payload, token, queryParams) {
 
   if (queryParams.is_account_recovery) {
     url.searchParams.append('is_account_recovery', true);
+  }
+
+  // EDLYCUSTOM: lets the backend distinguish a new user's first-time password set
+  // (edly panel invite) from a regular password reset, so it can skip the generic
+  // "your password was reset" notification email for first-time sets.
+  if (queryParams[TRACK_PARAM]) {
+    url.searchParams.append(TRACK_PARAM, queryParams[TRACK_PARAM]);
   }
 
   const { data } = await getHttpClient()

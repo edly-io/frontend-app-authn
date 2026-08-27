@@ -38,3 +38,10 @@ export const VALID_EMAIL_REGEX = '(^[-!#$%&\'*+/=?^_`{}|~0-9A-Z]+(\\.[-!#$%&\'*+
 export const AUTH_PARAMS = ['course_id', 'enrollment_action', 'course_mode', 'email_opt_in', 'purchase_workflow', 'next', 'register_for_free', 'track', 'is_account_recovery', 'variant', 'host', 'cta'];
 export const REDIRECT = 'redirect';
 export const RESET_EMAIL_CHECK = 'RESET_EMAIL_CHECK';
+
+// EDLYCUSTOM: query param edly-panel-edx-app appends to a first-time password-set invite link
+// (see `send_password_set_email_for_user` in edly-panel-edx-app's helpers.py). Cross-referenced
+// by name from `EDLY_PANEL_TRACK_PARAM`/`EDLY_PANEL_TRACK_VALUE` in edx-platform's
+// password_reset.py and from the constants in edly-panel-edx-app's api/v1/constants.py.
+export const TRACK_PARAM = 'track';
+export const PANEL_TRACK_VALUE = 'edly_panel';

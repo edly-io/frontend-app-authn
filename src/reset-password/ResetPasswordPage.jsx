@@ -30,7 +30,9 @@ import { LOGIN_PAGE, NUMBER_REGEX, RESET_PAGE } from '../data/constants';
 import {
   LOWERCASE_REGEX, MIN_PASSWORD_LENGTH, SYMBOL_REGEX, UPPERCASE_REGEX,
 } from '../data/passwordPolicy';
-import { getAllPossibleQueryParams, updatePathWithQueryParams, windowScrollTo } from '../data/utils';
+import {
+  getAllPossibleQueryParams, isPanelFirstTimePasswordSet, updatePathWithQueryParams, windowScrollTo,
+} from '../data/utils';
 
 const ResetPasswordPage = (props) => {
   const { formatMessage } = useIntl();
@@ -43,8 +45,7 @@ const ResetPasswordPage = (props) => {
   const { token } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const track = new URLSearchParams(location.search).get('track');
-  const isNewUser = track === 'edly_panel';
+  const isNewUser = isPanelFirstTimePasswordSet(location.search);
 
   useEffect(() => {
     if (props.status !== TOKEN_STATE.PENDING && props.status !== PASSWORD_RESET_ERROR) {
