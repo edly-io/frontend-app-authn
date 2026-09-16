@@ -840,10 +840,10 @@ describe('LoginPage', () => {
   describe('custom login page', () => {
     const cardConfig = {
       enabled: true,
+      placeholders: { email: 'you@school.edu', password: '••••••••' },
       card: {
         login: {
           title: 'Sign in to continue',
-          placeholders: { emailOrUsername: 'you@school.edu', password: '••••••••' },
           submit_label: 'Log in on Oryx Connect',
           submit_arrow: true,
         },

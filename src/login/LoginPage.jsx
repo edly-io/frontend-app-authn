@@ -299,7 +299,7 @@ const LoginPage = ({
             errorMessage={errors.emailOrUsername}
             floatingLabel={customLoginPage.enabled ? undefined : formatMessage(messages['login.user.identity.label'])}
             label={customLoginPage.enabled ? formatMessage(messages['login.user.identity.label']) : undefined}
-            placeholder={customLoginPage.enabled ? customLoginCard.placeholders?.emailOrUsername : undefined}
+            placeholder={customLoginPage.enabled ? customLoginPage.placeholders?.email : undefined}
           />
           <PasswordField
             name="password"
@@ -312,7 +312,7 @@ const LoginPage = ({
             errorMessage={errors.password}
             floatingLabel={customLoginPage.enabled ? undefined : formatMessage(messages['login.password.label'])}
             label={customLoginPage.enabled ? formatMessage(messages['login.password.label']) : undefined}
-            placeholder={customLoginPage.enabled ? customLoginCard.placeholders?.password : undefined}
+            placeholder={customLoginPage.enabled ? customLoginPage.placeholders?.password : undefined}
           />
           {customLoginPage.enabled && forgotPasswordLink}
           <StatefulButton

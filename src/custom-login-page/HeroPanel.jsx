@@ -42,10 +42,10 @@ const HeroPanel = ({
           >
             {cta.label}
             {cta.new_tab && (
-              <span className="clp-cta__arrow" aria-hidden="true">
-                {DEFAULT_COPY.submitArrow}
+              <>
+                <span className="clp-cta__arrow" aria-hidden="true">{DEFAULT_COPY.submitArrow}</span>
                 <span className="sr-only">{DEFAULT_COPY.ctaNewTabScreenReaderText}</span>
-              </span>
+              </>
             )}
           </a>
         ))}

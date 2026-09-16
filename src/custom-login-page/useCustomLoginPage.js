@@ -30,11 +30,13 @@ const resolveCustomLoginPage = () => {
 
     let hero = raw.hero || {};
     let card = raw.card || {};
+    let placeholders = raw.placeholders || {};
 
     const overrides = resolveByLanguageOverrides(raw);
     if (overrides) {
       hero = { ...hero, ...(overrides.hero || {}) };
       card = { ...card, ...(overrides.card || {}) };
+      placeholders = { ...placeholders, ...(overrides.placeholders || {}) };
     }
 
     const rawCtas = Array.isArray(hero.ctas) ? hero.ctas : [];
@@ -49,6 +51,7 @@ const resolveCustomLoginPage = () => {
       enabled: true,
       hero: { ...hero, ctas },
       card,
+      placeholders,
       cssVars,
     };
   } catch (error) {
