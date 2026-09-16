@@ -130,6 +130,7 @@ const PasswordField = (props) => {
 
   return (
     <Form.Group controlId={props.name} isInvalid={props.errorMessage !== ''}>
+      {props.label && <Form.Label className="clp-field__label">{props.label}</Form.Label>}
       <OverlayTrigger key="tooltip" placement={placement} overlay={tooltip} show={showTooltip}>
         <Form.Control
           as="input"
@@ -137,6 +138,7 @@ const PasswordField = (props) => {
           type={isPasswordHidden ? 'password' : 'text'}
           name={props.name}
           value={props.value}
+          placeholder={props.placeholder}
           autoComplete={props.autoComplete}
           aria-invalid={props.errorMessage !== ''}
           onFocus={handleFocus}
@@ -160,10 +162,13 @@ const PasswordField = (props) => {
 PasswordField.defaultProps = {
   borderClass: '',
   errorMessage: '',
+  floatingLabel: null,
   handleBlur: null,
   handleFocus: null,
   handleChange: () => {},
   handleErrorChange: null,
+  label: null,
+  placeholder: null,
   showRequirements: true,
   showScreenReaderText: true,
   autoComplete: null,
@@ -173,12 +178,14 @@ PasswordField.defaultProps = {
 PasswordField.propTypes = {
   borderClass: PropTypes.string,
   errorMessage: PropTypes.string,
-  floatingLabel: PropTypes.string.isRequired,
+  floatingLabel: PropTypes.string,
   handleBlur: PropTypes.func,
   handleFocus: PropTypes.func,
   handleChange: PropTypes.func,
   handleErrorChange: PropTypes.func,
+  label: PropTypes.node,
   name: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
   showRequirements: PropTypes.bool,
   value: PropTypes.string.isRequired,
   autoComplete: PropTypes.string,

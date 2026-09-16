@@ -22,6 +22,7 @@ const FormGroup = (props) => {
 
   return (
     <Form.Group controlId={props.name} className={props.className} isInvalid={props.errorMessage !== ''}>
+      {props.label && <Form.Label className="clp-field__label">{props.label}</Form.Label>}
       <Form.Control
         as={props.as}
         readOnly={props.readOnly}
@@ -32,6 +33,7 @@ const FormGroup = (props) => {
         spellCheck={props.spellCheck}
         name={props.name}
         value={props.value}
+        placeholder={props.placeholder}
         onFocus={handleFocus}
         onBlur={handleOnBlur}
         onClick={handleClick}
@@ -69,12 +71,15 @@ FormGroup.defaultProps = {
   children: null,
   className: '',
   errorMessage: '',
+  floatingLabel: null,
   handleBlur: null,
   handleChange: () => {},
   handleClick: null,
   handleFocus: null,
   helpText: [],
+  label: null,
   options: null,
+  placeholder: null,
   readOnly: false,
   spellCheck: null,
   trailingElement: null,
@@ -88,14 +93,16 @@ FormGroup.propTypes = {
   children: PropTypes.element,
   className: PropTypes.string,
   errorMessage: PropTypes.string,
-  floatingLabel: PropTypes.string.isRequired,
+  floatingLabel: PropTypes.string,
   handleBlur: PropTypes.func,
   handleChange: PropTypes.func,
   handleClick: PropTypes.func,
   handleFocus: PropTypes.func,
   helpText: PropTypes.arrayOf(PropTypes.string),
+  label: PropTypes.node,
   name: PropTypes.string.isRequired,
   options: PropTypes.func,
+  placeholder: PropTypes.string,
   readOnly: PropTypes.bool,
   spellCheck: PropTypes.string,
   trailingElement: PropTypes.element,
