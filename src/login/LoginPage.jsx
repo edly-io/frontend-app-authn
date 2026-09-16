@@ -314,7 +314,9 @@ const LoginPage = ({
             label={customLoginPage.enabled ? formatMessage(messages['login.password.label']) : undefined}
             placeholder={customLoginPage.enabled ? customLoginPage.placeholders?.password : undefined}
           />
-          {customLoginPage.enabled && forgotPasswordLink}
+          {customLoginPage.enabled && (
+            <div className="clp-card__form-meta">{forgotPasswordLink}</div>
+          )}
           <StatefulButton
             name="sign-in"
             id="sign-in"
