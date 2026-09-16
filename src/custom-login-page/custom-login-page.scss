@@ -292,10 +292,16 @@
 
   .pgn__form-control-floating-label-content {
     color: var(--clp-card-muted);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .form-control::placeholder {
+    color: var(--clp-card-muted);
+    font-weight: 400;
+    opacity: 1;
   }
 
   .clp-card__footer-text {
