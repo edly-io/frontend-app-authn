@@ -1,5 +1,7 @@
 import React from 'react';
 
+// Todo: need to change imports when package is published to edly-io
+import { CustomLoginLayout, useCustomLoginPage } from '@anas_hameed/edly-saas-widget';
 import { getConfig } from '@edx/frontend-platform';
 import { breakpoints } from '@openedx/paragon';
 import classNames from 'classnames';
@@ -14,6 +16,20 @@ import { AuthLargeLayout, AuthMediumLayout, AuthSmallLayout } from './components
 
 const BaseContainer = ({ children, showWelcomeBanner, fullName }) => {
   const enableImageLayout = getConfig().ENABLE_IMAGE_LAYOUT;
+  const customLoginPage = useCustomLoginPage();
+
+  if (customLoginPage.enabled && !showWelcomeBanner) {
+    return (
+      <CustomLoginLayout
+        hero={customLoginPage.hero}
+        card={customLoginPage.card}
+        placeholders={customLoginPage.placeholders}
+        cssVars={customLoginPage.cssVars}
+      >
+        {children}
+      </CustomLoginLayout>
+    );
+  }
 
   if (enableImageLayout) {
     return (
