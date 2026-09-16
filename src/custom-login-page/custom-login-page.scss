@@ -298,6 +298,11 @@
     text-transform: uppercase;
   }
 
+  .clp-card__footer-text {
+    margin-right: 4px;
+    color: var(--clp-card-muted);
+  }
+
   .clp-card__form-meta {
     display: flex;
     align-items: center;

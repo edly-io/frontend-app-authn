@@ -259,7 +259,8 @@ const LoginPage = ({
       to={updatePathWithQueryParams(RESET_PAGE)}
       onClick={trackForgotPasswordLinkClick}
     >
-      {formatMessage(messages['forgot.password'])}
+      {(customLoginPage.enabled && customLoginCard.forgot_label)
+        || formatMessage(messages['forgot.password'])}
     </Link>
   );
 
@@ -298,7 +299,9 @@ const LoginPage = ({
             handleFocus={handleOnFocus}
             errorMessage={errors.emailOrUsername}
             floatingLabel={customLoginPage.enabled ? undefined : formatMessage(messages['login.user.identity.label'])}
-            label={customLoginPage.enabled ? formatMessage(messages['login.user.identity.label']) : undefined}
+            label={customLoginPage.enabled
+              ? (customLoginCard.labels?.email || formatMessage(messages['login.user.identity.label']))
+              : undefined}
             placeholder={customLoginPage.enabled ? customLoginPage.placeholders?.email : undefined}
           />
           <PasswordField
@@ -311,7 +314,9 @@ const LoginPage = ({
             handleFocus={handleOnFocus}
             errorMessage={errors.password}
             floatingLabel={customLoginPage.enabled ? undefined : formatMessage(messages['login.password.label'])}
-            label={customLoginPage.enabled ? formatMessage(messages['login.password.label']) : undefined}
+            label={customLoginPage.enabled
+              ? (customLoginCard.labels?.password || formatMessage(messages['login.password.label']))
+              : undefined}
             placeholder={customLoginPage.enabled ? customLoginPage.placeholders?.password : undefined}
           />
           {customLoginPage.enabled && (

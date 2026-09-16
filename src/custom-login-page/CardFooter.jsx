@@ -12,7 +12,7 @@ const FOOTER_TARGET_BY_VARIANT = {
   password_reset: LOGIN_PAGE,
 };
 
-const CardFooter = ({ variant, label }) => {
+const CardFooter = ({ variant, label, text }) => {
   const target = FOOTER_TARGET_BY_VARIANT[variant];
   if (!target) {
     return null;
@@ -20,6 +20,7 @@ const CardFooter = ({ variant, label }) => {
 
   return (
     <div className="clp-card__footer">
+      {text && <span className="clp-card__footer-text">{text}</span>}
       <Link to={updatePathWithQueryParams(target)}>{label}</Link>
     </div>
   );
@@ -28,6 +29,11 @@ const CardFooter = ({ variant, label }) => {
 CardFooter.propTypes = {
   variant: PropTypes.string.isRequired,
   label: PropTypes.node.isRequired,
+  text: PropTypes.node,
+};
+
+CardFooter.defaultProps = {
+  text: null,
 };
 
 export default CardFooter;

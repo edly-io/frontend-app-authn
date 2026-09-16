@@ -36,7 +36,7 @@ const CustomLoginLayout = ({
             {cardCopy.title && <CardHeader title={cardCopy.title} subtitle={cardCopy.subtitle} />}
             <div className="clp-card__body">{children}</div>
             {cardCopy.footer && cardCopy.footer.label && (
-              <CardFooter variant={variant} label={cardCopy.footer.label} />
+              <CardFooter variant={variant} label={cardCopy.footer.label} text={cardCopy.footer.text} />
             )}
           </div>
         </div>
