@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 
+import { CustomLoginLayout, useCustomLoginPage } from '../custom-login-page';
 import { DefaultLargeLayout, DefaultMediumLayout, DefaultSmallLayout } from './components/default-layout';
 import {
   ImageExtraSmallLayout, ImageLargeLayout, ImageMediumLayout, ImageSmallLayout,
@@ -14,6 +15,19 @@ import { AuthLargeLayout, AuthMediumLayout, AuthSmallLayout } from './components
 
 const BaseContainer = ({ children, showWelcomeBanner, fullName }) => {
   const enableImageLayout = getConfig().ENABLE_IMAGE_LAYOUT;
+  const customLoginPage = useCustomLoginPage();
+
+  if (customLoginPage.enabled && !showWelcomeBanner) {
+    return (
+      <CustomLoginLayout
+        hero={customLoginPage.hero}
+        card={customLoginPage.card}
+        cssVars={customLoginPage.cssVars}
+      >
+        {children}
+      </CustomLoginLayout>
+    );
+  }
 
   if (enableImageLayout) {
     return (
