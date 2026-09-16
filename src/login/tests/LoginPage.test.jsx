@@ -2,7 +2,7 @@ import { Provider } from 'react-redux';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { IntlProvider } from '@edx/frontend-platform/i18n';
+import { configure, IntlProvider } from '@edx/frontend-platform/i18n';
 import {
   fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
@@ -835,5 +835,85 @@ describe('LoginPage', () => {
     const { container } = render(reduxWrapper(<LoginPage {...props} />));
     expect(container.querySelector('input#emailOrUsername').value).toEqual('john_doe');
     expect(container.querySelector('input#password').value).toEqual('test-password');
+  });
+
+  describe('custom login page', () => {
+    const cardConfig = {
+      enabled: true,
+      card: {
+        login: {
+          title: 'Sign in to continue',
+          placeholders: { emailOrUsername: 'you@school.edu', password: '••••••••' },
+          submit_label: 'Log in on Oryx Connect',
+          submit_arrow: true,
+        },
+      },
+    };
+
+    beforeEach(() => {
+      configure({
+        loggingService: { logError: jest.fn() },
+        config: {
+          ENVIRONMENT: 'production',
+          LANGUAGE_PREFERENCE_COOKIE_NAME: 'yum',
+        },
+        messages: { 'es-419': {}, de: {}, 'en-us': {} },
+      });
+    });
+
+    afterEach(() => {
+      mergeConfig({ CUSTOM_LOGIN_PAGE: {} });
+    });
+
+    it('renders the configured field placeholders', () => {
+      mergeConfig({ CUSTOM_LOGIN_PAGE: cardConfig });
+      const { container } = render(reduxWrapper(<LoginPage {...props} />));
+
+      expect(container.querySelector('#emailOrUsername').getAttribute('placeholder')).toEqual('you@school.edu');
+      expect(container.querySelector('#password').getAttribute('placeholder')).toEqual('••••••••');
+    });
+
+    it('renders the configured submit label with the arrow', () => {
+      mergeConfig({ CUSTOM_LOGIN_PAGE: cardConfig });
+      render(reduxWrapper(<LoginPage {...props} />));
+
+      expect(screen.getByText('Log in on Oryx Connect')).toBeDefined();
+    });
+
+    it('places the forgot-password link before the submit button in the DOM', () => {
+      mergeConfig({ CUSTOM_LOGIN_PAGE: cardConfig });
+      const { container } = render(reduxWrapper(<LoginPage {...props} />));
+
+      const formChildren = Array.from(container.querySelector('#sign-in-form').children);
+      const forgotIndex = formChildren.findIndex((node) => node.id === 'forgot-password');
+      const submitIndex = formChildren.findIndex((node) => node.id === 'sign-in');
+
+      expect(forgotIndex).toBeLessThan(submitIndex);
+    });
+
+    it('preserves the ids and variant the rest of the suite depends on', () => {
+      mergeConfig({ CUSTOM_LOGIN_PAGE: cardConfig });
+      const { container } = render(reduxWrapper(<LoginPage {...props} />));
+
+      expect(container.querySelector('#sign-in')).not.toBeNull();
+      expect(container.querySelector('#forgot-password')).not.toBeNull();
+      expect(container.querySelector('#sign-in').className).toContain('btn-brand');
+    });
+
+    it('keeps the stock tree unchanged when the gate is off (negative control)', () => {
+      const { container } = render(reduxWrapper(<LoginPage {...props} />));
+
+      expect(container.querySelector('.mw-xs')).not.toBeNull();
+      expect(container.querySelector('.clp')).toBeNull();
+      expect(container.querySelector('.clp-field__label')).toBeNull();
+      expect(container.querySelector('#emailOrUsername').getAttribute('placeholder')).toBeNull();
+      expect(container.querySelector('#password').getAttribute('placeholder')).toBeNull();
+
+      const formChildren = Array.from(container.querySelector('#sign-in-form').children);
+      const forgotIndex = formChildren.findIndex((node) => node.id === 'forgot-password');
+      const submitIndex = formChildren.findIndex((node) => node.id === 'sign-in');
+
+      expect(forgotIndex).toBeGreaterThan(submitIndex);
+    });
   });
 });

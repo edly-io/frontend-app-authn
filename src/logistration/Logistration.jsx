@@ -23,6 +23,7 @@ import {
   tpaProvidersSelector,
 } from '../common-components/data/selectors';
 import messages from '../common-components/messages';
+import { useCustomLoginPage } from '../custom-login-page';
 import { LOGIN_PAGE, REGISTER_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
 import {
   getActivationStatus,
@@ -53,6 +54,7 @@ const Logistration = (props) => {
   const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
   const hideRegistrationLink = getConfig().SHOW_REGISTRATION_LINKS === false;
   const selectedPage = redirectTo ? `/${redirectTo}` : selectedPageProp;
+  const customLoginPage = useCustomLoginPage();
 
   useEffect(() => {
     const authService = getAuthService();
@@ -146,7 +148,7 @@ const Logistration = (props) => {
                 </Tabs>
               )}
               <div id="main-content" className="main-content">
-                {!institutionLogin && (
+                {!institutionLogin && !customLoginPage.enabled && (
                   <h3 className="mb-4.5">{formatMessage(messages['logistration.sign.in'])}</h3>
                 )}
                 <LoginComponentSlot
@@ -164,7 +166,7 @@ const Logistration = (props) => {
                     <Tab title={tabTitle} eventKey={selectedPage === LOGIN_PAGE ? LOGIN_PAGE : REGISTER_PAGE} />
                   </Tabs>
                 )
-                : (!isValidTpaHint() && !hideRegistrationLink && (
+                : (!isValidTpaHint() && !hideRegistrationLink && !customLoginPage.enabled && (
                   <Tabs
                     defaultActiveKey={selectedPage}
                     id="controlled-tab"
@@ -180,7 +182,7 @@ const Logistration = (props) => {
                 <Navigate to={updatePathWithQueryParams(key)} replace />
               )}
               <div id="main-content" className="main-content">
-                {!institutionLogin && !isValidTpaHint() && hideRegistrationLink && (
+                {!institutionLogin && !isValidTpaHint() && hideRegistrationLink && !customLoginPage.enabled && (
                   <h3 className="mb-4.5">
                     {formatMessage(messages[selectedPage === LOGIN_PAGE ? 'logistration.sign.in' : 'logistration.register'])}
                   </h3>

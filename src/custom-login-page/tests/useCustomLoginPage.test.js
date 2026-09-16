@@ -11,7 +11,7 @@ jest.mock('@edx/frontend-platform/i18n', () => ({
 
 describe('useCustomLoginPage', () => {
   afterEach(() => {
-    mergeConfig({ CUSTOM_LOGIN_PAGE: undefined });
+    mergeConfig({ CUSTOM_LOGIN_PAGE: {} });
     getLocale.mockReturnValue('en');
   });
 

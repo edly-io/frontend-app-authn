@@ -246,6 +246,68 @@
   }
 }
 
+.clp {
+  .main-content {
+    min-width: 0 !important;
+    padding: 0 !important;
+  }
+
+  .pgn__form-group {
+    margin-bottom: 14px;
+  }
+
+  .clp-field__label {
+    display: block;
+    margin: 0 0 7px;
+    color: var(--clp-card-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    line-height: 1.3;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  .form-group__form-field.form-control {
+    height: auto !important;
+    padding: 13px 14px;
+    border: 1px solid var(--clp-field-border);
+    border-radius: 10px;
+    background: var(--clp-field-bg) !important;
+    color: var(--clp-card-heading);
+    font-size: 14px;
+    line-height: 1.2;
+    box-shadow: none;
+
+    &:focus {
+      border-color: var(--clp-link);
+      background: var(--clp-card-bg) !important;
+      box-shadow: 0 0 0 3px var(--clp-focus-ring);
+    }
+  }
+
+  .pgn__form-control-floating-label-content {
+    color: var(--clp-card-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .login-button-width {
+    background-color: var(--clp-cta-bg);
+    border-color: var(--clp-cta-bg);
+    border-radius: 11px;
+    box-shadow: 0 8px 20px var(--clp-cta-shadow);
+
+    &:hover,
+    &:focus {
+      background-color: var(--clp-cta-bg-hover);
+      border-color: var(--clp-cta-bg-hover);
+    }
+  }
+}
+
 [dir='rtl'] .clp-hero__swoosh {
   transform: scaleX(-1);
 }

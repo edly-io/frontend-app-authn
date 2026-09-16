@@ -9,6 +9,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Form, StatefulButton } from '@openedx/paragon';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
@@ -22,10 +23,13 @@ import {
   ThirdPartyAuthAlert,
 } from '../common-components';
 import AccountActivationMessage from './AccountActivationMessage';
+import LoginFailureMessage from './LoginFailure';
+import messages from './messages';
 import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
+import { DEFAULT_COPY, useCustomLoginPage } from '../custom-login-page';
 import { PENDING_STATE, RESET_PAGE } from '../data/constants';
 import {
   getActivationStatus,
@@ -37,8 +41,6 @@ import {
 import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
 import { backupLoginFormBegin, dismissPasswordResetBanner, loginRequest } from './data/actions';
 import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
-import LoginFailureMessage from './LoginFailure';
-import messages from './messages';
 
 const LoginPage = ({
   institutionLogin,
@@ -79,6 +81,8 @@ const LoginPage = ({
   const { formatMessage } = useIntl();
   const activationMsgType = getActivationStatus();
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
+  const customLoginPage = useCustomLoginPage();
+  const customLoginCard = customLoginPage.enabled ? (customLoginPage.card.login || {}) : {};
 
   const edlyPrefilledEmail = useSelector(state => state.emailCheck?.prefilledEmail);
   const edlyContext = useSelector(state => state.emailCheck?.context);
@@ -235,6 +239,30 @@ const LoginPage = ({
       />
     );
   }
+
+  const submitLabel = customLoginPage.enabled && customLoginCard.submit_label
+    ? customLoginCard.submit_label
+    : formatMessage(messages['sign.in.button']);
+  const submitLabelNode = customLoginPage.enabled && customLoginCard.submit_arrow
+    ? (
+      <>
+        {submitLabel}
+        <span aria-hidden="true"> {DEFAULT_COPY.submitArrow}</span>
+      </>
+    )
+    : submitLabel;
+  const forgotPasswordLink = (
+    <Link
+      id="forgot-password"
+      name="forgot-password"
+      className="btn btn-link font-weight-500 text-body"
+      to={updatePathWithQueryParams(RESET_PAGE)}
+      onClick={trackForgotPasswordLinkClick}
+    >
+      {formatMessage(messages['forgot.password'])}
+    </Link>
+  );
+
   return (
     <>
       <Helmet>
@@ -245,7 +273,7 @@ const LoginPage = ({
         redirectUrl={loginResult.redirectUrl}
         finishAuthUrl={finishAuthUrl}
       />
-      <div className="mw-xs mt-3 mb-2">
+      <div className={classNames('mt-3 mb-2', { 'mw-xs': !customLoginPage.enabled })}>
         <LoginFailureMessage
           errorCode={errorCode.type}
           errorCount={errorCode.count}
@@ -269,7 +297,9 @@ const LoginPage = ({
             handleChange={handleOnChange}
             handleFocus={handleOnFocus}
             errorMessage={errors.emailOrUsername}
-            floatingLabel={formatMessage(messages['login.user.identity.label'])}
+            floatingLabel={customLoginPage.enabled ? undefined : formatMessage(messages['login.user.identity.label'])}
+            label={customLoginPage.enabled ? formatMessage(messages['login.user.identity.label']) : undefined}
+            placeholder={customLoginPage.enabled ? customLoginCard.placeholders?.emailOrUsername : undefined}
           />
           <PasswordField
             name="password"
@@ -280,8 +310,11 @@ const LoginPage = ({
             handleChange={handleOnChange}
             handleFocus={handleOnFocus}
             errorMessage={errors.password}
-            floatingLabel={formatMessage(messages['login.password.label'])}
+            floatingLabel={customLoginPage.enabled ? undefined : formatMessage(messages['login.password.label'])}
+            label={customLoginPage.enabled ? formatMessage(messages['login.password.label']) : undefined}
+            placeholder={customLoginPage.enabled ? customLoginCard.placeholders?.password : undefined}
           />
+          {customLoginPage.enabled && forgotPasswordLink}
           <StatefulButton
             name="sign-in"
             id="sign-in"
@@ -290,21 +323,13 @@ const LoginPage = ({
             className="login-button-width"
             state={submitState}
             labels={{
-              default: formatMessage(messages['sign.in.button']),
+              default: submitLabelNode,
               pending: '',
             }}
             onClick={handleSubmit}
             onMouseDown={(event) => event.preventDefault()}
           />
-          <Link
-            id="forgot-password"
-            name="forgot-password"
-            className="btn btn-link font-weight-500 text-body"
-            to={updatePathWithQueryParams(RESET_PAGE)}
-            onClick={trackForgotPasswordLinkClick}
-          >
-            {formatMessage(messages['forgot.password'])}
-          </Link>
+          {!customLoginPage.enabled && forgotPasswordLink}
           <ThirdPartyAuth
             currentProvider={currentProvider}
             providers={providers}

@@ -20,7 +20,7 @@ const LargeScreen = {
 
 describe('Base component tests', () => {
   afterEach(() => {
-    mergeConfig({ ENABLE_IMAGE_LAYOUT: false, CUSTOM_LOGIN_PAGE: undefined });
+    mergeConfig({ ENABLE_IMAGE_LAYOUT: false, CUSTOM_LOGIN_PAGE: {} });
   });
 
   it('should show default layout', () => {
