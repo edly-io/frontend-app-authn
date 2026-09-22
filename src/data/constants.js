@@ -41,3 +41,6 @@ export const REDIRECT = 'redirect';
 // Messages the React Native shell listens for on its WebView bridge.
 export const NATIVE_BRIDGE_LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const NATIVE_BRIDGE_LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
+
+// Set on <html> inside the mobile app, for styling web-only furniture away.
+export const NATIVE_WEBVIEW_CLASS = 'is-native-webview';

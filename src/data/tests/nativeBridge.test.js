@@ -39,6 +39,7 @@ describe('nativeBridge', () => {
 
   afterEach(() => {
     delete window.ReactNativeWebView;
+    document.documentElement.classList.remove('is-native-webview');
   });
 
   describe('outside the mobile app', () => {
@@ -57,6 +58,11 @@ describe('nativeBridge', () => {
 
     it('does not announce a logout', () => {
       expect(loadBridge().announceLogoutToNativeApp()).toBe(false);
+    });
+
+    it('leaves the document unmarked', () => {
+      expect(loadBridge().markNativeWebView()).toBe(false);
+      expect(document.documentElement.classList.contains('is-native-webview')).toBe(false);
     });
   });
 
@@ -111,6 +117,18 @@ describe('nativeBridge', () => {
 
       expect(logError).toHaveBeenCalled();
       expect(JSON.parse(postMessage.mock.calls[0][0])).toEqual({ type: 'LOGIN_SUCCESS', user: null });
+    });
+
+    it('marks the document so web-only furniture can be styled away', () => {
+      expect(loadBridge().markNativeWebView()).toBe(true);
+      expect(document.documentElement.classList.contains('is-native-webview')).toBe(true);
+    });
+
+    it('marks the document without needing a message to have been sent', () => {
+      loadBridge().markNativeWebView();
+
+      expect(postMessage).not.toHaveBeenCalled();
+      expect(document.documentElement.classList.contains('is-native-webview')).toBe(true);
     });
 
     it('announces a logout', () => {

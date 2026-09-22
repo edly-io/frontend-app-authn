@@ -1,9 +1,23 @@
 import { fetchAuthenticatedUser, getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { logError } from '@edx/frontend-platform/logging';
 
-import { NATIVE_BRIDGE_LOGIN_SUCCESS, NATIVE_BRIDGE_LOGOUT_SUCCESS } from '../constants';
+import {
+  NATIVE_BRIDGE_LOGIN_SUCCESS, NATIVE_BRIDGE_LOGOUT_SUCCESS, NATIVE_WEBVIEW_CLASS,
+} from '../constants';
 
 export const isNativeWebView = () => typeof window !== 'undefined' && !!window.ReactNativeWebView;
+
+// Called once at start-up rather than from `isNativeWebView()`: a page that
+// never posts a message would otherwise never be marked, and the class has to
+// be on <html> before the first paint or web-only furniture flashes up and
+// then disappears.
+export const markNativeWebView = () => {
+  if (!isNativeWebView() || typeof document === 'undefined') {
+    return false;
+  }
+  document.documentElement.classList.add(NATIVE_WEBVIEW_CLASS);
+  return true;
+};
 
 export const postNativeMessage = (payload) => {
   if (!isNativeWebView()) {

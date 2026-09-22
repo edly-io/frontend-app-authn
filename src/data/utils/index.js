@@ -14,5 +14,6 @@ export {
   announceLoginToNativeApp,
   announceLogoutToNativeApp,
   isNativeWebView,
+  markNativeWebView,
   postNativeMessage,
 } from './nativeBridge';
