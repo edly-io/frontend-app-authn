@@ -37,3 +37,7 @@ export const VALID_EMAIL_REGEX = '(^[-!#$%&\'*+/=?^_`{}|~0-9A-Z]+(\\.[-!#$%&\'*+
 // things like auto-enrollment upon login and registration.
 export const AUTH_PARAMS = ['course_id', 'enrollment_action', 'course_mode', 'email_opt_in', 'purchase_workflow', 'next', 'register_for_free', 'track', 'is_account_recovery', 'variant', 'host', 'cta'];
 export const REDIRECT = 'redirect';
+
+// Messages the React Native shell listens for on its WebView bridge.
+export const NATIVE_BRIDGE_LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const NATIVE_BRIDGE_LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
