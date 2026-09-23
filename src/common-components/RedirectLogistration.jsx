@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom';
 import {
   AUTHN_PROGRESSIVE_PROFILING, RECOMMENDATIONS, REDIRECT,
 } from '../data/constants';
-import { setCookie } from '../data/utils';
+import { announceLoginToNativeApp, isNativeWebView, setCookie } from '../data/utils';
 
 const RedirectLogistration = (props) => {
   const {
@@ -76,7 +76,13 @@ const RedirectLogistration = (props) => {
       );
     }
 
-    window.location.href = finalRedirectUrl;
+    // In the mobile app the bridge message goes first, or the navigation
+    // below loses it.
+    if (isNativeWebView()) {
+      announceLoginToNativeApp().finally(() => { window.location.href = finalRedirectUrl; });
+    } else {
+      window.location.href = finalRedirectUrl;
+    }
   }
 
   return null;

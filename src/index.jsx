@@ -10,8 +10,11 @@ import { ErrorPage } from '@edx/frontend-platform/react';
 import { createRoot } from 'react-dom/client';
 
 import configuration from './config';
+import { markNativeWebView } from './data/utils';
 import messages from './i18n';
 import MainApp from './MainApp';
+
+markNativeWebView();
 
 subscribe(APP_READY, () => {
   const root = createRoot(document.getElementById('root'));
