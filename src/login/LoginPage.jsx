@@ -237,6 +237,7 @@ const LoginPage = ({
         success={loginResult.success}
         redirectUrl={loginResult.redirectUrl}
         finishAuthUrl={finishAuthUrl}
+        replaceHistory
       />
       <div className="mw-xs mt-3 mb-2">
         <LoginFailureMessage

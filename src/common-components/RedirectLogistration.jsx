@@ -20,6 +20,7 @@ const RedirectLogistration = (props) => {
     userId,
     registrationEmbedded,
     host,
+    replaceHistory,
   } = props;
   let finalRedirectUrl = '';
 
@@ -76,7 +77,11 @@ const RedirectLogistration = (props) => {
       );
     }
 
-    window.location.href = finalRedirectUrl;
+    if (replaceHistory) {
+      window.location.replace(finalRedirectUrl);
+    } else {
+      window.location.href = finalRedirectUrl;
+    }
   }
 
   return null;
@@ -94,6 +99,7 @@ RedirectLogistration.defaultProps = {
   userId: null,
   registrationEmbedded: false,
   host: '',
+  replaceHistory: false,
 };
 
 RedirectLogistration.propTypes = {
@@ -108,6 +114,7 @@ RedirectLogistration.propTypes = {
   userId: PropTypes.number,
   registrationEmbedded: PropTypes.bool,
   host: PropTypes.string,
+  replaceHistory: PropTypes.bool,
 };
 
 export default RedirectLogistration;

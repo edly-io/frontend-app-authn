@@ -2,6 +2,7 @@
 /* eslint-disable react/function-component-definition */
 import React from 'react';
 
+import { getConfig } from '@edx/frontend-platform';
 import { fetchAuthenticatedUser, getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
@@ -10,7 +11,7 @@ import {
 } from 'react-router-dom';
 
 import { UnAuthOnlyRoute } from '..';
-import { REGISTER_PAGE } from '../../data/constants';
+import { DEFAULT_REDIRECT_URL, REGISTER_PAGE } from '../../data/constants';
 
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedUser: jest.fn(),
@@ -58,6 +59,9 @@ describe('UnAuthOnlyRoute', () => {
     });
 
     expect(fetchAuthenticatedUser).toBeCalledWith({ forceRefresh: true });
+    expect(global.location.replace).toHaveBeenCalledWith(
+      getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL),
+    );
   });
 
   it('should have called with forceRefresh false', async () => {
