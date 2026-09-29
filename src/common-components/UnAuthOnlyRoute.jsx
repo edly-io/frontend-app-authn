@@ -25,7 +25,7 @@ const UnAuthOnlyRoute = ({ children }) => {
 
   if (isReady) {
     if (authUser && authUser.username) {
-      global.location.href = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
+      global.location.replace(getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL));
       return null;
     }
 

@@ -530,9 +530,9 @@ describe('LoginPage', () => {
     });
 
     delete window.location;
-    window.location = { href: getConfig().BASE_URL };
+    window.location = { href: getConfig().BASE_URL, replace: jest.fn() };
     render(reduxWrapper(<LoginPage {...props} />));
-    expect(window.location.href).toBe(dashboardURL);
+    expect(window.location.replace).toHaveBeenCalledWith(dashboardURL);
   });
 
   it('should redirect to finishAuthUrl upon successful login via SSO', () => {
@@ -556,10 +556,10 @@ describe('LoginPage', () => {
     });
 
     delete window.location;
-    window.location = { href: getConfig().BASE_URL };
+    window.location = { href: getConfig().BASE_URL, replace: jest.fn() };
 
     render(reduxWrapper(<LoginPage {...props} />));
-    expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
+    expect(window.location.replace).toHaveBeenCalledWith(getConfig().LMS_BASE_URL + authCompleteUrl);
   });
 
   it('should redirect to social auth provider url on SSO button click', () => {
@@ -604,10 +604,10 @@ describe('LoginPage', () => {
     });
 
     delete window.location;
-    window.location = { href: getConfig().BASE_URL };
+    window.location = { href: getConfig().BASE_URL, replace: jest.fn() };
 
     render(reduxWrapper(<LoginPage {...props} />));
-    expect(window.location.href).toBe(getConfig().LMS_BASE_URL + finishAuthUrl);
+    expect(window.location.replace).toHaveBeenCalledWith(getConfig().LMS_BASE_URL + finishAuthUrl);
   });
 
   // ******** test hinted third party auth ********

@@ -20,6 +20,7 @@ const RedirectLogistration = (props) => {
     userId,
     registrationEmbedded,
     host,
+    replaceHistory,
   } = props;
   let finalRedirectUrl = '';
 
@@ -76,12 +77,20 @@ const RedirectLogistration = (props) => {
       );
     }
 
+    const completeRedirect = () => {
+      if (replaceHistory) {
+        window.location.replace(finalRedirectUrl);
+      } else {
+        window.location.href = finalRedirectUrl;
+      }
+    };
+
     // In the mobile app the bridge message goes first, or the navigation
     // below loses it.
     if (isNativeWebView()) {
-      announceLoginToNativeApp().finally(() => { window.location.href = finalRedirectUrl; });
+      announceLoginToNativeApp().finally(completeRedirect);
     } else {
-      window.location.href = finalRedirectUrl;
+      completeRedirect();
     }
   }
 
@@ -100,6 +109,7 @@ RedirectLogistration.defaultProps = {
   userId: null,
   registrationEmbedded: false,
   host: '',
+  replaceHistory: false,
 };
 
 RedirectLogistration.propTypes = {
@@ -114,6 +124,7 @@ RedirectLogistration.propTypes = {
   userId: PropTypes.number,
   registrationEmbedded: PropTypes.bool,
   host: PropTypes.string,
+  replaceHistory: PropTypes.bool,
 };
 
 export default RedirectLogistration;
