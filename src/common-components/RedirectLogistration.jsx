@@ -77,14 +77,20 @@ const RedirectLogistration = (props) => {
       );
     }
 
-    if (replaceHistory) {
-      window.location.replace(finalRedirectUrl);
+    const completeRedirect = () => {
+      if (replaceHistory) {
+        window.location.replace(finalRedirectUrl);
+      } else {
+        window.location.href = finalRedirectUrl;
+      }
+    };
+
     // In the mobile app the bridge message goes first, or the navigation
     // below loses it.
     if (isNativeWebView()) {
-      announceLoginToNativeApp().finally(() => { window.location.href = finalRedirectUrl; });
+      announceLoginToNativeApp().finally(completeRedirect);
     } else {
-      window.location.href = finalRedirectUrl;
+      completeRedirect();
     }
   }
 

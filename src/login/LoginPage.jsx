@@ -257,6 +257,7 @@ const LoginPage = ({
           success={loginResult.success}
           redirectUrl={loginResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
+          replaceHistory
         />
         <h4 className="mt-3">{formatMessage(messages['2fa.page.title'])}</h4>
         <TwoFactorAuth />

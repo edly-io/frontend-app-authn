@@ -4,9 +4,9 @@ import { render } from '@testing-library/react';
 import algoliasearchHelper from 'algoliasearch-helper';
 
 import mockedRecommendedProducts from './mockedData';
+import CreateAlgoliaSearchHelperMock from './test_utils/test_utils';
 import isOneTrustFunctionalCookieEnabled from '../../../data/oneTrust';
 import useAlgoliaRecommendations from '../hooks/useAlgoliaRecommendations';
-import CreateAlgoliaSearchHelperMock from './test_utils/test_utils';
 
 jest.mock('algoliasearch-helper');
 
