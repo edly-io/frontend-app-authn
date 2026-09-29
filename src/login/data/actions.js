@@ -37,3 +37,41 @@ export const loginRequestFailure = (loginError) => ({
 export const dismissPasswordResetBanner = () => ({
   type: DISMISS_PASSWORD_RESET_BANNER,
 });
+
+// Two Factor Auth
+export const TWO_FACTOR_AUTH_REQUIRED_ACTION = 'TWO_FACTOR_AUTH_REQUIRED';
+export const TWO_FACTOR_AUTH_VERIFY = new AsyncActionType('LOGIN', 'TWO_FACTOR_AUTH_VERIFY');
+export const TWO_FACTOR_AUTH_RESEND = new AsyncActionType('LOGIN', 'TWO_FACTOR_AUTH_RESEND');
+
+export const twoFactorAuthRequired = (maskedEmail) => ({
+  type: TWO_FACTOR_AUTH_REQUIRED_ACTION,
+  payload: { maskedEmail },
+});
+
+export const twoFactorAuthVerifyRequest = (otp) => ({
+  type: TWO_FACTOR_AUTH_VERIFY.BASE,
+  payload: { otp },
+});
+
+export const twoFactorAuthVerifyBegin = () => ({ type: TWO_FACTOR_AUTH_VERIFY.BEGIN });
+
+export const twoFactorAuthVerifySuccess = (redirectUrl) => ({
+  type: TWO_FACTOR_AUTH_VERIFY.SUCCESS,
+  payload: { redirectUrl },
+});
+
+export const twoFactorAuthVerifyFailure = (errorCode) => ({
+  type: TWO_FACTOR_AUTH_VERIFY.FAILURE,
+  payload: { errorCode },
+});
+
+export const twoFactorAuthResendRequest = () => ({ type: TWO_FACTOR_AUTH_RESEND.BASE });
+
+export const twoFactorAuthResendBegin = () => ({ type: TWO_FACTOR_AUTH_RESEND.BEGIN });
+
+export const twoFactorAuthResendSuccess = () => ({ type: TWO_FACTOR_AUTH_RESEND.SUCCESS });
+
+export const twoFactorAuthResendFailure = (errorCode) => ({
+  type: TWO_FACTOR_AUTH_RESEND.FAILURE,
+  payload: { errorCode },
+});

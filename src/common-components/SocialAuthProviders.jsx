@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 
 import messages from './messages';
 import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
+import { getTpaProviderIconUrl } from '../data/utils';
 
 const SocialAuthProviders = (props) => {
   const { formatMessage } = useIntl();
@@ -32,7 +33,7 @@ const SocialAuthProviders = (props) => {
     >
       {provider.iconImage ? (
         <div aria-hidden="true">
-          <img className="btn-tpa__image-icon" src={provider.iconImage} alt={`icon ${provider.name}`} />
+          <img className="btn-tpa__image-icon" src={getTpaProviderIconUrl(provider.iconImage)} alt={`icon ${provider.name}`} />
         </div>
       )
         : (

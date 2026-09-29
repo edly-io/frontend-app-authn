@@ -21,6 +21,7 @@ import {
   NUDGE_PASSWORD_CHANGE,
   REQUIRE_PASSWORD_CHANGE,
   TPA_AUTHENTICATION_FAILURE,
+  TWO_FACTOR_AUTH_DISABLED,
 } from './data/constants';
 import messages from './messages';
 import { windowScrollTo } from '../data/utils';
@@ -61,6 +62,9 @@ const LoginFailureMessage = (props) => {
     }
     case FORBIDDEN_REQUEST:
       errorMessage = <p>{formatMessage(messages['login.rate.limit.reached.message'])}</p>;
+      break;
+    case TWO_FACTOR_AUTH_DISABLED:
+      errorMessage = <p>{formatMessage(messages['2fa.disabled.message'])}</p>;
       break;
     case INACTIVE_USER: {
       const supportLink = (

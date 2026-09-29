@@ -8,20 +8,20 @@ import thunkMiddleware from 'redux-thunk';
 import createRootReducer from './reducers';
 import rootSaga from './sagas';
 
-const sagaMiddleware = createSagaMiddleware();
+export default function configureStore(initialState = {}) {
+  const sagaMiddleware = createSagaMiddleware();
 
-function composeMiddleware() {
-  if (getConfig().ENVIRONMENT === 'development') {
-    const loggerMiddleware = createLogger({
-      collapsed: true,
-    });
-    return composeWithDevTools(applyMiddleware(thunkMiddleware, sagaMiddleware, loggerMiddleware));
+  function composeMiddleware() {
+    if (getConfig().ENVIRONMENT === 'development') {
+      const loggerMiddleware = createLogger({
+        collapsed: true,
+      });
+      return composeWithDevTools(applyMiddleware(thunkMiddleware, sagaMiddleware, loggerMiddleware));
+    }
+
+    return compose(applyMiddleware(thunkMiddleware, sagaMiddleware));
   }
 
-  return compose(applyMiddleware(thunkMiddleware, sagaMiddleware));
-}
-
-export default function configureStore(initialState = {}) {
   const store = createStore(
     createRootReducer(),
     initialState,

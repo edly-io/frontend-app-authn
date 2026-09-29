@@ -3,26 +3,9 @@ import { getConfig } from '@edx/frontend-platform';
 import { DEFAULT_REDIRECT_URL, DEFAULT_STATE, PENDING_STATE } from '../../../data/constants';
 import { RESET_PASSWORD } from '../../../reset-password';
 import { BACKUP_LOGIN_DATA, DISMISS_PASSWORD_RESET_BANNER, LOGIN_REQUEST } from '../actions';
-import reducer from '../reducers';
+import reducer, { defaultState } from '../reducers';
 
 describe('login reducer', () => {
-  const defaultState = {
-    loginErrorCode: '',
-    loginErrorContext: {},
-    loginResult: {},
-    loginFormData: {
-      formFields: {
-        emailOrUsername: '', password: '',
-      },
-      errors: {
-        emailOrUsername: '', password: '',
-      },
-    },
-    shouldBackupState: false,
-    showResetPasswordSuccessBanner: false,
-    submitState: DEFAULT_STATE,
-  };
-
   it('should update state to show reset password success banner', () => {
     const action = {
       type: RESET_PASSWORD.SUCCESS,
