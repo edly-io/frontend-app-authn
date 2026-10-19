@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Alert, Form, Hyperlink, Spinner, StatefulButton } from '@openedx/paragon';
+import { Alert, Form, Spinner, StatefulButton } from '@openedx/paragon';
 import { InfoOutline } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -43,7 +43,7 @@ import { getThirdPartyAuthContext as getRegistrationDataFromBackend } from '../c
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
 import {
-  COMPLETE_STATE, LEGACY_ACCOUNT_PAGE, LEGACY_PLATFORM_URL, PENDING_STATE, REGISTER_PAGE,
+  COMPLETE_STATE, LEGACY_ACCOUNT_PAGE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
 import {
   getAllPossibleQueryParams, getTpaHint, getTpaProvider, isHostAvailableInQueryParams, setCookie, updatePathWithQueryParams,
@@ -378,9 +378,7 @@ const RegistrationPage = (props) => {
               {!registrationEmbedded && getConfig().ENABLE_LEGACY_ACCOUNT_FLOW && (
                 <Alert variant="info" icon={InfoOutline} className="mt-3 mb-2" id="legacy-account">
                   {formatMessage(messages['legacy.account.link.text'], {
-                    old: (chunks) => (
-                      <Hyperlink destination={LEGACY_PLATFORM_URL} target="_blank" isInline>{chunks}</Hyperlink>
-                    ),
+                    old: (chunks) => chunks,
                     nl: () => <br />,
                     here: (chunks) => (
                       <Link
