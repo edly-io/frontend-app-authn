@@ -300,7 +300,7 @@ const LoginPage = ({
           {getConfig().ENABLE_LEGACY_ACCOUNT_FLOW && (
             <Alert variant="info" icon={InfoOutline} className="mt-3 mb-2" id="legacy-account">
               {formatMessage(messages['legacy.account.link.text'], {
-                old: (chunks) => <span>{chunks}</span>,
+                old: (chunks) => chunks,
                 nl: () => <br />,
                 here: (chunks) => (
                   <Link

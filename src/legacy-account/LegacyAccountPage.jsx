@@ -26,7 +26,7 @@ const LegacyAccountPage = () => {
   const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
 
   // Renders the <link> tag inside translated messages as plain text.
-  const oldPlatformLink = (chunks) => <span>{chunks}</span>;
+  const oldPlatformLink = (chunks) => chunks;
 
   const [email, setEmail] = useState('');
   const [validationError, setValidationError] = useState('');
