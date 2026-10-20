@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Alert, Form, Hyperlink, StatefulButton } from '@openedx/paragon';
+import { Alert, Form, StatefulButton } from '@openedx/paragon';
 import { InfoOutline } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
@@ -25,7 +25,7 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
-import { LEGACY_ACCOUNT_PAGE, LEGACY_PLATFORM_URL, PENDING_STATE, RESET_PAGE } from '../data/constants';
+import { LEGACY_ACCOUNT_PAGE, PENDING_STATE, RESET_PAGE } from '../data/constants';
 import {
   getActivationStatus,
   getAllPossibleQueryParams,
@@ -300,9 +300,7 @@ const LoginPage = ({
           {getConfig().ENABLE_LEGACY_ACCOUNT_FLOW && (
             <Alert variant="info" icon={InfoOutline} className="mt-3 mb-2" id="legacy-account">
               {formatMessage(messages['legacy.account.link.text'], {
-                old: (chunks) => (
-                  <Hyperlink destination={LEGACY_PLATFORM_URL} target="_blank" isInline>{chunks}</Hyperlink>
-                ),
+                old: (chunks) => chunks,
                 nl: () => <br />,
                 here: (chunks) => (
                   <Link

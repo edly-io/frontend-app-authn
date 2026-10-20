@@ -4,7 +4,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
-  Alert, Form, Hyperlink, Icon, StatefulButton, Tab, Tabs,
+  Alert, Form, Icon, StatefulButton, Tab, Tabs,
 } from '@openedx/paragon';
 import { CheckCircle, ChevronLeft, Error } from '@openedx/paragon/icons';
 import { Helmet } from 'react-helmet';
@@ -15,7 +15,7 @@ import { requestLegacySetPassword } from './service';
 import BaseContainer from '../base-container';
 import { FormGroup } from '../common-components';
 import {
-  COMPLETE_STATE, DEFAULT_STATE, LEGACY_PLATFORM_URL, LOGIN_PAGE, PENDING_STATE, RESET_PAGE, VALID_EMAIL_REGEX,
+  COMPLETE_STATE, DEFAULT_STATE, LOGIN_PAGE, PENDING_STATE, RESET_PAGE, VALID_EMAIL_REGEX,
 } from '../data/constants';
 import { updatePathWithQueryParams, windowScrollTo } from '../data/utils';
 
@@ -25,12 +25,8 @@ const LegacyAccountPage = () => {
   const platformName = getConfig().SITE_NAME;
   const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
 
-  // Renders the <link> tag inside translated messages as a link to the old platform.
-  const oldPlatformLink = (chunks) => (
-    <Hyperlink destination={LEGACY_PLATFORM_URL} target="_blank" isInline>
-      {chunks}
-    </Hyperlink>
-  );
+  // Renders the <link> tag inside translated messages as plain text.
+  const oldPlatformLink = (chunks) => chunks;
 
   const [email, setEmail] = useState('');
   const [validationError, setValidationError] = useState('');
