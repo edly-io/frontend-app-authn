@@ -121,7 +121,7 @@ const messages = defineMessages({
   },
   'register.step.password.hint': {
     id: 'register.step.password.hint',
-    defaultMessage: 'Use 8+ characters with a mix of letters, numbers and symbols.',
+    defaultMessage: 'Use 12+ characters with a mix of letters, numbers and symbols.',
     description: 'Hint under the password strength bar of the two-step registration',
   },
   'register.step.name.label': {

@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 
 import commonMessages from '../../common-components/messages';
 import { LOGIN_PAGE } from '../../data/constants';
+import { MIN_PASSWORD_LENGTH } from '../../data/passwordPolicy';
 import { updatePathWithQueryParams } from '../../data/utils';
 import messages from '../messages';
 
@@ -67,7 +68,7 @@ TwoStepHeader.propTypes = {
 export const PasswordStrength = ({ value }) => {
   const { formatMessage } = useIntl();
   const score = [
-    value.length >= 8,
+    value.length >= MIN_PASSWORD_LENGTH,
     /[a-z]/.test(value) && /[A-Z]/.test(value),
     /\d/.test(value),
     /[^A-Za-z0-9]/.test(value),

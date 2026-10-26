@@ -34,7 +34,9 @@ import {
   FORM_SUBMISSION_ERROR,
   PROFILE_STEP_ROWS,
   TPA_AUTHENTICATION_FAILURE,
+  TWO_STEP_ACCOUNT_FIELDS,
 } from './data/constants';
+import { toIsoDate } from './data/inputMasks';
 import { validateProfileFields } from './data/profileRules';
 import getBackendValidations from './data/selectors';
 import {
@@ -188,6 +190,14 @@ const RegistrationPage = (props) => {
   }, [backendValidations, registrationEmbedded]);
 
   useEffect(() => {
+    // Step 1's fields are unmounted on step 2: send the user back so the field error is visible.
+    if (twoStep && step === 2 && backendValidations
+      && TWO_STEP_ACCOUNT_FIELDS.some(name => backendValidations[name])) {
+      setStep(1);
+    }
+  }, [backendValidations]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
     if (registrationErrorCode) {
       setErrorCode(prevState => ({ type: registrationErrorCode, count: prevState.count + 1 }));
     }
@@ -285,6 +295,11 @@ const RegistrationPage = (props) => {
       totalRegistrationTime,
       queryParams);
 
+    // The expiry date is typed as mm/dd/yy; the backend expects ISO.
+    if (twoStep && payload.id_expiration_date) {
+      payload.id_expiration_date = toIsoDate(payload.id_expiration_date);
+    }
+
     // making register call
     dispatch(registerNewUser(payload));
   };
@@ -327,7 +342,8 @@ const RegistrationPage = (props) => {
   };
 
   useEffect(() => {
-    if (autoSubmitRegForm && userPipelineDataLoaded) {
+    // Two-step: never auto-submit, the SSO user goes through step 2 so the profile fields get validated.
+    if (autoSubmitRegForm && userPipelineDataLoaded && !twoStep) {
       registerUser();
     }
   }, [autoSubmitRegForm, userPipelineDataLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -359,7 +375,7 @@ const RegistrationPage = (props) => {
             && !!Object.keys(optionalFields.fields).length
           }
         />
-        {autoSubmitRegForm && !errorCode.type ? (
+        {autoSubmitRegForm && !twoStep && !errorCode.type ? (
           <div className="mw-xs mt-5 text-center">
             <Spinner animation="border" variant="primary" id="tpa-spinner" />
           </div>

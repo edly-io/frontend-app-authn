@@ -1,5 +1,5 @@
 import {
-  caretAfterFormat, formatTelephone, formatTrn, unformatTelephone,
+  caretAfterFormat, formatDate, formatTelephone, formatTrn, toIsoDate, unformatTelephone,
 } from '../inputMasks';
 
 describe('formatTrn', () => {
@@ -66,5 +66,21 @@ describe('caretAfterFormat', () => {
   it('returns 0 before any digit and the end past the last digit', () => {
     expect(caretAfterFormat('abc', 3, '')).toBe(0);
     expect(caretAfterFormat('123', 3, '123')).toBe(3);
+  });
+});
+
+describe('formatDate / toIsoDate', () => {
+  it('masks digits as mm/dd/yy and ignores everything else', () => {
+    expect(formatDate('')).toBe('');
+    expect(formatDate('0')).toBe('0');
+    expect(formatDate('013')).toBe('01/3');
+    expect(formatDate('01-31-30')).toBe('01/31/30');
+    expect(formatDate('0131301234')).toBe('01/31/30');
+  });
+
+  it('converts a complete real date to ISO and rejects the rest', () => {
+    expect(toIsoDate('01/31/30')).toBe('2030-01-31');
+    expect(toIsoDate('02/29/28')).toBe('2028-02-29');
+    ['02/30/30', '13/01/30', '01/31', '', undefined].forEach(value => expect(toIsoDate(value)).toBe(''));
   });
 });

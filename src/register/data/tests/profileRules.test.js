@@ -47,9 +47,9 @@ describe('TPDCO profile field rules', () => {
     expect(error('parish', 'Mars', { options: [['Kingston', 'Kingston']] })).toBe('tpdco.choice.invalid');
   });
 
-  it('id_expiration_date must be a real YYYY-MM-DD date, with no future-date rule', () => {
-    ['2030-01-31', '2000-02-29', '1999-12-31'].forEach(value => expect(error('id_expiration_date', value)).toBe(''));
-    ['2030-02-30', '2030-13-01', '01/31/30', 'tomorrow'].forEach(
+  it('id_expiration_date must be a real mm/dd/yy date, with no future-date rule', () => {
+    ['01/31/30', '02/29/28', '12/31/99'].forEach(value => expect(error('id_expiration_date', value)).toBe(''));
+    ['02/30/30', '13/01/30', '2030-01-31', '1/31/30', 'tomorrow'].forEach(
       value => expect(error('id_expiration_date', value)).toBe('tpdco.date.invalid'),
     );
   });

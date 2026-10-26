@@ -33,6 +33,8 @@ export const PARISH_REGIONS = {
 };
 
 // Fields shown on step 1 of the two-step registration; every other configurable field is on step 2.
+// Fields rendered on step 1 of the two-step registration.
+export const TWO_STEP_ACCOUNT_FIELDS = ['name', 'email', 'username', 'password'];
 export const ACCOUNT_STEP_FIELDS = ['confirm_email', 'confirm_password'];
 
 // Step 2 of the two-step registration, in Figma order; names in the same inner array share a row.
@@ -60,7 +62,7 @@ export const TWO_STEP_FIELD_UI = {
   job_title: { label: 'Job title', placeholder: 'e.g. Instructional designer' },
   photo_id_type: { label: 'Photo ID type', placeholder: 'Select ID type' },
   photo_id_number: { label: 'Photo ID number', placeholder: 'As printed on your ID' },
-  id_expiration_date: { label: 'ID expiration date', placeholder: 'mm/dd/yy' },
+  id_expiration_date: { label: 'ID expiration date', placeholder: 'mm/dd/yy', type: 'text' },
   parish: { label: 'Parish', placeholder: 'Select parish' },
   region: { label: 'Region', placeholder: 'Auto-filled from parish' },
 };

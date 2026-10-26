@@ -35,3 +35,18 @@ export const caretAfterFormat = (rawValue, rawCaret, formattedValue) => {
   }
   return formattedValue.length;
 };
+
+/** Expiry date as typed: digits only, shown as mm/dd/yy (the Figma format). */
+export const formatDate = (raw) => {
+  const digits = (raw || '').replace(/\D/g, '').slice(0, 6);
+  return [digits.slice(0, 2), digits.slice(2, 4), digits.slice(4)].filter(Boolean).join('/');
+};
+
+/** mm/dd/yy -> YYYY-MM-DD (20yy, ID expiry dates are never in the 1900s), or '' when it is not a real date. */
+export const toIsoDate = (value) => {
+  const match = /^(\d{2})\/(\d{2})\/(\d{2})$/.exec(value || '');
+  if (!match) { return ''; }
+  const iso = `20${match[3]}-${match[1]}-${match[2]}`;
+  const date = new Date(`${iso}T00:00:00Z`);
+  return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === iso ? iso : '';
+};

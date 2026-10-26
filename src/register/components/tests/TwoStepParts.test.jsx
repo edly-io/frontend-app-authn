@@ -41,9 +41,11 @@ describe('TwoStepParts', () => {
   });
 
   it('renders the password strength bar and hint', () => {
-    const { container, getByText } = renderWithIntl(<PasswordStrength value="Abcdefg1!" />);
+    const { container, getByText } = renderWithIntl(<PasswordStrength value="Abcdefghij1!" />);
     expect(container.querySelectorAll('.is-filled')).toHaveLength(4);
-    expect(getByText(/Use 8\+ characters/)).toBeTruthy();
+    expect(getByText(/Use 12\+ characters/)).toBeTruthy();
+    // Below the real minimum length the first segment stays empty.
+    expect(renderWithIntl(<PasswordStrength value="Abcdefg1!" />).container.querySelectorAll('.is-filled')).toHaveLength(3);
   });
 
   it('renders the terms footer with both links', () => {

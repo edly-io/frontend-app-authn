@@ -3,8 +3,9 @@
 // login page and the Sign in | Register tab bar) are unaffected.
 
 .tpdco-reg {
-  // Accent follows the tenant brand colour; the Figma navy is only the fallback.
-  --tpdco-accent: var(--pgn-color-brand-base, #15376d);
+  // Figma navy. `.tpdco-reg` is only added for tenants with TPDCO_TWO_STEP_REGISTRATION, so this is tenant-scoped;
+  // to follow the tenant theme instead use var(--pgn-color-brand-base, #15376d).
+  --tpdco-accent: #15376d;
 
   // Step indicator, back link, progress and headings
   &__step-row {
@@ -194,8 +195,9 @@
     }
   }
 
-  // The Figma form shows the terms line above instead of the core honor-code block.
-  #honor-code {
+  // The Figma form shows the terms line above instead of the core honor-code blurb. Only the auto-accepted
+  // blurb is hidden: a required honor-code checkbox (which contains an input) must stay visible.
+  #honor-code:not(:has(input)) {
     display: none;
   }
 }

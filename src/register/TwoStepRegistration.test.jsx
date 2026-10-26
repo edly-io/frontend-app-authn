@@ -2,7 +2,7 @@ import { Provider } from 'react-redux';
 
 import { mergeConfig } from '@edx/frontend-platform';
 import { configure, getLocale, IntlProvider } from '@edx/frontend-platform/i18n';
-import { fireEvent, render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
@@ -35,6 +35,7 @@ const descriptions = Object.fromEntries(PROFILE_STEP_ROWS.flat().map(name => [na
 
 describe('TPDCO two-step registration submit', () => {
   let store;
+  let state;
 
   beforeEach(() => {
     getLocale.mockReturnValue('en-us');
@@ -51,7 +52,7 @@ describe('TPDCO two-step registration submit', () => {
       USER_RETENTION_COOKIE_NAME: 'authn-returning-user',
     });
     window.location = { search: '' };
-    store = mockStore({
+    state = {
       register: {
         registrationResult: { success: false, redirectUrl: '' },
         registrationError: {},
@@ -75,7 +76,8 @@ describe('TPDCO two-step registration submit', () => {
         fieldDescriptions: descriptions,
         optionalFields: { fields: {}, extended_profile: [] },
       },
-    });
+    };
+    store = mockStore(() => state);
     store.dispatch = jest.fn(store.dispatch);
   });
 
@@ -126,14 +128,74 @@ describe('TPDCO two-step registration submit', () => {
     type('job_title', 'Guide');
     type('photo_id_type', 'Passport');
     type('photo_id_number', 'A1234567');
-    type('id_expiration_date', '2030-01-31');
+    type('id_expiration_date', '013130');
     type('parish', 'Kingston');
     fireEvent.click(container.querySelector('button.btn-brand'));
 
     const registerCall = store.dispatch.mock.calls.map(([action]) => action)
       .find(action => action.type === registerNewUser({}).type);
     expect(registerCall.payload.registrationInfo).toEqual(
-      expect.objectContaining({ trn: '123-456-789', telephone: '8765550100', region: 'Kingston' }),
+      expect.objectContaining({
+        trn: '123-456-789', telephone: '8765550100', region: 'Kingston', id_expiration_date: '2030-01-31',
+      }),
     );
+  });
+
+  const renderPage = () => render(
+    <Router><IntlProvider locale="en"><Provider store={store}><RegistrationPage /></Provider></IntlProvider></Router>,
+  );
+  const fillAccountStep = (container) => {
+    const type = (name, value) => fireEvent.change(container.querySelector(`[name="${name}"]`), { target: { value } });
+    type('name', 'John Doe');
+    type('email', 'john.doe@example.com');
+    type('username', 'john_doe');
+    type('password', 'Abcdefghij1!x');
+    fireEvent.click(container.querySelector('button.btn-brand'));
+  };
+
+  it('returns to step 1 when the backend rejects an account-step field', () => {
+    const { container } = renderPage();
+    fillAccountStep(container);
+    expect(container.querySelector('[name="trn"]')).not.toBeNull();
+
+    state = {
+      ...state,
+      register: {
+        ...state.register,
+        registrationError: { email: [{ userMessage: 'An account with this email already exists.' }], errorCode: 'duplicate-email' },
+      },
+    };
+    act(() => { store.dispatch({ type: 'noop' }); });
+
+    expect(container.querySelector('[name="trn"]')).toBeNull();
+    expect(container.querySelector('[name="email"]')).not.toBeNull();
+  });
+
+  it('stays on step 2 for a profile-field backend error', () => {
+    const { container } = renderPage();
+    fillAccountStep(container);
+    state = {
+      ...state,
+      register: {
+        ...state.register,
+        registrationError: { trn: [{ userMessage: 'This TRN is already registered.' }], errorCode: 'duplicate-trn' },
+      },
+    };
+    act(() => { store.dispatch({ type: 'noop' }); });
+    expect(container.querySelector('[name="trn"]')).not.toBeNull();
+  });
+
+  it('does not auto-submit an SSO registration in two-step mode', () => {
+    state = {
+      ...state,
+      register: { ...state.register, userPipelineDataLoaded: true },
+      commonComponents: {
+        ...state.commonComponents,
+        thirdPartyAuthContext: { ...state.commonComponents.thirdPartyAuthContext, autoSubmitRegForm: true },
+      },
+    };
+    const { container } = renderPage();
+    expect(container.querySelector('[name="email"]')).not.toBeNull();
+    expect(store.dispatch).not.toHaveBeenCalledWith(expect.objectContaining({ type: registerNewUser({}).type }));
   });
 });
