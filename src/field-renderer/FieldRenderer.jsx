@@ -9,8 +9,11 @@ import PasswordField from '../common-components/PasswordField';
 const FormFieldRenderer = (props) => {
   let formField = null;
   const {
-    className, errorMessage, fieldData, onChangeHandler, isRequired, value,
+    className, errorMessage, fieldData, labelAbove, onChangeHandler, isRequired, placeholder, readOnly, value,
   } = props;
+  // Label above the input (two-step registration) instead of Paragon's floating label.
+  const labelProps = labelAbove ? { placeholder } : { floatingLabel: fieldData.label };
+  const aboveLabel = labelAbove ? <Form.Label>{fieldData.label}</Form.Label> : null;
 
   const handleFocus = (e) => {
     if (props.handleFocus) { props.handleFocus(e); }
@@ -27,6 +30,7 @@ const FormFieldRenderer = (props) => {
       }
       formField = (
         <Form.Group controlId={fieldData.name} isInvalid={!!(isRequired && errorMessage)}>
+          {aboveLabel}
           <Form.Control
             className={className}
             as="select"
@@ -35,11 +39,11 @@ const FormFieldRenderer = (props) => {
             aria-invalid={isRequired && Boolean(errorMessage)}
             onChange={(e) => onChangeHandler(e)}
             trailingElement={<Icon src={ExpandMore} />}
-            floatingLabel={fieldData.label}
+            floatingLabel={labelProps.floatingLabel}
             onBlur={handleOnBlur}
             onFocus={handleFocus}
           >
-            <option key="default" value="">{fieldData.label}</option>
+            <option key="default" value="">{labelAbove ? placeholder : fieldData.label}</option>
             {fieldData.options.map(option => (
               <option className="data-hj-suppress" key={option[0]} value={option[0]}>{option[1]}</option>
             ))}
@@ -76,16 +80,20 @@ const FormFieldRenderer = (props) => {
       );
       break;
     }
+    case 'date':
     case 'text': {
       formField = (
         <Form.Group controlId={fieldData.name} isInvalid={!!(isRequired && errorMessage)}>
+          {aboveLabel}
           <Form.Control
             className={className}
             name={fieldData.name}
+            type={fieldData.type === 'date' ? 'date' : undefined}
+            readOnly={readOnly}
             value={value}
             aria-invalid={isRequired && Boolean(errorMessage)}
             onChange={(e) => onChangeHandler(e)}
-            floatingLabel={fieldData.label}
+            {...labelProps}
             onBlur={handleOnBlur}
             onFocus={handleFocus}
           />
@@ -130,6 +138,8 @@ const FormFieldRenderer = (props) => {
           value={value}
           errorMessage={errorMessage}
           floatingLabel={fieldData.label}
+          labelAbove={labelAbove}
+          placeholder={placeholder}
           handleChange={(e) => onChangeHandler(e)}
           handleBlur={handleOnBlur}
           showRequirements={false}
@@ -151,6 +161,9 @@ FormFieldRenderer.defaultProps = {
   handleFocus: null,
   errorMessage: '',
   isRequired: false,
+  labelAbove: false,
+  placeholder: undefined,
+  readOnly: false,
 };
 
 FormFieldRenderer.propTypes = {
@@ -166,6 +179,9 @@ FormFieldRenderer.propTypes = {
   handleFocus: PropTypes.func,
   errorMessage: PropTypes.string,
   isRequired: PropTypes.bool,
+  labelAbove: PropTypes.bool,
+  placeholder: PropTypes.string,
+  readOnly: PropTypes.bool,
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.bool,

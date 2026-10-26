@@ -1,0 +1,139 @@
+import { Provider } from 'react-redux';
+
+import { mergeConfig } from '@edx/frontend-platform';
+import { configure, getLocale, IntlProvider } from '@edx/frontend-platform/i18n';
+import { fireEvent, render } from '@testing-library/react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import configureStore from 'redux-mock-store';
+
+import { registerNewUser } from './data/actions';
+import { PROFILE_STEP_ROWS } from './data/constants';
+import RegistrationPage from './RegistrationPage';
+
+jest.mock('@edx/frontend-platform/analytics', () => ({
+  sendPageEvent: jest.fn(),
+  sendTrackEvent: jest.fn(),
+}));
+jest.mock('@edx/frontend-platform/i18n', () => ({
+  ...jest.requireActual('@edx/frontend-platform/i18n'),
+  getLocale: jest.fn(),
+}));
+
+const mockStore = configureStore();
+
+const REQUIRED = ['gender', 'trn', 'physical_address', 'mailing_address', 'telephone', 'job_title',
+  'photo_id_type', 'photo_id_number', 'id_expiration_date', 'parish', 'region'];
+const SELECTS = { gender: ['m', 'f'], photo_id_type: ['Passport'], parish: ['Kingston'] };
+
+const descriptions = Object.fromEntries(PROFILE_STEP_ROWS.flat().map(name => [name, {
+  name,
+  label: name,
+  type: SELECTS[name] ? 'select' : 'text',
+  options: (SELECTS[name] || []).map(value => [value, value]),
+  error_message: REQUIRED.includes(name) ? { required: `${name} is required.` } : '',
+}]));
+
+describe('TPDCO two-step registration submit', () => {
+  let store;
+
+  beforeEach(() => {
+    getLocale.mockReturnValue('en-us');
+    configure({
+      loggingService: { logError: jest.fn() },
+      config: { ENVIRONMENT: 'production', LANGUAGE_PREFERENCE_COOKIE_NAME: 'yum' },
+      messages: { 'es-419': {}, de: {}, 'en-us': {} },
+    });
+    mergeConfig({
+      TPDCO_TWO_STEP_REGISTRATION: true,
+      SHOW_CONFIGURABLE_EDX_FIELDS: false,
+      MARKETING_EMAILS_OPT_IN: false,
+      ENABLE_DYNAMIC_REGISTRATION_FIELDS: true,
+      USER_RETENTION_COOKIE_NAME: 'authn-returning-user',
+    });
+    window.location = { search: '' };
+    store = mockStore({
+      register: {
+        registrationResult: { success: false, redirectUrl: '' },
+        registrationError: {},
+        registrationFormData: {
+          configurableFormFields: {},
+          formFields: {
+            name: '', email: '', username: '', password: '',
+          },
+          emailSuggestion: { suggestion: '', type: '' },
+          errors: {
+            name: '', email: '', username: '', password: '',
+          },
+        },
+        usernameSuggestions: [],
+      },
+      commonComponents: {
+        thirdPartyAuthApiStatus: null,
+        thirdPartyAuthContext: {
+          currentProvider: null, finishAuthUrl: null, providers: [], pipelineUserDetails: null, countryCode: null,
+        },
+        fieldDescriptions: descriptions,
+        optionalFields: { fields: {}, extended_profile: [] },
+      },
+    });
+    store.dispatch = jest.fn(store.dispatch);
+  });
+
+  afterAll(() => {
+    mergeConfig({ TPDCO_TWO_STEP_REGISTRATION: false });
+  });
+
+  it('shows every required error on an empty step 2 and does not register', () => {
+    const { container } = render(
+      <Router><IntlProvider locale="en"><Provider store={store}><RegistrationPage /></Provider></IntlProvider></Router>,
+    );
+    const type = (name, value) => fireEvent.change(container.querySelector(`[name="${name}"]`), { target: { value } });
+    type('name', 'John Doe');
+    type('email', 'john.doe@example.com');
+    type('username', 'john_doe');
+    type('password', 'Abcdefghij1!x');
+    fireEvent.click(container.querySelector('button.btn-brand'));
+    expect(container.querySelector('[name="trn"]')).not.toBeNull();
+
+    fireEvent.click(container.querySelector('button.btn-brand'));
+
+    REQUIRED.filter(name => name !== 'region').forEach(name => {
+      expect(container.querySelector(`#${name}-error`).textContent).toEqual(`${name} is required.`);
+    });
+    expect(document.activeElement.name).toEqual('gender');
+    expect(store.dispatch).not.toHaveBeenCalledWith(expect.objectContaining({ type: registerNewUser({}).type }));
+  });
+
+  it('masks TRN and telephone while typing and submits the formatted TRN and digits-only telephone', () => {
+    const { container } = render(
+      <Router><IntlProvider locale="en"><Provider store={store}><RegistrationPage /></Provider></IntlProvider></Router>,
+    );
+    const type = (name, value) => fireEvent.change(container.querySelector(`[name="${name}"]`), { target: { value } });
+    type('name', 'John Doe');
+    type('email', 'john.doe@example.com');
+    type('username', 'john_doe');
+    type('password', 'Abcdefghij1!x');
+    fireEvent.click(container.querySelector('button.btn-brand'));
+
+    type('trn', '123456789');
+    type('telephone', '8765550100');
+    expect(container.querySelector('[name="trn"]').value).toBe('123-456-789');
+    expect(container.querySelector('[name="telephone"]').value).toBe('876 555 0100');
+
+    type('gender', 'm');
+    type('physical_address', '1 Hope Road');
+    type('mailing_address', 'PO Box 1');
+    type('job_title', 'Guide');
+    type('photo_id_type', 'Passport');
+    type('photo_id_number', 'A1234567');
+    type('id_expiration_date', '2030-01-31');
+    type('parish', 'Kingston');
+    fireEvent.click(container.querySelector('button.btn-brand'));
+
+    const registerCall = store.dispatch.mock.calls.map(([action]) => action)
+      .find(action => action.type === registerNewUser({}).type);
+    expect(registerCall.payload.registrationInfo).toEqual(
+      expect.objectContaining({ trn: '123-456-789', telephone: '8765550100', region: 'Kingston' }),
+    );
+  });
+});

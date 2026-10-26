@@ -38,6 +38,18 @@ describe('FieldRendererTests', () => {
     expect(value).toEqual('1997');
   });
 
+  it('should render date field type and read-only text field', () => {
+    const { container } = render(
+      <FieldRenderer fieldData={{ type: 'date', label: 'ID expiration date', name: 'expiry' }} onChangeHandler={() => {}} />,
+    );
+    expect(container.querySelector('input#expiry').type).toEqual('date');
+
+    const { container: textContainer } = render(
+      <FieldRenderer fieldData={{ type: 'text', label: 'Region', name: 'region' }} onChangeHandler={() => {}} readOnly />,
+    );
+    expect(textContainer.querySelector('input#region').readOnly).toBe(true);
+  });
+
   it('should return null if no options are provided for select field', () => {
     const fieldData = {
       type: 'select',

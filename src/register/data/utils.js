@@ -10,6 +10,16 @@ import validateName from '../RegistrationFields/NameField/validator';
 import validateUsername from '../RegistrationFields/UsernameField/validator';
 
 /**
+ * Backend extension-form fields send ``error_message`` as a Django error_messages dict
+ * ({ required: '...' }) instead of a string; normalise to a string.
+ * @param message
+ * @returns {string}
+ */
+export const getFieldErrorMessage = (message) => (
+  typeof message === 'string' ? message : message?.required || ''
+);
+
+/**
  * It validates the password field value
  * @param value
  * @param formatMessage
@@ -122,7 +132,7 @@ export const isFormValid = (
     if (key === 'country' && !configurableFormFields?.country?.displayValue) {
       fieldErrors[key] = formatMessage(messages['empty.country.field.error']);
     } else if (!configurableFormFields[key]) {
-      fieldErrors[key] = fieldDescriptions[key].error_message;
+      fieldErrors[key] = getFieldErrorMessage(fieldDescriptions[key].error_message);
     }
     if (fieldErrors[key]) { isValid = false; }
   });
