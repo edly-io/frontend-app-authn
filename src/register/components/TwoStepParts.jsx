@@ -14,43 +14,43 @@ import { updatePathWithQueryParams } from '../../data/utils';
 import messages from '../messages';
 
 /**
- * Header of the TPDCO two-step registration: step indicator, back link, two-segment progress bar and heading.
+ * Header of the two-step registration: step indicator, back link, two-segment progress bar and heading.
  */
 export const TwoStepHeader = ({ step, onBack }) => {
   const { formatMessage } = useIntl();
   return (
-    <div className="tpdco-reg__header">
-      <div className="tpdco-reg__step-row">
+    <div className="two-step-reg__header">
+      <div className="two-step-reg__step-row">
         {step === 2 && (
-          <Button variant="link" size="inline" className="tpdco-reg__back" onClick={onBack}>
+          <Button variant="link" size="inline" className="two-step-reg__back" onClick={onBack}>
             <Icon src={ChevronLeft} size="sm" />
             {formatMessage(messages['register.step.back.link'])}
           </Button>
         )}
-        <span className="tpdco-reg__step">{formatMessage(messages['register.step.indicator'], { step })}</span>
+        <span className="two-step-reg__step">{formatMessage(messages['register.step.indicator'], { step })}</span>
       </div>
-      <div className="tpdco-reg__progress">
-        <div className="tpdco-reg__progress-item tpdco-reg__progress-item--active">
-          <span className="tpdco-reg__progress-bar" />
-          <span className="tpdco-reg__progress-label">{formatMessage(messages['register.step.account.title'])}</span>
+      <div className="two-step-reg__progress">
+        <div className="two-step-reg__progress-item two-step-reg__progress-item--active">
+          <span className="two-step-reg__progress-bar" />
+          <span className="two-step-reg__progress-label">{formatMessage(messages['register.step.account.title'])}</span>
         </div>
-        <div className={`tpdco-reg__progress-item${step === 2 ? ' tpdco-reg__progress-item--active' : ''}`}>
-          <span className="tpdco-reg__progress-bar" />
-          <span className="tpdco-reg__progress-label">{formatMessage(messages['register.step.profile.title'])}</span>
+        <div className={`two-step-reg__progress-item${step === 2 ? ' two-step-reg__progress-item--active' : ''}`}>
+          <span className="two-step-reg__progress-bar" />
+          <span className="two-step-reg__progress-label">{formatMessage(messages['register.step.profile.title'])}</span>
         </div>
       </div>
       {step === 1 ? (
         <>
-          <h1 className="tpdco-reg__heading">{formatMessage(messages['register.step.heading.account'])}</h1>
-          <p className="tpdco-reg__subtitle">
+          <h1 className="two-step-reg__heading">{formatMessage(messages['register.step.heading.account'])}</h1>
+          <p className="two-step-reg__subtitle">
             {formatMessage(messages['register.step.already.registered'])}{' '}
             <Link to={updatePathWithQueryParams(LOGIN_PAGE)}>{formatMessage(commonMessages['logistration.sign.in'])}</Link>
           </p>
         </>
       ) : (
         <>
-          <h1 className="tpdco-reg__heading">{formatMessage(messages['register.step.heading.profile'])}</h1>
-          <p className="tpdco-reg__subtitle">{formatMessage(messages['register.step.profile.subtitle'])}</p>
+          <h1 className="two-step-reg__heading">{formatMessage(messages['register.step.heading.profile'])}</h1>
+          <p className="two-step-reg__subtitle">{formatMessage(messages['register.step.profile.subtitle'])}</p>
         </>
       )}
     </div>
@@ -74,13 +74,13 @@ export const PasswordStrength = ({ value }) => {
     /[^A-Za-z0-9]/.test(value),
   ].filter(Boolean).length;
   return (
-    <div className="tpdco-reg__strength">
-      <div className="tpdco-reg__strength-bar" data-score={score}>
+    <div className="two-step-reg__strength">
+      <div className="two-step-reg__strength-bar" data-score={score}>
         {[1, 2, 3, 4].map(segment => (
           <span key={segment} className={segment <= score ? 'is-filled' : ''} />
         ))}
       </div>
-      <p className="tpdco-reg__hint">{formatMessage(messages['register.step.password.hint'])}</p>
+      <p className="two-step-reg__hint">{formatMessage(messages['register.step.password.hint'])}</p>
     </div>
   );
 };
@@ -99,7 +99,7 @@ PasswordStrength.defaultProps = {
 export const TermsFooter = () => {
   const { formatMessage } = useIntl();
   return (
-    <p className="tpdco-reg__terms">
+    <p className="two-step-reg__terms">
       <FormattedMessage
         {...messages['register.step.terms.footer']}
         values={{

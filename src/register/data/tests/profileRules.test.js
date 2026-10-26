@@ -5,18 +5,18 @@ const formatMessage = (message, values) => `${message.id}${values ? JSON.stringi
 const required = { required: 'Required.' };
 const error = (name, value, description = {}) => getProfileFieldError(name, value, description, formatMessage);
 
-describe('TPDCO profile field rules', () => {
+describe('Registration profile field rules', () => {
   it('trn: accepts 9 digits with or without separators', () => {
     ['123456789', '123-456-789', '123 456 789', ' 123456789 '].forEach(value => expect(error('trn', value)).toBe(''));
   });
 
   it('trn: rejects wrong digit counts and non-digits with the format message', () => {
-    ['12345678', '1234567890', '12a456789'].forEach(value => expect(error('trn', value)).toBe('tpdco.trn.invalid'));
+    ['12345678', '1234567890', '12a456789'].forEach(value => expect(error('trn', value)).toBe('registration.profile.trn.invalid'));
   });
 
   it('trn: allows up to 20 typed characters and flags more', () => {
     expect(error('trn', '123 - 456 - 789')).toBe('');
-    expect(error('trn', '1'.repeat(21))).toContain('tpdco.max.length');
+    expect(error('trn', '1'.repeat(21))).toContain('registration.profile.max.length');
   });
 
   it.each([
@@ -26,8 +26,8 @@ describe('TPDCO profile field rules', () => {
     ['photo_id_number', 100],
     ['telephone', 50],
   ])('%s: allows %i characters and flags one more', (name, max) => {
-    expect(error(name, '1'.repeat(max))).not.toContain('tpdco.max.length');
-    expect(error(name, '1'.repeat(max + 1))).toContain('tpdco.max.length');
+    expect(error(name, '1'.repeat(max))).not.toContain('registration.profile.max.length');
+    expect(error(name, '1'.repeat(max + 1))).toContain('registration.profile.max.length');
   });
 
   it('mailing_address has no length rule', () => {
@@ -36,21 +36,21 @@ describe('TPDCO profile field rules', () => {
 
   it('telephone: mirrors core phone_regex (digits, optional leading +)', () => {
     ['+18765550100', '8765550100', '+1', ''].forEach(value => expect(error('telephone', value)).toBe(''));
-    ['876-555-0100', '+1 876', 'abc', '8+76'].forEach(value => expect(error('telephone', value)).toBe('tpdco.phone.invalid'));
+    ['876-555-0100', '+1 876', 'abc', '8+76'].forEach(value => expect(error('telephone', value)).toBe('registration.profile.phone.invalid'));
   });
 
   it('photo_id_type and parish must be one of the backend options', () => {
     const description = { options: [['Passport', 'Passport'], ['School ID', 'School ID']] };
     expect(error('photo_id_type', 'Passport', description)).toBe('');
-    expect(error('photo_id_type', 'National ID', description)).toBe('tpdco.choice.invalid');
+    expect(error('photo_id_type', 'National ID', description)).toBe('registration.profile.choice.invalid');
     expect(error('parish', 'Kingston', { options: [['Kingston', 'Kingston']] })).toBe('');
-    expect(error('parish', 'Mars', { options: [['Kingston', 'Kingston']] })).toBe('tpdco.choice.invalid');
+    expect(error('parish', 'Mars', { options: [['Kingston', 'Kingston']] })).toBe('registration.profile.choice.invalid');
   });
 
   it('id_expiration_date must be a real ISO date, with no future-date rule', () => {
     ['2030-01-31', '2028-02-29', '1999-12-31'].forEach(value => expect(error('id_expiration_date', value)).toBe(''));
     ['2030-02-30', '2030-13-01', '01/31/30', '2030-1-31', 'tomorrow'].forEach(
-      value => expect(error('id_expiration_date', value)).toBe('tpdco.date.invalid'),
+      value => expect(error('id_expiration_date', value)).toBe('registration.profile.date.invalid'),
     );
   });
 
@@ -63,6 +63,6 @@ describe('TPDCO profile field rules', () => {
   it('validateProfileFields returns only the invalid fields present in the descriptions', () => {
     const descriptions = { trn: { error_message: required }, telephone: { error_message: required } };
     expect(validateProfileFields({ trn: '1', telephone: '+18765550100', job_title: 'x'.repeat(500) }, descriptions, formatMessage))
-      .toEqual({ trn: 'tpdco.trn.invalid' });
+      .toEqual({ trn: 'registration.profile.trn.invalid' });
   });
 });

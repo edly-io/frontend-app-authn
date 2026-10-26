@@ -156,30 +156,30 @@ const messages = defineMessages({
     defaultMessage: 'Create a password',
     description: 'Two-step registration placeholder',
   },
-  'tpdco.trn.invalid': {
-    id: 'tpdco.trn.invalid',
+  'registration.profile.trn.invalid': {
+    id: 'registration.profile.trn.invalid',
     defaultMessage: 'TRN must be 9 digits in the format ###-###-###.',
-    description: 'Error for an invalid TRN in the TPDCO registration',
+    description: 'Error for an invalid TRN in the registration profile',
   },
-  'tpdco.phone.invalid': {
-    id: 'tpdco.phone.invalid',
+  'registration.profile.phone.invalid': {
+    id: 'registration.profile.phone.invalid',
     defaultMessage: 'Phone number must start with \'+\' (optional) followed by digits (0-9) only.',
-    description: 'Error for an invalid telephone number in the TPDCO registration',
+    description: 'Error for an invalid telephone number in the registration profile',
   },
-  'tpdco.max.length': {
-    id: 'tpdco.max.length',
+  'registration.profile.max.length': {
+    id: 'registration.profile.max.length',
     defaultMessage: 'Ensure this value has at most {max} characters (it has {count}).',
-    description: 'Error for a value that is too long in the TPDCO registration',
+    description: 'Error for a value that is too long in the registration profile',
   },
-  'tpdco.choice.invalid': {
-    id: 'tpdco.choice.invalid',
+  'registration.profile.choice.invalid': {
+    id: 'registration.profile.choice.invalid',
     defaultMessage: 'Select a valid choice.',
     description: 'Error for a dropdown value that is not one of the options',
   },
-  'tpdco.date.invalid': {
-    id: 'tpdco.date.invalid',
+  'registration.profile.date.invalid': {
+    id: 'registration.profile.date.invalid',
     defaultMessage: 'Enter a valid date.',
-    description: 'Error for an invalid date in the TPDCO registration',
+    description: 'Error for an invalid date in the registration profile',
   },
   'register.step.account.title': {
     id: 'register.step.account.title',

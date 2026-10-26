@@ -1,4 +1,4 @@
-// Input masks for the TPDCO two-step registration (two-step mode only).
+// Input masks for the two-step registration (two-step mode only).
 
 /** TRN: digits only, capped at 9, shown as ###-###-###. The formatted value is what gets submitted. */
 export const formatTrn = (raw) => {

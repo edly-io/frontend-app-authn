@@ -488,7 +488,7 @@ describe('ConfigurableRegistrationForm', () => {
       const { container } = renderForm(2, { fieldDescriptions: descriptions });
 
       PROFILE_STEP_ROWS.forEach(row => {
-        const rowNode = container.querySelector(`[name="${row[0]}"]`).closest('.tpdco-reg__row');
+        const rowNode = container.querySelector(`[name="${row[0]}"]`).closest('.two-step-reg__row');
         row.forEach(name => {
           expect(rowNode.querySelector(`[name="${name}"]`)).not.toBeNull();
         });

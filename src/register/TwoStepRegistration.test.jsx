@@ -33,7 +33,7 @@ const descriptions = Object.fromEntries(PROFILE_STEP_ROWS.flat().map(name => [na
   error_message: REQUIRED.includes(name) ? { required: `${name} is required.` } : '',
 }]));
 
-describe('TPDCO two-step registration submit', () => {
+describe('two-step registration submit', () => {
   let store;
   let state;
 
@@ -45,7 +45,7 @@ describe('TPDCO two-step registration submit', () => {
       messages: { 'es-419': {}, de: {}, 'en-us': {} },
     });
     mergeConfig({
-      TPDCO_TWO_STEP_REGISTRATION: true,
+      TWO_STEP_REGISTRATION: true,
       SHOW_CONFIGURABLE_EDX_FIELDS: false,
       MARKETING_EMAILS_OPT_IN: false,
       ENABLE_DYNAMIC_REGISTRATION_FIELDS: true,
@@ -82,7 +82,7 @@ describe('TPDCO two-step registration submit', () => {
   });
 
   afterAll(() => {
-    mergeConfig({ TPDCO_TWO_STEP_REGISTRATION: false });
+    mergeConfig({ TWO_STEP_REGISTRATION: false });
   });
 
   it('shows every required error on an empty step 2 and does not register', () => {

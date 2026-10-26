@@ -226,7 +226,7 @@ const ConfigurableRegistrationForm = (props) => {
     .map(row => row.filter(name => fieldDescriptions[name]))
     .filter(row => row.length)
     .map(row => (
-      <div key={row.join('-')} className="tpdco-reg__row">
+      <div key={row.join('-')} className="two-step-reg__row">
         {row.map(name => (
           <div key={name}>
             {renderConfigurableField(fieldDescriptions[name])}

@@ -26,8 +26,8 @@ describe('TwoStepParts', () => {
     expect(getByText('Step 1 of 2')).toBeTruthy();
     expect(getByText('Create Account')).toBeTruthy();
     expect(getByText('Sign in')).toBeTruthy();
-    expect(container.querySelectorAll('.tpdco-reg__progress-item--active')).toHaveLength(1);
-    expect(container.querySelector('.tpdco-reg__back')).toBeNull();
+    expect(container.querySelectorAll('.two-step-reg__progress-item--active')).toHaveLength(1);
+    expect(container.querySelector('.two-step-reg__back')).toBeNull();
   });
 
   it('renders the step 2 header with a back link and both segments filled', () => {
@@ -35,8 +35,8 @@ describe('TwoStepParts', () => {
     const { container, getByText } = renderWithIntl(<TwoStepHeader step={2} onBack={onBack} />);
     expect(getByText('Step 2 of 2')).toBeTruthy();
     expect(getByText('Profile & ID')).toBeTruthy();
-    expect(container.querySelectorAll('.tpdco-reg__progress-item--active')).toHaveLength(2);
-    container.querySelector('.tpdco-reg__back').click();
+    expect(container.querySelectorAll('.two-step-reg__progress-item--active')).toHaveLength(2);
+    container.querySelector('.two-step-reg__back').click();
     expect(onBack).toHaveBeenCalled();
   });
 

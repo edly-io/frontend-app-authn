@@ -1,11 +1,11 @@
-// TPDCO two-step registration form content. Everything here is scoped under `.tpdco-reg`, a class that
-// RegistrationPage.jsx only adds when MFE_CONFIG.TPDCO_TWO_STEP_REGISTRATION is set, so other tenants (and the
+// Two-step registration form content. Everything here is scoped under `.two-step-reg`, a class that
+// RegistrationPage.jsx only adds when MFE_CONFIG.TWO_STEP_REGISTRATION is set, so other tenants (and the
 // login page and the Sign in | Register tab bar) are unaffected.
 
-.tpdco-reg {
-  // Figma navy. `.tpdco-reg` is only added for tenants with TPDCO_TWO_STEP_REGISTRATION, so this is tenant-scoped;
+.two-step-reg {
+  // Figma navy. `.two-step-reg` is only added for tenants with TWO_STEP_REGISTRATION, so this is tenant-scoped;
   // to follow the tenant theme instead use var(--pgn-color-brand-base, #15376d).
-  --tpdco-accent: #15376d;
+  --two-step-accent: #15376d;
 
   // Step indicator, back link, progress and headings
   &__step-row {
@@ -25,7 +25,7 @@
     align-items: center;
     margin-right: 1.5rem;
     font-size: 14px;
-    color: var(--tpdco-accent);
+    color: var(--two-step-accent);
     text-decoration: none;
   }
 
@@ -39,10 +39,10 @@
     color: #4b5563;
 
     &--active {
-      color: var(--tpdco-accent);
+      color: var(--two-step-accent);
 
-      .tpdco-reg__progress-bar {
-        background: var(--tpdco-accent);
+      .two-step-reg__progress-bar {
+        background: var(--two-step-accent);
       }
     }
   }
@@ -72,7 +72,7 @@
     color: #4b5563;
 
     a {
-      color: var(--tpdco-accent);
+      color: var(--two-step-accent);
       text-decoration: underline;
     }
   }
@@ -156,7 +156,7 @@
     }
   }
 
-  .tpdco-reg__strength .tpdco-reg__hint {
+  .two-step-reg__strength .two-step-reg__hint {
     margin: 0.5rem 0 0;
   }
 
@@ -178,8 +178,8 @@
     height: 42px;
     margin-top: 10px !important;
     margin-bottom: 1rem !important;
-    background: var(--tpdco-accent);
-    border-color: var(--tpdco-accent);
+    background: var(--two-step-accent);
+    border-color: var(--two-step-accent);
     border-radius: 6px;
   }
 

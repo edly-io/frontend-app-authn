@@ -13,7 +13,7 @@ export const TPA_AUTHENTICATION_FAILURE = 'tpa-authentication-failure';
 export const TPA_SESSION_EXPIRED = 'tpa-session-expired';
 export const FORBIDDEN_USERNAME = 'forbidden-username';
 
-// Mirrors TPDCO_PARISH_REGIONS in edly_features_app/constants.py; used only to pre-fill the read-only region.
+// Mirrors PARISH_REGIONS in edly_features_app/constants.py; used only to pre-fill the read-only region.
 // The server re-derives the region from the parish and ignores the submitted value.
 export const PARISH_REGIONS = {
   Kingston: 'Kingston',
