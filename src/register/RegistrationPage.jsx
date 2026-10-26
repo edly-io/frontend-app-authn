@@ -36,7 +36,6 @@ import {
   TPA_AUTHENTICATION_FAILURE,
   TWO_STEP_ACCOUNT_FIELDS,
 } from './data/constants';
-import { toIsoDate } from './data/inputMasks';
 import { validateProfileFields } from './data/profileRules';
 import getBackendValidations from './data/selectors';
 import {
@@ -294,11 +293,6 @@ const RegistrationPage = (props) => {
       flags.showMarketingEmailOptInCheckbox,
       totalRegistrationTime,
       queryParams);
-
-    // The expiry date is typed as mm/dd/yy; the backend expects ISO.
-    if (twoStep && payload.id_expiration_date) {
-      payload.id_expiration_date = toIsoDate(payload.id_expiration_date);
-    }
 
     // making register call
     dispatch(registerNewUser(payload));

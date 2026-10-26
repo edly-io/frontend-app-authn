@@ -1,4 +1,3 @@
-import { toIsoDate } from './inputMasks';
 import { getFieldErrorMessage } from './utils';
 import messages from '../messages';
 
@@ -10,6 +9,13 @@ import messages from '../messages';
 export const PHONE_REGEX = /^\+?1?\d*$/;
 export const TRN_REGEX = /^\d{9}$/;
 
+// The native date input yields YYYY-MM-DD (or '' while incomplete).
+const isValidIsoDate = (value) => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) { return false; }
+  const date = new Date(`${value}T00:00:00Z`);
+  return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
+};
+
 export const PROFILE_FIELD_RULES = {
   trn: { maxLength: 20, validate: value => TRN_REGEX.test(value.replace(/[\s-]/g, '')), invalidMessage: 'tpdco.trn.invalid' },
   physical_address: { maxLength: 255 },
@@ -19,7 +25,7 @@ export const PROFILE_FIELD_RULES = {
   telephone: { maxLength: 50, validate: value => PHONE_REGEX.test(value), invalidMessage: 'tpdco.phone.invalid' },
   photo_id_type: { oneOf: true },
   parish: { oneOf: true },
-  id_expiration_date: { validate: value => toIsoDate(value) !== '', invalidMessage: 'tpdco.date.invalid' },
+  id_expiration_date: { validate: value => isValidIsoDate(value), invalidMessage: 'tpdco.date.invalid' },
 };
 
 /**

@@ -128,7 +128,7 @@ describe('TPDCO two-step registration submit', () => {
     type('job_title', 'Guide');
     type('photo_id_type', 'Passport');
     type('photo_id_number', 'A1234567');
-    type('id_expiration_date', '013130');
+    type('id_expiration_date', '2030-01-31');
     type('parish', 'Kingston');
     fireEvent.click(container.querySelector('button.btn-brand'));
 

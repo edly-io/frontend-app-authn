@@ -62,7 +62,7 @@ export const TWO_STEP_FIELD_UI = {
   job_title: { label: 'Job title', placeholder: 'e.g. Instructional designer' },
   photo_id_type: { label: 'Photo ID type', placeholder: 'Select ID type' },
   photo_id_number: { label: 'Photo ID number', placeholder: 'As printed on your ID' },
-  id_expiration_date: { label: 'ID expiration date', placeholder: 'mm/dd/yy', type: 'text' },
+  id_expiration_date: { label: 'ID expiration date' },
   parish: { label: 'Parish', placeholder: 'Select parish' },
   region: { label: 'Region', placeholder: 'Auto-filled from parish' },
 };

@@ -9,7 +9,7 @@ import {
   ACCOUNT_STEP_FIELDS, FIELDS, PARISH_REGIONS, PROFILE_STEP_ROWS, TWO_STEP_FIELD_UI,
 } from '../data/constants';
 import {
-  caretAfterFormat, formatDate, formatTelephone, formatTrn, unformatTelephone,
+  caretAfterFormat, formatTelephone, formatTrn, unformatTelephone,
 } from '../data/inputMasks';
 import { getProfileFieldError } from '../data/profileRules';
 import { getFieldErrorMessage } from '../data/utils';
@@ -113,10 +113,6 @@ const ConfigurableRegistrationForm = (props) => {
       }));
       // Keep the caret where the user was typing instead of jumping to the end after the value is reformatted.
       window.requestAnimationFrame(() => input.setSelectionRange?.(caret, caret));
-      return;
-    }
-    if (step === 2 && name === 'id_expiration_date') {
-      setFormFields(prevState => ({ ...prevState, [name]: formatDate(value) }));
       return;
     }
     if (name === 'parish') {
