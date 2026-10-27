@@ -198,4 +198,33 @@ describe('two-step registration submit', () => {
     expect(container.querySelector('[name="email"]')).not.toBeNull();
     expect(store.dispatch).not.toHaveBeenCalledWith(expect.objectContaining({ type: registerNewUser({}).type }));
   });
+
+  it('shows the username suggestions on step 1 and fills the username on click', () => {
+    state = { ...state, register: { ...state.register, usernameSuggestions: ['john_doe1', 'john_doe2'] } };
+    const { container } = renderPage();
+    const chips = container.querySelectorAll('button.username-suggestions--chip');
+    expect(chips).toHaveLength(2);
+    expect(container.querySelector('.two-step-reg .username-suggestions')).not.toBeNull();
+
+    fireEvent.click(chips[1]);
+    expect(container.querySelector('[name="username"]').value).toBe('john_doe2');
+  });
+
+  it('blocks submit on step 2 when the mailing address is empty even if the backend does not require it', () => {
+    state = {
+      ...state,
+      commonComponents: {
+        ...state.commonComponents,
+        fieldDescriptions: {
+          ...descriptions, mailing_address: { ...descriptions.mailing_address, error_message: '' },
+        },
+      },
+    };
+    const { container } = renderPage();
+    fillAccountStep(container);
+    expect(container.querySelector('label[for="mailing_address"]').textContent).toBe('Mailing address*');
+    fireEvent.click(container.querySelector('button.btn-brand'));
+    expect(container.querySelector('#mailing_address-error').textContent).toBe('Please enter your mailing address.');
+    expect(store.dispatch).not.toHaveBeenCalledWith(expect.objectContaining({ type: registerNewUser({}).type }));
+  });
 });

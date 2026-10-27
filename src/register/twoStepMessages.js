@@ -118,6 +118,16 @@ const messages = defineMessages({
     defaultMessage: 'Enter a valid date.',
     description: 'Error for an invalid date in the registration profile',
   },
+  'registration.profile.date.past': {
+    id: 'registration.profile.date.past',
+    defaultMessage: 'ID expiration date can\'t be in the past.',
+    description: 'Error for an expiration date earlier than today in the registration profile',
+  },
+  'registration.profile.mailing_address.required': {
+    id: 'registration.profile.mailing_address.required',
+    defaultMessage: 'Please enter your mailing address.',
+    description: 'Error for an empty mailing address in the registration profile',
+  },
   'register.step.account.title': {
     id: 'register.step.account.title',
     defaultMessage: 'Account details',

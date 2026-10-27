@@ -34,12 +34,15 @@ export const PROFILE_STEP_ROWS = [
   ['parish', 'region'],
 ];
 
+// Step-2 fields that are always required, whether or not the backend marks them so (see getRequiredMessage).
+export const ALWAYS_REQUIRED_PROFILE_FIELDS = ['mailing_address'];
+
 // Step 1/2 field copy for the two-step registration (labels without the required asterisk, which is added when
 // the backend marks the field required). `type` overrides the backend field type.
 export const TWO_STEP_FIELD_UI = {
   confirm_password: { label: 'Confirm password', placeholder: 'Re-enter your password' },
   gender: { label: 'Gender', placeholder: 'Select' },
-  trn: { label: 'TRN', placeholder: '###-###-###' },
+  trn: { label: 'TRN', placeholder: 'Enter your unique TRN' },
   physical_address: { label: 'Address', placeholder: 'Street address' },
   mailing_address: { label: 'Mailing address', placeholder: 'Mailing address', type: 'text' },
   telephone: { label: 'Telephone number', placeholder: '123 555 0123' },

@@ -103,4 +103,39 @@ describe('TwoStepProfileFields', () => {
     const update = setFieldErrors.mock.calls[0][0];
     expect(update({}).region).toEqual('Please select your parish.');
   });
+
+  describe('always-required and date fields', () => {
+    const descriptions = {
+      mailing_address: {
+        name: 'mailing_address', type: 'text', label: 'Mailing address', error_message: '',
+      },
+      id_expiration_date: {
+        name: 'id_expiration_date', type: 'date', label: 'ID expiration date', error_message: '',
+      },
+    };
+
+    it('marks mailing address required without a backend flag and errors on an empty blur', () => {
+      const setFieldErrors = jest.fn();
+      const { container } = renderForm(2, { fieldDescriptions: descriptions, setFieldErrors });
+      expect(container.querySelector('label[for="mailing_address"]').textContent).toBe('Mailing address*');
+      fireEvent.blur(container.querySelector('input[name="mailing_address"]'), { target: { value: '' } });
+      expect(setFieldErrors.mock.calls[0][0]({}).mailing_address).toEqual('Please enter your mailing address.');
+    });
+
+    it('uses the backend message and a single asterisk when the backend marks it required', () => {
+      const setFieldErrors = jest.fn();
+      const backend = { mailing_address: { ...descriptions.mailing_address, error_message: { required: 'Backend says so.' } } };
+      const { container } = renderForm(2, { fieldDescriptions: backend, setFieldErrors });
+      expect(container.querySelector('label[for="mailing_address"]').textContent).toBe('Mailing address*');
+      fireEvent.blur(container.querySelector('input[name="mailing_address"]'), { target: { value: '' } });
+      expect(setFieldErrors.mock.calls[0][0]({}).mailing_address).toEqual('Backend says so.');
+    });
+
+    it('limits the ID expiration date picker to today (local) onwards', () => {
+      jest.useFakeTimers().setSystemTime(new Date(2026, 5, 15, 23, 30));
+      const { container } = renderForm(2, { fieldDescriptions: descriptions });
+      expect(container.querySelector('input[name="id_expiration_date"]').min).toBe('2026-06-15');
+      jest.useRealTimers();
+    });
+  });
 });

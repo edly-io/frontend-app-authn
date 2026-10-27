@@ -10,9 +10,11 @@ import getFieldErrorMessage from '../data/fieldError';
 import {
   caretAfterFormat, formatTelephone, formatTrn, unformatTelephone,
 } from '../data/inputMasks';
-import { getProfileFieldError } from '../data/profileRules';
 import {
-  ACCOUNT_STEP_FIELDS, PARISH_REGIONS, PROFILE_STEP_ROWS, TWO_STEP_FIELD_UI,
+  getProfileFieldError, getRequiredMessage, getToday, PROFILE_FIELD_RULES,
+} from '../data/profileRules';
+import {
+  ACCOUNT_STEP_FIELDS, ALWAYS_REQUIRED_PROFILE_FIELDS, PARISH_REGIONS, PROFILE_STEP_ROWS, TWO_STEP_FIELD_UI,
 } from '../data/twoStepConstants';
 import messages from '../messages';
 import { CountryField, HonorCode, TermsOfService } from '../RegistrationFields';
@@ -102,8 +104,8 @@ const TwoStepProfileFields = (props) => {
     const isPhone = step === 2 && PHONE_MASKED.includes(name);
     const value = isPhone ? unformatTelephone(event.target.value) : event.target.value;
     let error = '';
-    if ((!value || !value.trim()) && getFieldErrorMessage(fieldDescriptions[name]?.error_message)) {
-      error = getFieldErrorMessage(fieldDescriptions[name].error_message);
+    if ((!value || !value.trim()) && getRequiredMessage(name, fieldDescriptions[name], formatMessage)) {
+      error = getRequiredMessage(name, fieldDescriptions[name], formatMessage);
     } else if (step === 2 && getProfileFieldError(name, value, fieldDescriptions[name], formatMessage)) {
       error = getProfileFieldError(name, value, fieldDescriptions[name], formatMessage);
     } else if (name === 'confirm_email' && value !== email) {
@@ -122,9 +124,15 @@ const TwoStepProfileFields = (props) => {
   const renderConfigurableField = (backendFieldData) => {
     // Label above the input, with the Figma copy for known fields.
     const ui = TWO_STEP_FIELD_UI[backendFieldData.name];
-    const required = !!getFieldErrorMessage(backendFieldData.error_message);
+    const required = !!getFieldErrorMessage(backendFieldData.error_message)
+      || ALWAYS_REQUIRED_PROFILE_FIELDS.includes(backendFieldData.name);
     const fieldData = ui
-      ? { ...backendFieldData, type: ui.type || backendFieldData.type, label: `${ui.label}${required ? '*' : ''}` }
+      ? {
+        ...backendFieldData,
+        type: ui.type || backendFieldData.type,
+        label: `${ui.label}${required ? '*' : ''}`,
+        min: PROFILE_FIELD_RULES[backendFieldData.name]?.notPast ? getToday() : undefined,
+      }
       : backendFieldData;
     return (
       <span key={fieldData.name}>

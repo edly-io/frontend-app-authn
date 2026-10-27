@@ -1,4 +1,4 @@
-import { getProfileFieldError, validateProfileFields } from '../profileRules';
+import { getProfileFieldError, getToday, validateProfileFields } from '../profileRules';
 
 // Echoes the message id so assertions do not depend on copy.
 const formatMessage = (message, values) => `${message.id}${values ? JSON.stringify(values) : ''}`;
@@ -47,11 +47,39 @@ describe('Registration profile field rules', () => {
     expect(error('parish', 'Mars', { options: [['Kingston', 'Kingston']] })).toBe('registration.profile.choice.invalid');
   });
 
-  it('id_expiration_date must be a real ISO date, with no future-date rule', () => {
-    ['2030-01-31', '2028-02-29', '1999-12-31'].forEach(value => expect(error('id_expiration_date', value)).toBe(''));
-    ['2030-02-30', '2030-13-01', '01/31/30', '2030-1-31', 'tomorrow'].forEach(
-      value => expect(error('id_expiration_date', value)).toBe('registration.profile.date.invalid'),
+  describe('id_expiration_date', () => {
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(new Date(2026, 5, 15, 23, 30));
+    });
+    afterEach(() => jest.useRealTimers());
+
+    it('getToday is the local date as YYYY-MM-DD', () => {
+      expect(getToday()).toBe('2026-06-15');
+    });
+
+    it('must be a real ISO date', () => {
+      ['2030-01-31', '2028-02-29'].forEach(value => expect(error('id_expiration_date', value)).toBe(''));
+      ['2030-02-30', '2030-13-01', '01/31/30', '2030-1-31', 'tomorrow'].forEach(
+        value => expect(error('id_expiration_date', value)).toBe('registration.profile.date.invalid'),
+      );
+    });
+
+    it('may be today or later but not earlier', () => {
+      ['2026-06-15', '2026-06-16', '2030-01-31'].forEach(value => expect(error('id_expiration_date', value)).toBe(''));
+      ['2026-06-14', '1999-12-31'].forEach(
+        value => expect(error('id_expiration_date', value)).toBe('registration.profile.date.past'),
+      );
+    });
+  });
+
+  it('mailing_address is always required, with the backend message when there is one', () => {
+    const errorsFor = (value, description) => validateProfileFields(
+      { mailing_address: value }, { mailing_address: description }, formatMessage,
     );
+    expect(errorsFor('', {})).toEqual({ mailing_address: 'registration.profile.mailing_address.required' });
+    expect(errorsFor('  ', { error_message: '' })).toEqual({ mailing_address: 'registration.profile.mailing_address.required' });
+    expect(errorsFor('', { error_message: required })).toEqual({ mailing_address: 'Required.' });
+    expect(errorsFor('PO Box 1', {})).toEqual({});
   });
 
   it('whitespace-only values are errors for required fields only', () => {

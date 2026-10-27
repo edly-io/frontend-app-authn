@@ -90,6 +90,7 @@ const FormFieldRenderer = (props) => {
             name={fieldData.name}
             type={fieldData.type === 'date' ? 'date' : undefined}
             readOnly={readOnly}
+            min={fieldData.min}
             value={value}
             aria-invalid={isRequired && Boolean(errorMessage)}
             onChange={(e) => onChangeHandler(e)}
@@ -172,6 +173,7 @@ FormFieldRenderer.propTypes = {
     type: PropTypes.string,
     label: PropTypes.string,
     name: PropTypes.string,
+    min: PropTypes.string,
     options: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
   }).isRequired,
   onChangeHandler: PropTypes.func.isRequired,

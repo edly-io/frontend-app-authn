@@ -1,4 +1,5 @@
 import getFieldErrorMessage from './fieldError';
+import { ALWAYS_REQUIRED_PROFILE_FIELDS } from './twoStepConstants';
 import messages from '../twoStepMessages';
 
 // Rules for the step-2 profile fields. They mirror the backend (RegistrationProfileForm in edly-features-app and core's
@@ -16,6 +17,19 @@ const isValidIsoDate = (value) => {
   return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
 };
 
+// Today as YYYY-MM-DD in the user's local timezone (the format of the native date input).
+export const getToday = () => {
+  const now = new Date();
+  const pad = number => String(number).padStart(2, '0');
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+};
+
+// The backend's required message, or the UI's own for the always-required fields; '' when not required.
+export const getRequiredMessage = (name, description, formatMessage) => (
+  getFieldErrorMessage(description?.error_message)
+  || (ALWAYS_REQUIRED_PROFILE_FIELDS.includes(name) ? formatMessage(messages[`registration.profile.${name}.required`]) : '')
+);
+
 export const PROFILE_FIELD_RULES = {
   trn: { maxLength: 20, validate: value => TRN_REGEX.test(value.replace(/[\s-]/g, '')), invalidMessage: 'registration.profile.trn.invalid' },
   physical_address: { maxLength: 255 },
@@ -25,7 +39,7 @@ export const PROFILE_FIELD_RULES = {
   telephone: { maxLength: 50, validate: value => PHONE_REGEX.test(value), invalidMessage: 'registration.profile.phone.invalid' },
   photo_id_type: { oneOf: true },
   parish: { oneOf: true },
-  id_expiration_date: { validate: value => isValidIsoDate(value), invalidMessage: 'registration.profile.date.invalid' },
+  id_expiration_date: { validate: value => isValidIsoDate(value), invalidMessage: 'registration.profile.date.invalid', notPast: true },
 };
 
 /**
@@ -55,17 +69,25 @@ export const getProfileFieldError = (name, rawValue, description, formatMessage)
   if (rule.validate && !rule.validate(value)) {
     return formatMessage(messages[rule.invalidMessage]);
   }
+  if (rule.notPast && value < getToday()) {
+    return formatMessage(messages['registration.profile.date.past']);
+  }
   return '';
 };
 
 /**
- * Validates every profile field present in the descriptions and returns { fieldName: message } for the invalid ones.
+ * Validates every profile field present in the descriptions (and the always-required ones) and returns
+ * { fieldName: message } for the invalid ones.
  */
 export const validateProfileFields = (formFields, fieldDescriptions, formatMessage) => {
   const errors = {};
-  Object.keys(PROFILE_FIELD_RULES).forEach(name => {
+  const names = new Set([...Object.keys(PROFILE_FIELD_RULES), ...ALWAYS_REQUIRED_PROFILE_FIELDS]);
+  names.forEach(name => {
     if (!fieldDescriptions[name]) { return; }
-    const error = getProfileFieldError(name, formFields[name], fieldDescriptions[name], formatMessage);
+    let error = getProfileFieldError(name, formFields[name], fieldDescriptions[name], formatMessage);
+    if (!error && ALWAYS_REQUIRED_PROFILE_FIELDS.includes(name) && !(formFields[name] || '').trim()) {
+      error = getRequiredMessage(name, fieldDescriptions[name], formatMessage);
+    }
     if (error) { errors[name] = error; }
   });
   return errors;

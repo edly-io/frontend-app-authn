@@ -67,11 +67,15 @@
     color: #111827;
   }
 
+  // 14px / #545964 / 0.1px tracking as in the Figma (without a size it inherits the 16px page base).
   &__subtitle {
     margin-bottom: 26px;
-    color: #4b5563;
+    font-size: 14px;
+    letter-spacing: 0.1px;
+    color: #545964;
 
     a {
+      font-weight: 500;
       color: var(--two-step-accent);
       text-decoration: underline;
     }
@@ -113,6 +117,14 @@
     &[readonly] {
       background: #f3f4f6;
     }
+  }
+
+  // The username suggestions overlay covers its whole wrapper, which here also holds the label above the input;
+  // confine it to the input row (label line 20px + 4px gap).
+  .username-suggestions {
+    top: 24px;
+    bottom: auto;
+    height: 38px;
   }
 
   &__hint {
