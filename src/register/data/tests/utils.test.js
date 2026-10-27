@@ -1,4 +1,4 @@
-import { getFieldErrorMessage, isFormValid } from '../utils';
+import { isFormValid } from '../utils';
 
 describe('Payload validation', () => {
   let formatMessage;
@@ -73,13 +73,5 @@ describe('Payload validation', () => {
     expect(fieldErrors.username).toBeDefined();
     expect(fieldErrors.password).toBeDefined();
     expect(isValid).toBe(false);
-  });
-});
-
-describe('getFieldErrorMessage', () => {
-  it('returns strings unchanged and unwraps Django error_messages dicts', () => {
-    expect(getFieldErrorMessage('Required')).toEqual('Required');
-    expect(getFieldErrorMessage({ required: 'Please enter your TRN.' })).toEqual('Please enter your TRN.');
-    expect(getFieldErrorMessage(undefined)).toEqual('');
   });
 });

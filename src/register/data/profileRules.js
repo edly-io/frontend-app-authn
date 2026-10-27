@@ -1,5 +1,5 @@
-import { getFieldErrorMessage } from './utils';
-import messages from '../messages';
+import getFieldErrorMessage from './fieldError';
+import messages from '../twoStepMessages';
 
 // Rules for the step-2 profile fields. They mirror the backend (RegistrationProfileForm in edly-features-app and core's
 // UserProfile.phone_regex) and must never be stricter than it. Required-ness comes from the backend's field
@@ -19,7 +19,7 @@ const isValidIsoDate = (value) => {
 export const PROFILE_FIELD_RULES = {
   trn: { maxLength: 20, validate: value => TRN_REGEX.test(value.replace(/[\s-]/g, '')), invalidMessage: 'registration.profile.trn.invalid' },
   physical_address: { maxLength: 255 },
-  other_numbers: { maxLength: 50 },
+  other_numbers: { maxLength: 50, validate: value => PHONE_REGEX.test(value), invalidMessage: 'registration.profile.phone.invalid' },
   job_title: { maxLength: 100 },
   photo_id_number: { maxLength: 100 },
   telephone: { maxLength: 50, validate: value => PHONE_REGEX.test(value), invalidMessage: 'registration.profile.phone.invalid' },

@@ -34,9 +34,9 @@ describe('Registration profile field rules', () => {
     expect(error('mailing_address', 'x'.repeat(5000))).toBe('');
   });
 
-  it('telephone: mirrors core phone_regex (digits, optional leading +)', () => {
-    ['+18765550100', '8765550100', '+1', ''].forEach(value => expect(error('telephone', value)).toBe(''));
-    ['876-555-0100', '+1 876', 'abc', '8+76'].forEach(value => expect(error('telephone', value)).toBe('registration.profile.phone.invalid'));
+  it.each(['telephone', 'other_numbers'])('%s: mirrors core phone_regex (digits, optional leading +)', (name) => {
+    ['+18765550100', '8765550100', '+1', ''].forEach(value => expect(error(name, value)).toBe(''));
+    ['876-555-0100', '+1 876', 'abc', '8+76', '87a65b50100'].forEach(value => expect(error(name, value)).toBe('registration.profile.phone.invalid'));
   });
 
   it('photo_id_type and parish must be one of the backend options', () => {

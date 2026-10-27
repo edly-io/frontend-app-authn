@@ -1,4 +1,4 @@
-import { PARISH_REGIONS } from '../constants';
+import { PARISH_REGIONS } from '../twoStepConstants';
 
 // Guard against drift: PARISH_REGIONS in edly-features-app (edly_features_app/constants.py) must hold exactly
 // this map (its test_registration_profile.py pins the same literal). Change both repos together.

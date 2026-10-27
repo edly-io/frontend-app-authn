@@ -12,6 +12,7 @@ import { LOGIN_PAGE } from '../../data/constants';
 import { MIN_PASSWORD_LENGTH } from '../../data/passwordPolicy';
 import { updatePathWithQueryParams } from '../../data/utils';
 import messages from '../messages';
+import twoStepMessages from '../twoStepMessages';
 
 /**
  * Header of the two-step registration: step indicator, back link, two-segment progress bar and heading.
@@ -24,33 +25,33 @@ export const TwoStepHeader = ({ step, onBack }) => {
         {step === 2 && (
           <Button variant="link" size="inline" className="two-step-reg__back" onClick={onBack}>
             <Icon src={ChevronLeft} size="sm" />
-            {formatMessage(messages['register.step.back.link'])}
+            {formatMessage(twoStepMessages['register.step.back.link'])}
           </Button>
         )}
-        <span className="two-step-reg__step">{formatMessage(messages['register.step.indicator'], { step })}</span>
+        <span className="two-step-reg__step">{formatMessage(twoStepMessages['register.step.indicator'], { step })}</span>
       </div>
       <div className="two-step-reg__progress">
         <div className="two-step-reg__progress-item two-step-reg__progress-item--active">
           <span className="two-step-reg__progress-bar" />
-          <span className="two-step-reg__progress-label">{formatMessage(messages['register.step.account.title'])}</span>
+          <span className="two-step-reg__progress-label">{formatMessage(twoStepMessages['register.step.account.title'])}</span>
         </div>
         <div className={`two-step-reg__progress-item${step === 2 ? ' two-step-reg__progress-item--active' : ''}`}>
           <span className="two-step-reg__progress-bar" />
-          <span className="two-step-reg__progress-label">{formatMessage(messages['register.step.profile.title'])}</span>
+          <span className="two-step-reg__progress-label">{formatMessage(twoStepMessages['register.step.profile.title'])}</span>
         </div>
       </div>
       {step === 1 ? (
         <>
-          <h1 className="two-step-reg__heading">{formatMessage(messages['register.step.heading.account'])}</h1>
+          <h1 className="two-step-reg__heading">{formatMessage(twoStepMessages['register.step.heading.account'])}</h1>
           <p className="two-step-reg__subtitle">
-            {formatMessage(messages['register.step.already.registered'])}{' '}
+            {formatMessage(twoStepMessages['register.step.already.registered'])}{' '}
             <Link to={updatePathWithQueryParams(LOGIN_PAGE)}>{formatMessage(commonMessages['logistration.sign.in'])}</Link>
           </p>
         </>
       ) : (
         <>
-          <h1 className="two-step-reg__heading">{formatMessage(messages['register.step.heading.profile'])}</h1>
-          <p className="two-step-reg__subtitle">{formatMessage(messages['register.step.profile.subtitle'])}</p>
+          <h1 className="two-step-reg__heading">{formatMessage(twoStepMessages['register.step.heading.profile'])}</h1>
+          <p className="two-step-reg__subtitle">{formatMessage(twoStepMessages['register.step.profile.subtitle'])}</p>
         </>
       )}
     </div>
@@ -80,7 +81,7 @@ export const PasswordStrength = ({ value }) => {
           <span key={segment} className={segment <= score ? 'is-filled' : ''} />
         ))}
       </div>
-      <p className="two-step-reg__hint">{formatMessage(messages['register.step.password.hint'])}</p>
+      <p className="two-step-reg__hint">{formatMessage(twoStepMessages['register.step.password.hint'])}</p>
     </div>
   );
 };
@@ -101,11 +102,11 @@ export const TermsFooter = () => {
   return (
     <p className="two-step-reg__terms">
       <FormattedMessage
-        {...messages['register.step.terms.footer']}
+        {...twoStepMessages['register.step.terms.footer']}
         values={{
           terms: (
             <Hyperlink isInline destination={getConfig().TOS_AND_HONOR_CODE || '#'} target="_blank" showLaunchIcon={false}>
-              {formatMessage(messages['register.step.terms'])}
+              {formatMessage(twoStepMessages['register.step.terms'])}
             </Hyperlink>
           ),
           privacyPolicy: (

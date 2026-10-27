@@ -7,7 +7,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import { registerNewUser } from './data/actions';
-import { PROFILE_STEP_ROWS } from './data/constants';
+import { PROFILE_STEP_ROWS } from './data/twoStepConstants';
 import RegistrationPage from './RegistrationPage';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({

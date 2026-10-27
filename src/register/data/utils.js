@@ -1,5 +1,6 @@
 import { snakeCaseObject } from '@edx/frontend-platform';
 
+import getFieldErrorMessage from './fieldError';
 import { NUMBER_REGEX } from '../../data/constants';
 import {
   LOWERCASE_REGEX, MIN_PASSWORD_LENGTH, SYMBOL_REGEX, UPPERCASE_REGEX,
@@ -8,16 +9,6 @@ import messages from '../messages';
 import validateEmail from '../RegistrationFields/EmailField/validator';
 import validateName from '../RegistrationFields/NameField/validator';
 import validateUsername from '../RegistrationFields/UsernameField/validator';
-
-/**
- * Backend extension-form fields send ``error_message`` as a Django error_messages dict
- * ({ required: '...' }) instead of a string; normalise to a string.
- * @param message
- * @returns {string}
- */
-export const getFieldErrorMessage = (message) => (
-  typeof message === 'string' ? message : message?.required || ''
-);
 
 /**
  * It validates the password field value
