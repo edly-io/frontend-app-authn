@@ -9,6 +9,7 @@ import configureStore from 'redux-mock-store';
 import { registerNewUser } from './data/actions';
 import { PROFILE_STEP_ROWS } from './data/twoStepConstants';
 import RegistrationPage from './RegistrationPage';
+import twoStepMessages from './twoStepMessages';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
@@ -226,5 +227,38 @@ describe('two-step registration submit', () => {
     fireEvent.click(container.querySelector('button.btn-brand'));
     expect(container.querySelector('#mailing_address-error').textContent).toBe('Please enter your mailing address.');
     expect(store.dispatch).not.toHaveBeenCalledWith(expect.objectContaining({ type: registerNewUser({}).type }));
+  });
+
+  it('takes step 2 labels and placeholders from the intl messages', () => {
+    const { container } = render(
+      <Router>
+        <IntlProvider locale="en" messages={{ 'registration.profile.gender.label': 'Genre' }}>
+          <Provider store={store}><RegistrationPage /></Provider>
+        </IntlProvider>
+      </Router>,
+    );
+    fillAccountStep(container);
+    expect(container.querySelector('label[for="gender"]').textContent).toBe('Genre*');
+    expect(container.querySelector('label[for="trn"]').textContent).toBe('TRN*');
+  });
+
+  it('has label and placeholder messages for every step 2 field', () => {
+    PROFILE_STEP_ROWS.flat().forEach(name => {
+      expect(twoStepMessages[`registration.profile.${name}.label`]).toBeDefined();
+      if (name !== 'id_expiration_date') {
+        expect(twoStepMessages[`registration.profile.${name}.placeholder`]).toBeDefined();
+      }
+    });
+  });
+
+  it('moves focus to the step heading on Continue and Back, but not on first render', () => {
+    const { container } = renderPage();
+    expect(document.activeElement).toBe(document.body);
+    fillAccountStep(container);
+    expect(document.activeElement).toBe(container.querySelector('h1'));
+    expect(document.activeElement.textContent).toBe('Profile & ID');
+    fireEvent.click(container.querySelector('.two-step-reg__back'));
+    expect(document.activeElement).toBe(container.querySelector('h1'));
+    expect(document.activeElement.textContent).toBe('Create Account');
   });
 });

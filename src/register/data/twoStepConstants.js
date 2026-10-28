@@ -37,20 +37,6 @@ export const PROFILE_STEP_ROWS = [
 // Step-2 fields that are always required, whether or not the backend marks them so (see getRequiredMessage).
 export const ALWAYS_REQUIRED_PROFILE_FIELDS = ['mailing_address'];
 
-// Step 1/2 field copy for the two-step registration (labels without the required asterisk, which is added when
-// the backend marks the field required). `type` overrides the backend field type.
-export const TWO_STEP_FIELD_UI = {
-  confirm_password: { label: 'Confirm password', placeholder: 'Re-enter your password' },
-  gender: { label: 'Gender', placeholder: 'Select' },
-  trn: { label: 'TRN', placeholder: 'Enter your unique TRN' },
-  physical_address: { label: 'Address', placeholder: 'Street address' },
-  mailing_address: { label: 'Mailing address', placeholder: 'Mailing address', type: 'text' },
-  telephone: { label: 'Telephone number', placeholder: '123 555 0123' },
-  other_numbers: { label: 'Other number (optional)', placeholder: 'Alternate phone' },
-  job_title: { label: 'Job title', placeholder: 'e.g. Instructional designer' },
-  photo_id_type: { label: 'Photo ID type', placeholder: 'Select ID type' },
-  photo_id_number: { label: 'Photo ID number', placeholder: 'As printed on your ID' },
-  id_expiration_date: { label: 'ID expiration date' },
-  parish: { label: 'Parish', placeholder: 'Select parish' },
-  region: { label: 'Region', placeholder: 'Auto-filled from parish' },
-};
+// Backend field type overrides for the two-step registration. Labels and placeholders are the
+// `registration.profile.<field>.label|placeholder` messages in twoStepMessages.
+export const TWO_STEP_FIELD_TYPES = { mailing_address: 'text' };

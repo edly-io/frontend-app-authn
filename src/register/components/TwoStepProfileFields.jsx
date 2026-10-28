@@ -14,10 +14,11 @@ import {
   getProfileFieldError, getRequiredMessage, getToday, PROFILE_FIELD_RULES,
 } from '../data/profileRules';
 import {
-  ACCOUNT_STEP_FIELDS, ALWAYS_REQUIRED_PROFILE_FIELDS, PARISH_REGIONS, PROFILE_STEP_ROWS, TWO_STEP_FIELD_UI,
+  ACCOUNT_STEP_FIELDS, ALWAYS_REQUIRED_PROFILE_FIELDS, PARISH_REGIONS, PROFILE_STEP_ROWS, TWO_STEP_FIELD_TYPES,
 } from '../data/twoStepConstants';
 import messages from '../messages';
 import { CountryField, HonorCode, TermsOfService } from '../RegistrationFields';
+import twoStepMessages from '../twoStepMessages';
 
 const PROFILE_STEP_FIELDS = PROFILE_STEP_ROWS.flat();
 // Digits-only fields shown as ### ### ####.
@@ -123,14 +124,15 @@ const TwoStepProfileFields = (props) => {
 
   const renderConfigurableField = (backendFieldData) => {
     // Label above the input, with the Figma copy for known fields.
-    const ui = TWO_STEP_FIELD_UI[backendFieldData.name];
+    const labelMessage = twoStepMessages[`registration.profile.${backendFieldData.name}.label`];
+    const placeholderMessage = twoStepMessages[`registration.profile.${backendFieldData.name}.placeholder`];
     const required = !!getFieldErrorMessage(backendFieldData.error_message)
       || ALWAYS_REQUIRED_PROFILE_FIELDS.includes(backendFieldData.name);
-    const fieldData = ui
+    const fieldData = labelMessage
       ? {
         ...backendFieldData,
-        type: ui.type || backendFieldData.type,
-        label: `${ui.label}${required ? '*' : ''}`,
+        type: TWO_STEP_FIELD_TYPES[backendFieldData.name] || backendFieldData.type,
+        label: `${formatMessage(labelMessage)}${required ? '*' : ''}`,
         min: PROFILE_FIELD_RULES[backendFieldData.name]?.notPast ? getToday() : undefined,
       }
       : backendFieldData;
@@ -146,8 +148,8 @@ const TwoStepProfileFields = (props) => {
           errorMessage={fieldErrors[fieldData.name]}
           isRequired
           readOnly={fieldData.name === 'region'}
-          labelAbove={!!ui}
-          placeholder={ui?.placeholder}
+          labelAbove={!!labelMessage}
+          placeholder={placeholderMessage && formatMessage(placeholderMessage)}
         />
       </span>
     );

@@ -128,6 +128,131 @@ const messages = defineMessages({
     defaultMessage: 'Please enter your mailing address.',
     description: 'Error for an empty mailing address in the registration profile',
   },
+  'registration.profile.confirm_password.label': {
+    id: 'registration.profile.confirm_password.label',
+    defaultMessage: 'Confirm password',
+    description: 'Two-step registration label for the confirm password field',
+  },
+  'registration.profile.confirm_password.placeholder': {
+    id: 'registration.profile.confirm_password.placeholder',
+    defaultMessage: 'Re-enter your password',
+    description: 'Two-step registration placeholder for the confirm password field',
+  },
+  'registration.profile.gender.label': {
+    id: 'registration.profile.gender.label',
+    defaultMessage: 'Gender',
+    description: 'Two-step registration label for the gender field',
+  },
+  'registration.profile.gender.placeholder': {
+    id: 'registration.profile.gender.placeholder',
+    defaultMessage: 'Select',
+    description: 'Two-step registration placeholder for the gender field',
+  },
+  'registration.profile.trn.label': {
+    id: 'registration.profile.trn.label',
+    defaultMessage: 'TRN',
+    description: 'Two-step registration label for the trn field',
+  },
+  'registration.profile.trn.placeholder': {
+    id: 'registration.profile.trn.placeholder',
+    defaultMessage: 'Enter your unique TRN',
+    description: 'Two-step registration placeholder for the trn field',
+  },
+  'registration.profile.physical_address.label': {
+    id: 'registration.profile.physical_address.label',
+    defaultMessage: 'Address',
+    description: 'Two-step registration label for the physical address field',
+  },
+  'registration.profile.physical_address.placeholder': {
+    id: 'registration.profile.physical_address.placeholder',
+    defaultMessage: 'Street address',
+    description: 'Two-step registration placeholder for the physical address field',
+  },
+  'registration.profile.mailing_address.label': {
+    id: 'registration.profile.mailing_address.label',
+    defaultMessage: 'Mailing address',
+    description: 'Two-step registration label for the mailing address field',
+  },
+  'registration.profile.mailing_address.placeholder': {
+    id: 'registration.profile.mailing_address.placeholder',
+    defaultMessage: 'Mailing address',
+    description: 'Two-step registration placeholder for the mailing address field',
+  },
+  'registration.profile.telephone.label': {
+    id: 'registration.profile.telephone.label',
+    defaultMessage: 'Telephone number',
+    description: 'Two-step registration label for the telephone field',
+  },
+  'registration.profile.telephone.placeholder': {
+    id: 'registration.profile.telephone.placeholder',
+    defaultMessage: '123 555 0123',
+    description: 'Two-step registration placeholder for the telephone field',
+  },
+  'registration.profile.other_numbers.label': {
+    id: 'registration.profile.other_numbers.label',
+    defaultMessage: 'Other number (optional)',
+    description: 'Two-step registration label for the other numbers field',
+  },
+  'registration.profile.other_numbers.placeholder': {
+    id: 'registration.profile.other_numbers.placeholder',
+    defaultMessage: 'Alternate phone',
+    description: 'Two-step registration placeholder for the other numbers field',
+  },
+  'registration.profile.job_title.label': {
+    id: 'registration.profile.job_title.label',
+    defaultMessage: 'Job title',
+    description: 'Two-step registration label for the job title field',
+  },
+  'registration.profile.job_title.placeholder': {
+    id: 'registration.profile.job_title.placeholder',
+    defaultMessage: 'e.g. Instructional designer',
+    description: 'Two-step registration placeholder for the job title field',
+  },
+  'registration.profile.photo_id_type.label': {
+    id: 'registration.profile.photo_id_type.label',
+    defaultMessage: 'Photo ID type',
+    description: 'Two-step registration label for the photo id type field',
+  },
+  'registration.profile.photo_id_type.placeholder': {
+    id: 'registration.profile.photo_id_type.placeholder',
+    defaultMessage: 'Select ID type',
+    description: 'Two-step registration placeholder for the photo id type field',
+  },
+  'registration.profile.photo_id_number.label': {
+    id: 'registration.profile.photo_id_number.label',
+    defaultMessage: 'Photo ID number',
+    description: 'Two-step registration label for the photo id number field',
+  },
+  'registration.profile.photo_id_number.placeholder': {
+    id: 'registration.profile.photo_id_number.placeholder',
+    defaultMessage: 'As printed on your ID',
+    description: 'Two-step registration placeholder for the photo id number field',
+  },
+  'registration.profile.id_expiration_date.label': {
+    id: 'registration.profile.id_expiration_date.label',
+    defaultMessage: 'ID expiration date',
+    description: 'Two-step registration label for the id expiration date field',
+  },
+  'registration.profile.parish.label': {
+    id: 'registration.profile.parish.label',
+    defaultMessage: 'Parish',
+    description: 'Two-step registration label for the parish field',
+  },
+  'registration.profile.parish.placeholder': {
+    id: 'registration.profile.parish.placeholder',
+    defaultMessage: 'Select parish',
+    description: 'Two-step registration placeholder for the parish field',
+  },
+  'registration.profile.region.label': {
+    id: 'registration.profile.region.label',
+    defaultMessage: 'Region',
+    description: 'Two-step registration label for the region field',
+  },
+  'registration.profile.region.placeholder': {
+    id: 'registration.profile.region.placeholder',
+    defaultMessage: 'Auto-filled from parish',
+    description: 'Two-step registration placeholder for the region field',
+  },
   'register.step.account.title': {
     id: 'register.step.account.title',
     defaultMessage: 'Account details',

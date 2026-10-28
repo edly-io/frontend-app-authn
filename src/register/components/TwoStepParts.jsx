@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
@@ -19,6 +19,16 @@ import twoStepMessages from '../twoStepMessages';
  */
 export const TwoStepHeader = ({ step, onBack }) => {
   const { formatMessage } = useIntl();
+  const headingRef = useRef(null);
+  const shownStep = useRef(step);
+
+  useEffect(() => {
+    // Move focus to the new step's heading, but not when the page first loads.
+    if (shownStep.current === step) { return; }
+    shownStep.current = step;
+    headingRef.current?.focus();
+  }, [step]);
+
   return (
     <div className="two-step-reg__header">
       <div className="two-step-reg__step-row">
@@ -42,7 +52,7 @@ export const TwoStepHeader = ({ step, onBack }) => {
       </div>
       {step === 1 ? (
         <>
-          <h1 className="two-step-reg__heading">{formatMessage(twoStepMessages['register.step.heading.account'])}</h1>
+          <h1 className="two-step-reg__heading" tabIndex={-1} ref={headingRef}>{formatMessage(twoStepMessages['register.step.heading.account'])}</h1>
           <p className="two-step-reg__subtitle">
             {formatMessage(twoStepMessages['register.step.already.registered'])}{' '}
             <Link to={updatePathWithQueryParams(LOGIN_PAGE)}>{formatMessage(commonMessages['logistration.sign.in'])}</Link>
@@ -50,7 +60,7 @@ export const TwoStepHeader = ({ step, onBack }) => {
         </>
       ) : (
         <>
-          <h1 className="two-step-reg__heading">{formatMessage(twoStepMessages['register.step.heading.profile'])}</h1>
+          <h1 className="two-step-reg__heading" tabIndex={-1} ref={headingRef}>{formatMessage(twoStepMessages['register.step.heading.profile'])}</h1>
           <p className="two-step-reg__subtitle">{formatMessage(twoStepMessages['register.step.profile.subtitle'])}</p>
         </>
       )}
