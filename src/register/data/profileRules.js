@@ -18,6 +18,8 @@ const isValidIsoDate = (value) => {
 };
 
 // Today as YYYY-MM-DD in the user's local timezone (the format of the native date input).
+// The backend also accepts one day of grace for users in a timezone behind the server; the user's own local
+// date needs none, so the grace is intentionally not mirrored here.
 export const getToday = () => {
   const now = new Date();
   const pad = number => String(number).padStart(2, '0');
