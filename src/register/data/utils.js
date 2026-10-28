@@ -1,5 +1,6 @@
 import { snakeCaseObject } from '@edx/frontend-platform';
 
+import getFieldErrorMessage from './fieldError';
 import { NUMBER_REGEX } from '../../data/constants';
 import {
   LOWERCASE_REGEX, MIN_PASSWORD_LENGTH, SYMBOL_REGEX, UPPERCASE_REGEX,
@@ -122,7 +123,7 @@ export const isFormValid = (
     if (key === 'country' && !configurableFormFields?.country?.displayValue) {
       fieldErrors[key] = formatMessage(messages['empty.country.field.error']);
     } else if (!configurableFormFields[key]) {
-      fieldErrors[key] = fieldDescriptions[key].error_message;
+      fieldErrors[key] = getFieldErrorMessage(fieldDescriptions[key].error_message);
     }
     if (fieldErrors[key]) { isValid = false; }
   });

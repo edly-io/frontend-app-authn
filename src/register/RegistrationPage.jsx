@@ -15,6 +15,7 @@ import Skeleton from 'react-loading-skeleton';
 
 import ConfigurableRegistrationForm from './components/ConfigurableRegistrationForm';
 import RegistrationFailure from './components/RegistrationFailure';
+import TwoStepProfileFields from './components/TwoStepProfileFields';
 import {
   backupRegistrationFormBegin,
   clearRegistrationBackendError,
@@ -32,6 +33,7 @@ import {
 } from './data/utils';
 import messages from './messages';
 import { EmailField, NameField, UsernameField } from './RegistrationFields';
+import useTwoStepRegistration from './useTwoStepRegistration';
 import {
   InstitutionLogistration,
   PasswordField,
@@ -79,7 +81,9 @@ const RegistrationPage = (props) => {
   const fieldDescriptions = useSelector(state => state.commonComponents.fieldDescriptions);
   const optionalFields = useSelector(state => state.commonComponents.optionalFields);
   const thirdPartyAuthApiStatus = useSelector(state => state.commonComponents.thirdPartyAuthApiStatus);
-  const autoSubmitRegForm = useSelector(state => state.commonComponents.thirdPartyAuthContext.autoSubmitRegForm);
+  // Two-step registration never auto-submits: an SSO user goes through step 2 so the profile fields get validated.
+  const autoSubmitRegForm = useSelector(state => state.commonComponents.thirdPartyAuthContext.autoSubmitRegForm)
+    && !getConfig().TWO_STEP_REGISTRATION;
   const thirdPartyAuthErrorMessage = useSelector(state => state.commonComponents.thirdPartyAuthContext.errorMessage);
   const finishAuthUrl = useSelector(state => state.commonComponents.thirdPartyAuthContext.finishAuthUrl);
   const currentProvider = useSelector(state => state.commonComponents.thirdPartyAuthContext.currentProvider);
@@ -106,6 +110,23 @@ const RegistrationPage = (props) => {
   const [temporaryErrors, setTemporaryErrors] = useState({ ...backedUpFormData.errors });
 
   const { cta, host } = queryParams;
+  const twoStep = useTwoStepRegistration({
+    fieldDescriptions,
+    optionalFields,
+    formFields,
+    configurableFormFields,
+    errors,
+    temporaryErrors,
+    setErrors,
+    setErrorCode,
+    backendValidations,
+    registrationEmbedded,
+    currentProvider,
+  });
+  const [Name, Email, Username, Password] = twoStep.accountFields(
+    [NameField, EmailField, UsernameField, PasswordField],
+  );
+  const RegistrationFields = twoStep.enabled ? TwoStepProfileFields : ConfigurableRegistrationForm;
   const buttonLabel = cta
     ? formatMessage(messages['create.account.cta.button'], { label: cta })
     : formatMessage(messages['create.account.for.free.button']);
@@ -228,13 +249,14 @@ const RegistrationPage = (props) => {
     }
 
     // Validating form data before submitting
-    const { isValid, fieldErrors, emailSuggestion } = isFormValid(
+    const { isValid: baseValid, fieldErrors, emailSuggestion } = isFormValid(
       payload,
       registrationEmbedded ? temporaryErrors : errors,
       configurableFormFields,
       fieldDescriptions,
       formatMessage,
     );
+    const isValid = twoStep.validateProfile(fieldErrors, baseValid);
     setErrors({ ...fieldErrors });
     dispatch(setEmailSuggestionInStore(emailSuggestion));
 
@@ -258,7 +280,7 @@ const RegistrationPage = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    registerUser();
+    twoStep.submit(registerUser);
   };
 
   useEffect(() => {
@@ -290,7 +312,8 @@ const RegistrationPage = (props) => {
           optionalFields={optionalFields}
           registrationEmbedded={registrationEmbedded}
           redirectToProgressiveProfilingPage={
-            getConfig().ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN && !!Object.keys(optionalFields.fields).length
+            getConfig().ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN && !twoStep.enabled
+            && !!Object.keys(optionalFields.fields).length
           }
         />
         {autoSubmitRegForm && !errorCode.type ? (
@@ -302,6 +325,7 @@ const RegistrationPage = (props) => {
             className={classNames(
               'mw-xs mt-3',
               { 'w-100 m-auto pt-4 main-content': registrationEmbedded },
+              twoStep.enabled && 'two-step-reg',
             )}
           >
             <ThirdPartyAuthAlert
@@ -316,7 +340,8 @@ const RegistrationPage = (props) => {
             />
             {!errorCode.type && <EdlyLogistrationInfo />}
             <Form id="registration-form" name="registration-form">
-              <NameField
+              {twoStep.header}
+              <Name
                 name="name"
                 value={formFields.name}
                 shouldFetchUsernameSuggestions={!formFields.username.trim()}
@@ -325,8 +350,9 @@ const RegistrationPage = (props) => {
                 errorMessage={errors.name}
                 helpText={[formatMessage(messages['help.text.name'])]}
                 floatingLabel={formatMessage(messages['registration.fullname.label'])}
+                {...twoStep.fieldProps('name')}
               />
-              <EmailField
+              <Email
                 name="email"
                 value={formFields.email}
                 confirmEmailValue={configurableFormFields?.confirm_email}
@@ -336,9 +362,10 @@ const RegistrationPage = (props) => {
                 errorMessage={errors.email}
                 helpText={[formatMessage(messages['help.text.email'])]}
                 floatingLabel={formatMessage(messages['registration.email.label'])}
+                {...twoStep.fieldProps('email')}
               />
               {!flags.autoGeneratedUsernameEnabled && (
-                <UsernameField
+                <Username
                   name="username"
                   spellCheck="false"
                   value={formFields.username}
@@ -347,10 +374,12 @@ const RegistrationPage = (props) => {
                   errorMessage={errors.username}
                   helpText={[formatMessage(messages['help.text.username.1']), formatMessage(messages['help.text.username.2'])]}
                   floatingLabel={formatMessage(messages['registration.username.label'])}
+                  {...twoStep.fieldProps('username')}
                 />
               )}
+              {twoStep.usernameHint}
               {!currentProvider && (
-                <PasswordField
+                <Password
                   name="password"
                   value={formFields.password}
                   confirmPasswordValue={configurableFormFields?.confirm_password}
@@ -358,9 +387,11 @@ const RegistrationPage = (props) => {
                   handleErrorChange={handleErrorChange}
                   errorMessage={errors.password}
                   floatingLabel={formatMessage(messages['registration.password.label'])}
+                  {...twoStep.fieldProps('password')}
                 />
               )}
-              <ConfigurableRegistrationForm
+              {twoStep.passwordStrength}
+              <RegistrationFields
                 email={formFields.email}
                 password={formFields.password}
                 fieldErrors={errors}
@@ -369,6 +400,7 @@ const RegistrationPage = (props) => {
                 setFormFields={setConfigurableFormFields}
                 autoSubmitRegisterForm={autoSubmitRegForm}
                 fieldDescriptions={fieldDescriptions}
+                {...twoStep.formProps}
               />
               <StatefulButton
                 id="register-user"
@@ -378,12 +410,13 @@ const RegistrationPage = (props) => {
                 className="register-button mt-4 mb-4"
                 state={submitState}
                 labels={{
-                  default: buttonLabel,
+                  default: twoStep.submitLabel || buttonLabel,
                   pending: '',
                 }}
                 onClick={handleSubmit}
                 onMouseDown={(e) => e.preventDefault()}
               />
+              {twoStep.footer}
               {!registrationEmbedded && (
                 <ThirdPartyAuth
                   currentProvider={currentProvider}

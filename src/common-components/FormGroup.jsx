@@ -22,6 +22,7 @@ const FormGroup = (props) => {
 
   return (
     <Form.Group controlId={props.name} className={props.className} isInvalid={props.errorMessage !== ''}>
+      {props.labelAbove && <Form.Label>{props.floatingLabel}</Form.Label>}
       <Form.Control
         as={props.as}
         readOnly={props.readOnly}
@@ -38,7 +39,8 @@ const FormGroup = (props) => {
         onChange={props.handleChange}
         controlClassName={props.borderClass}
         trailingElement={props.trailingElement}
-        floatingLabel={props.floatingLabel}
+        floatingLabel={props.labelAbove ? undefined : props.floatingLabel}
+        placeholder={props.placeholder}
       >
         {props.options ? props.options() : null}
       </Form.Control>
@@ -74,7 +76,9 @@ FormGroup.defaultProps = {
   handleClick: null,
   handleFocus: null,
   helpText: [],
+  labelAbove: false,
   options: null,
+  placeholder: undefined,
   readOnly: false,
   spellCheck: null,
   trailingElement: null,
@@ -94,6 +98,8 @@ FormGroup.propTypes = {
   handleClick: PropTypes.func,
   handleFocus: PropTypes.func,
   helpText: PropTypes.arrayOf(PropTypes.string),
+  labelAbove: PropTypes.bool,
+  placeholder: PropTypes.string,
   name: PropTypes.string.isRequired,
   options: PropTypes.func,
   readOnly: PropTypes.bool,

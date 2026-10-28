@@ -1,0 +1,215 @@
+// Two-step registration form content. Everything here is scoped under `.two-step-reg`, a class that
+// RegistrationPage.jsx only adds when MFE_CONFIG.TWO_STEP_REGISTRATION is set, so other tenants (and the
+// login page and the Sign in | Register tab bar) are unaffected.
+
+.two-step-reg {
+  // Figma navy. `.two-step-reg` is only added for tenants with TWO_STEP_REGISTRATION, so this is tenant-scoped;
+  // to follow the tenant theme instead use var(--pgn-color-brand-base, #15376d).
+  --two-step-accent: #15376d;
+
+  // Step indicator, back link, progress and headings
+  &__step-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 26px;
+  }
+
+  &__step {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 1.5rem;
+    font-size: 14px;
+    color: var(--two-step-accent);
+    text-decoration: none;
+  }
+
+  &__progress {
+    display: flex;
+    gap: 20px;
+  }
+
+  &__progress-item {
+    flex: 1;
+    color: #4b5563;
+
+    &--active {
+      color: var(--two-step-accent);
+
+      .two-step-reg__progress-bar {
+        background: var(--two-step-accent);
+      }
+    }
+  }
+
+  &__progress-bar {
+    display: block;
+    height: 5px;
+    margin-bottom: 0.5rem;
+    background: #e5e7eb;
+    border-radius: 999px;
+  }
+
+  &__progress-label {
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  &__heading {
+    margin: 26px 0 14px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+  }
+
+  // 14px / #545964 / 0.1px tracking as in the Figma (without a size it inherits the 16px page base).
+  &__subtitle {
+    margin-bottom: 26px;
+    font-size: 14px;
+    letter-spacing: 0.1px;
+    color: #545964;
+
+    a {
+      font-weight: 500;
+      color: var(--two-step-accent);
+      text-decoration: underline;
+    }
+  }
+
+  // Labels above inputs
+  // 16px between field blocks (the global .pgn__form-group margin is 28px; scoped here so other tenants keep it).
+  .pgn__form-group {
+    margin-bottom: 16px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    color: #374151;
+  }
+
+  // Select fields have a 6px label gap in the Figma.
+  .pgn__form-group:has(select) label {
+    margin-bottom: 6px;
+  }
+
+  .form-control {
+    height: 38px;
+    min-height: 38px;
+    padding: 0 12px;
+    font-size: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.05);
+
+    &::placeholder {
+      color: #9ca3af;
+    }
+
+    &[readonly] {
+      background: #f3f4f6;
+    }
+  }
+
+  // The username suggestions overlay covers its whole wrapper, which here also holds the label above the input;
+  // confine it to the input row (label line 20px + 4px gap).
+  .username-suggestions {
+    top: 24px;
+    bottom: auto;
+    height: 38px;
+  }
+
+  &__hint {
+    // About 3px under the input (the 16px group margin is pulled back), 16px to the next field.
+    margin: -13px 0 16px;
+    font-size: 14px;
+    color: #6b7280;
+  }
+
+  // Password strength
+  &__strength {
+    margin-top: -6px;
+    margin-bottom: 16px;
+  }
+
+  &__strength-bar {
+    display: flex;
+    gap: 10px;
+
+    span {
+      flex: 1;
+      height: 5px;
+      background: #e5e7eb;
+      border-radius: 999px;
+
+      &.is-filled {
+        background: #ef4444;
+      }
+    }
+
+    &[data-score="2"] .is-filled {
+      background: #f59e0b;
+    }
+
+    &[data-score="3"] .is-filled {
+      background: #84cc16;
+    }
+
+    &[data-score="4"] .is-filled {
+      background: #16a34a;
+    }
+  }
+
+  .two-step-reg__strength .two-step-reg__hint {
+    margin: 0.5rem 0 0;
+  }
+
+  // Step 2 pairs: 24px gap, equal widths.
+  &__row {
+    display: flex;
+    gap: 24px;
+
+    > div {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+
+  // Submit button and footer
+  .register-button {
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    margin-top: 10px !important;
+    margin-bottom: 1rem !important;
+    background: var(--two-step-accent);
+    border-color: var(--two-step-accent);
+    border-radius: 6px;
+  }
+
+  &__terms {
+    margin: 0;
+    font-size: 12px;
+    color: #4b5563;
+    text-align: center;
+
+    a {
+      color: #111827;
+      text-decoration: underline;
+    }
+  }
+
+  // The Figma form shows the terms line above instead of the core honor-code blurb. Only the auto-accepted
+  // blurb is hidden: a required honor-code checkbox (which contains an input) must stay visible.
+  #honor-code:not(:has(input)) {
+    display: none;
+  }
+}
