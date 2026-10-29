@@ -11,7 +11,6 @@ import {
 import configureStore from './data/configureStore';
 import {
   AUTHN_PROGRESSIVE_PROFILING,
-  LEGACY_ACCOUNT_PAGE,
   LOGIN_PAGE,
   PAGE_NOT_FOUND,
   PASSWORD_RESET_CONFIRM,
@@ -22,7 +21,6 @@ import {
 } from './data/constants';
 import { updatePathWithQueryParams } from './data/utils';
 import { ForgotPasswordPage } from './forgot-password';
-import { LegacyAccountPage } from './legacy-account';
 import Logistration from './logistration/Logistration';
 import { ProgressiveProfiling } from './progressive-profiling';
 import { RecommendationsPage } from './recommendations';
@@ -53,9 +51,6 @@ const MainApp = () => (
       />
       <Route path={REGISTER_PAGE} element={<UnAuthOnlyRoute><Logistration /></UnAuthOnlyRoute>} />
       <Route path={RESET_PAGE} element={<UnAuthOnlyRoute><ForgotPasswordPage /></UnAuthOnlyRoute>} />
-      {getConfig().ENABLE_LEGACY_ACCOUNT_FLOW && (
-        <Route path={LEGACY_ACCOUNT_PAGE} element={<UnAuthOnlyRoute><LegacyAccountPage /></UnAuthOnlyRoute>} />
-      )}
       <Route path={PASSWORD_RESET_CONFIRM} element={<ResetPasswordPage />} />
       <Route path={AUTHN_PROGRESSIVE_PROFILING} element={<ProgressiveProfiling />} />
       <Route path={RECOMMENDATIONS} element={<RecommendationsPage />} />

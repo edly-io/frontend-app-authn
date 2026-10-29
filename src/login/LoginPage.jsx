@@ -6,8 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Alert, Form, StatefulButton } from '@openedx/paragon';
-import { InfoOutline } from '@openedx/paragon/icons';
+import { Form, StatefulButton } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
@@ -25,7 +24,7 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
-import { LEGACY_ACCOUNT_PAGE, PENDING_STATE, RESET_PAGE } from '../data/constants';
+import { PENDING_STATE, RESET_PAGE } from '../data/constants';
 import {
   getActivationStatus,
   getAllPossibleQueryParams,
@@ -38,18 +37,6 @@ import { backupLoginFormBegin, dismissPasswordResetBanner, loginRequest } from '
 import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
-
-const renderLineBreak = () => <br />;
-
-const renderLegacyAccountLink = (chunks) => (
-  <Link
-    to={updatePathWithQueryParams(LEGACY_ACCOUNT_PAGE)}
-    className="font-weight-bold"
-    style={{ textDecoration: 'underline' }}
-  >
-    {chunks}
-  </Link>
-);
 
 const LoginPage = ({
   institutionLogin,
@@ -309,15 +296,6 @@ const LoginPage = ({
           >
             {formatMessage(messages['forgot.password'])}
           </Link>
-          {getConfig().ENABLE_LEGACY_ACCOUNT_FLOW && (
-            <Alert variant="info" icon={InfoOutline} className="mt-3 mb-2" id="legacy-account">
-              {formatMessage(messages['legacy.account.link.text'], {
-                old: (chunks) => chunks,
-                nl: renderLineBreak,
-                here: renderLegacyAccountLink,
-              })}
-            </Alert>
-          )}
           <ThirdPartyAuth
             currentProvider={currentProvider}
             providers={providers}

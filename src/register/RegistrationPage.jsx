@@ -6,15 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Alert, Form, Spinner, StatefulButton,
-} from '@openedx/paragon';
-import { InfoOutline } from '@openedx/paragon/icons';
+import { Form, Spinner, StatefulButton } from '@openedx/paragon';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
-import { Link } from 'react-router-dom';
 
 import ConfigurableRegistrationForm from './components/ConfigurableRegistrationForm';
 import RegistrationFailure from './components/RegistrationFailure';
@@ -45,28 +41,11 @@ import { getThirdPartyAuthContext as getRegistrationDataFromBackend } from '../c
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
 import {
-  COMPLETE_STATE, LEGACY_ACCOUNT_PAGE, PENDING_STATE, REGISTER_PAGE,
+  COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
 import {
-  getAllPossibleQueryParams,
-  getTpaHint,
-  getTpaProvider,
-  isHostAvailableInQueryParams,
-  setCookie,
-  updatePathWithQueryParams,
+  getAllPossibleQueryParams, getTpaHint, getTpaProvider, isHostAvailableInQueryParams, setCookie,
 } from '../data/utils';
-
-const renderLineBreak = () => <br />;
-
-const renderLegacyAccountLink = (chunks) => (
-  <Link
-    to={updatePathWithQueryParams(LEGACY_ACCOUNT_PAGE)}
-    className="font-weight-bold"
-    style={{ textDecoration: 'underline' }}
-  >
-    {chunks}
-  </Link>
-);
 
 /**
  * Main Registration Page component
@@ -394,15 +373,6 @@ const RegistrationPage = (props) => {
                 onClick={handleSubmit}
                 onMouseDown={(e) => e.preventDefault()}
               />
-              {!registrationEmbedded && getConfig().ENABLE_LEGACY_ACCOUNT_FLOW && (
-                <Alert variant="info" icon={InfoOutline} className="mt-3 mb-2" id="legacy-account">
-                  {formatMessage(messages['legacy.account.link.text'], {
-                    old: (chunks) => chunks,
-                    nl: renderLineBreak,
-                    here: renderLegacyAccountLink,
-                  })}
-                </Alert>
-              )}
               {!registrationEmbedded && (
                 <ThirdPartyAuth
                   currentProvider={currentProvider}
