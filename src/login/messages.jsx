@@ -27,11 +27,6 @@ const messages = defineMessages({
     defaultMessage: 'Forgot password',
     description: 'Button text for forgot password',
   },
-  'legacy.account.link.text': {
-    id: 'legacy.account.link.text',
-    defaultMessage: 'Already have an account on <old>Old Rwaq platform</old>?<nl></nl>Click <here>here</here> to set your password.',
-    description: 'Prompt for legacy-platform users. <old> links to the old platform; <nl> is a line break; <here> opens the set-password screen.',
-  },
   'institution.login.button': {
     id: 'institution.login.button',
     defaultMessage: 'Institution/campus credentials',
