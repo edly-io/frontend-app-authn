@@ -39,18 +39,6 @@ import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
 
-const renderLineBreak = () => <br />;
-
-const renderLegacyAccountLink = (chunks) => (
-  <Link
-    to={updatePathWithQueryParams(LEGACY_ACCOUNT_PAGE)}
-    className="font-weight-bold"
-    style={{ textDecoration: 'underline' }}
-  >
-    {chunks}
-  </Link>
-);
-
 const LoginPage = ({
   institutionLogin,
   handleInstitutionLogin,
@@ -313,8 +301,16 @@ const LoginPage = ({
             <Alert variant="info" icon={InfoOutline} className="mt-3 mb-2" id="legacy-account">
               {formatMessage(messages['legacy.account.link.text'], {
                 old: (chunks) => chunks,
-                nl: renderLineBreak,
-                here: renderLegacyAccountLink,
+                nl: () => <br />,
+                here: (chunks) => (
+                  <Link
+                    to={updatePathWithQueryParams(LEGACY_ACCOUNT_PAGE)}
+                    className="font-weight-bold"
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    {chunks}
+                  </Link>
+                ),
               })}
             </Alert>
           )}

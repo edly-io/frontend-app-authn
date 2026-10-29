@@ -6,9 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Alert, Form, Spinner, StatefulButton,
-} from '@openedx/paragon';
+import { Alert, Form, Spinner, StatefulButton } from '@openedx/paragon';
 import { InfoOutline } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -48,25 +46,8 @@ import {
   COMPLETE_STATE, LEGACY_ACCOUNT_PAGE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
 import {
-  getAllPossibleQueryParams,
-  getTpaHint,
-  getTpaProvider,
-  isHostAvailableInQueryParams,
-  setCookie,
-  updatePathWithQueryParams,
+  getAllPossibleQueryParams, getTpaHint, getTpaProvider, isHostAvailableInQueryParams, setCookie, updatePathWithQueryParams,
 } from '../data/utils';
-
-const renderLineBreak = () => <br />;
-
-const renderLegacyAccountLink = (chunks) => (
-  <Link
-    to={updatePathWithQueryParams(LEGACY_ACCOUNT_PAGE)}
-    className="font-weight-bold"
-    style={{ textDecoration: 'underline' }}
-  >
-    {chunks}
-  </Link>
-);
 
 /**
  * Main Registration Page component
@@ -398,8 +379,16 @@ const RegistrationPage = (props) => {
                 <Alert variant="info" icon={InfoOutline} className="mt-3 mb-2" id="legacy-account">
                   {formatMessage(messages['legacy.account.link.text'], {
                     old: (chunks) => chunks,
-                    nl: renderLineBreak,
-                    here: renderLegacyAccountLink,
+                    nl: () => <br />,
+                    here: (chunks) => (
+                      <Link
+                        to={updatePathWithQueryParams(LEGACY_ACCOUNT_PAGE)}
+                        className="font-weight-bold"
+                        style={{ textDecoration: 'underline' }}
+                      >
+                        {chunks}
+                      </Link>
+                    ),
                   })}
                 </Alert>
               )}
