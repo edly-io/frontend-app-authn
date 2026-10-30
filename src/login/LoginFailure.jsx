@@ -12,6 +12,7 @@ import {
   ACCOUNT_LOCKED_OUT,
   ALLOWED_DOMAIN_LOGIN_ERROR,
   FAILED_LOGIN_ATTEMPT,
+  FBR_ACCOUNT_DEACTIVATED,
   FORBIDDEN_REQUEST,
   INACTIVE_USER,
   INCORRECT_EMAIL_PASSWORD,
@@ -89,6 +90,16 @@ const LoginFailureMessage = (props) => {
       );
       break;
     }
+    case FBR_ACCOUNT_DEACTIVATED:
+      errorMessage = (
+        <p>
+          <FormattedMessage
+            id="login.fbr.account.deactivated.error"
+            defaultMessage="Your account has been deactivated. Please contact your administrator for assistance."
+          />
+        </p>
+      );
+      break;
     case ALLOWED_DOMAIN_LOGIN_ERROR: {
       const url = `${getConfig().LMS_BASE_URL}/dashboard/?tpa_hint=${context.tpaHint}`;
       const tpaLink = (
