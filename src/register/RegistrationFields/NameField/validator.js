@@ -9,11 +9,19 @@ export const HTML_REGEX = /<|>/u;
 // regex from backend
 export const INVALID_NAME_REGEX = /https?:\/\/(?:[-\w.]|(?:%[\da-fA-F]{2}))*/g;
 
+// letters (any script, so Arabic works) and marks, then letters, marks, space, apostrophe, hyphen and period
+export const VALID_NAME_REGEX = /^[\p{L}\p{M}][\p{L}\p{M} '.-]*$/u;
+
 const validateName = (value, formatMessage) => {
   let fieldError = '';
   if (!value.trim()) {
     fieldError = formatMessage(messages['empty.name.field.error']);
-  } else if (URL_REGEX.test(value) || HTML_REGEX.test(value) || INVALID_NAME_REGEX.test(value)) {
+  } else if (
+    !VALID_NAME_REGEX.test(value.trim())
+    || URL_REGEX.test(value)
+    || HTML_REGEX.test(value)
+    || INVALID_NAME_REGEX.test(value)
+  ) {
     fieldError = formatMessage(messages['name.validation.message']);
   }
   return fieldError;
