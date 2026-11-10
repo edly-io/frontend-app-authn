@@ -11,7 +11,9 @@ import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import { COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE } from '../../data/constants';
-import { backupLoginFormBegin, dismissPasswordResetBanner, loginRequest } from '../data/actions';
+import {
+  backupLoginFormBegin, dismissPasswordResetBanner, loginRequest, twoFactorAuthPendingRequest,
+} from '../data/actions';
 import { INTERNAL_SERVER_ERROR } from '../data/constants';
 import LoginPage from '../LoginPage';
 
@@ -111,6 +113,26 @@ describe('LoginPage', () => {
     ));
 
     expect(store.dispatch).toHaveBeenCalledWith(loginRequest({ email_or_username: 'test', password: 'test-password' }));
+  });
+
+  it('should request the pending OTP login when redirected from a paused third-party login', () => {
+    store.dispatch = jest.fn(store.dispatch);
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: '?fbr_2fa=pending' };
+
+    render(reduxWrapper(<LoginPage {...props} />));
+
+    expect(store.dispatch).toHaveBeenCalledWith(twoFactorAuthPendingRequest());
+  });
+
+  it('should not request a pending OTP login on a normal visit', () => {
+    store.dispatch = jest.fn(store.dispatch);
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: '' };
+
+    render(reduxWrapper(<LoginPage {...props} />));
+
+    expect(store.dispatch).not.toHaveBeenCalledWith(twoFactorAuthPendingRequest());
   });
 
   it('should not dispatch loginRequest on empty form submission', () => {
@@ -231,7 +253,7 @@ describe('LoginPage', () => {
 
   it('should match default button state', () => {
     render(reduxWrapper(<LoginPage {...props} />));
-    expect(screen.getByText('Sign in')).toBeDefined();
+    expect(screen.getByRole('button', { name: 'Sign in' })).toBeDefined();
   });
 
   it('should match pending button state', () => {

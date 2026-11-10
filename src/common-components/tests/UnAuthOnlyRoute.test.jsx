@@ -3,9 +3,8 @@
 import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { fetchAuthenticatedUser, getAuthenticatedUser } from '@edx/frontend-platform/auth';
-import { render } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
+import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
+import { render, screen } from '@testing-library/react';
 import {
   MemoryRouter, Route, BrowserRouter as Router, Routes,
 } from 'react-router-dom';
@@ -15,7 +14,6 @@ import { DEFAULT_REDIRECT_URL, REGISTER_PAGE } from '../../data/constants';
 
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedUser: jest.fn(),
-  fetchAuthenticatedUser: jest.fn(),
 }));
 
 const RRD = require('react-router-dom');
@@ -45,33 +43,27 @@ describe('UnAuthOnlyRoute', () => {
     jest.clearAllMocks();
   });
 
-  it('should have called with forceRefresh true', async () => {
+  it('redirects an authenticated user', () => {
     const user = {
       username: 'gonzo',
       other: 'data',
     };
 
     getAuthenticatedUser.mockReturnValue(user);
-    fetchAuthenticatedUser.mockReturnValueOnce(Promise.resolve(user));
+    render(routerWrapper());
 
-    await act(async () => {
-      await render(routerWrapper());
-    });
-
-    expect(fetchAuthenticatedUser).toBeCalledWith({ forceRefresh: true });
+    expect(screen.queryByText('Register Page')).toBeNull();
+    expect(getAuthenticatedUser).toHaveBeenCalled();
     expect(global.location.replace).toHaveBeenCalledWith(
       getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL),
     );
   });
 
-  it('should have called with forceRefresh false', async () => {
+  it('renders the route immediately for an unauthenticated user', () => {
     getAuthenticatedUser.mockReturnValue(null);
-    fetchAuthenticatedUser.mockReturnValueOnce(Promise.resolve(null));
+    render(routerWrapper());
 
-    await act(async () => {
-      await render(routerWrapper());
-    });
-
-    expect(fetchAuthenticatedUser).toBeCalledWith({ forceRefresh: false });
+    expect(screen.getByText('Register Page')).toBeDefined();
+    expect(getAuthenticatedUser).toHaveBeenCalled();
   });
 });

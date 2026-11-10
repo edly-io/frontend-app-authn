@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Form, StatefulButton } from '@openedx/paragon';
+import { Form, Icon, StatefulButton } from '@openedx/paragon';
+import { ArrowForward, Lock } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
@@ -30,10 +31,13 @@ import {
   getAllPossibleQueryParams,
   getTpaHint,
   getTpaProvider,
+  isTwoFactorAuthPending,
   updatePathWithQueryParams,
 } from '../data/utils';
 import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
-import { backupLoginFormBegin, dismissPasswordResetBanner, loginRequest } from './data/actions';
+import {
+  backupLoginFormBegin, dismissPasswordResetBanner, loginRequest, twoFactorAuthPendingRequest,
+} from './data/actions';
 import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
@@ -94,6 +98,13 @@ const LoginPage = ({
   useEffect(() => {
     sendPageEvent('login_and_registration', 'login');
   }, []);
+
+  // A third-party login paused by the LMS for OTP verification lands here.
+  useEffect(() => {
+    if (isTwoFactorAuthPending()) {
+      dispatch(twoFactorAuthPendingRequest());
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     const payload = { ...queryParams };
@@ -276,7 +287,11 @@ const LoginPage = ({
         finishAuthUrl={finishAuthUrl}
         replaceHistory
       />
-      <div className="mw-xs mt-3 mb-2">
+      <div className="fbr-login-form mw-xs mt-3 mb-2">
+        <header className="fbr-login-form__header">
+          <h2>{formatMessage(messages['sign.in.button'])}</h2>
+          <p>{formatMessage(messages['login.form.lede'], { siteName: getConfig().SITE_NAME })}</p>
+        </header>
         <LoginFailureMessage
           errorCode={errorCode.type}
           errorCount={errorCode.count}
@@ -303,7 +318,7 @@ const LoginPage = ({
           <PasswordField
             name="password"
             value={formFields.password}
-            autoComplete="off"
+            autoComplete="current-password"
             showScreenReaderText={false}
             showRequirements={false}
             handleChange={handleOnChange}
@@ -311,29 +326,36 @@ const LoginPage = ({
             errorMessage={errors.password}
             floatingLabel={formatMessage(messages['login.password.label'])}
           />
+          <div className="fbr-login-form__forgot-password">
+            <Link
+              id="forgot-password"
+              name="forgot-password"
+              className="btn btn-link font-weight-500"
+              to={updatePathWithQueryParams(RESET_PAGE)}
+              onClick={trackForgotPasswordLinkClick}
+            >
+              {formatMessage(messages['forgot.password'])}
+            </Link>
+          </div>
           <StatefulButton
             name="sign-in"
             id="sign-in"
             type="submit"
             variant="brand"
-            className="login-button-width"
+            className="login-button-width fbr-login-form__submit"
             state={submitState}
             labels={{
-              default: formatMessage(messages['sign.in.button']),
+              default: (
+                <span className="d-flex align-items-center justify-content-center">
+                  {formatMessage(messages['sign.in.button'])}
+                  <Icon className="ml-2" src={ArrowForward} />
+                </span>
+              ),
               pending: '',
             }}
             onClick={handleSubmit}
             onMouseDown={(event) => event.preventDefault()}
           />
-          <Link
-            id="forgot-password"
-            name="forgot-password"
-            className="btn btn-link font-weight-500 text-body"
-            to={updatePathWithQueryParams(RESET_PAGE)}
-            onClick={trackForgotPasswordLinkClick}
-          >
-            {formatMessage(messages['forgot.password'])}
-          </Link>
           <ThirdPartyAuth
             currentProvider={currentProvider}
             providers={providers}
@@ -343,6 +365,13 @@ const LoginPage = ({
             isLoginPage
           />
         </Form>
+        <footer className="fbr-login-form__footer">
+          <div className="fbr-login-form__security-label">
+            <Icon src={Lock} />
+            <span>{formatMessage(messages['login.security.label'])}</span>
+          </div>
+          <p>{formatMessage(messages['login.security.notice'])}</p>
+        </footer>
       </div>
     </>
   );

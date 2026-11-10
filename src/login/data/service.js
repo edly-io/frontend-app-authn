@@ -26,6 +26,19 @@ export async function loginRequest(creds) {
   };
 }
 
+export async function getPendingTwoFactorAuth() {
+  const { data } = await getAuthenticatedHttpClient()
+    .get(
+      `${getConfig().LMS_BASE_URL}/api/2fa/v1/pending/`,
+      { isPublic: true },
+    )
+    .catch((e) => {
+      throw (e);
+    });
+
+  return { maskedEmail: data.masked_email || null };
+}
+
 export async function verifyOtp(otp) {
   const { data } = await getAuthenticatedHttpClient()
     .post(

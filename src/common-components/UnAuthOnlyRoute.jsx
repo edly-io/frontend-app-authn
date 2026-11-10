@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { fetchAuthenticatedUser, getAuthenticatedUser } from '@edx/frontend-platform/auth';
+import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import PropTypes from 'prop-types';
 
 import {
@@ -13,26 +13,22 @@ import {
  * already authenticated.
  */
 const UnAuthOnlyRoute = ({ children }) => {
-  const [authUser, setAuthUser] = useState({});
-  const [isReady, setIsReady] = useState(false);
+  // App initialization has already fetched and validated the current user before
+  // rendering the route. Re-fetching here can leave the login page blank when a
+  // local auth request is blocked or fails.
+  const authUser = getAuthenticatedUser();
 
   useEffect(() => {
-    fetchAuthenticatedUser({ forceRefresh: !!getAuthenticatedUser() }).then((authenticatedUser) => {
-      setAuthUser(authenticatedUser);
-      setIsReady(true);
-    });
-  }, []);
-
-  if (isReady) {
     if (authUser && authUser.username) {
       global.location.replace(getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL));
-      return null;
     }
+  }, [authUser]);
 
-    return children;
+  if (authUser && authUser.username) {
+    return null;
   }
 
-  return null;
+  return children;
 };
 
 UnAuthOnlyRoute.propTypes = {

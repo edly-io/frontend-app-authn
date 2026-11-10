@@ -68,6 +68,13 @@ export const getActivationStatus = () => {
   return params.account_activation_status;
 };
 
+// Set by the LMS when a third-party login is paused waiting for an OTP.
+export const isTwoFactorAuthPending = () => {
+  const params = QueryString.parse(window.location.search);
+
+  return params.fbr_2fa === 'pending';
+};
+
 export const isScrollBehaviorSupported = () => 'scrollBehavior' in document.documentElement.style;
 
 export const windowScrollTo = (options) => {
