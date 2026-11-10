@@ -5,6 +5,7 @@ export {
   getActivationStatus,
   getTpaProviderIconUrl,
   isHostAvailableInQueryParams,
+  isTwoFactorAuthPending,
   updatePathWithQueryParams,
   windowScrollTo,
 } from './dataUtils';

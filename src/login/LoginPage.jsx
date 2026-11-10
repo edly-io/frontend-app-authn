@@ -31,10 +31,13 @@ import {
   getAllPossibleQueryParams,
   getTpaHint,
   getTpaProvider,
+  isTwoFactorAuthPending,
   updatePathWithQueryParams,
 } from '../data/utils';
 import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
-import { backupLoginFormBegin, dismissPasswordResetBanner, loginRequest } from './data/actions';
+import {
+  backupLoginFormBegin, dismissPasswordResetBanner, loginRequest, twoFactorAuthPendingRequest,
+} from './data/actions';
 import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
@@ -95,6 +98,13 @@ const LoginPage = ({
   useEffect(() => {
     sendPageEvent('login_and_registration', 'login');
   }, []);
+
+  // A third-party login paused by the LMS for OTP verification lands here.
+  useEffect(() => {
+    if (isTwoFactorAuthPending()) {
+      dispatch(twoFactorAuthPendingRequest());
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     const payload = { ...queryParams };

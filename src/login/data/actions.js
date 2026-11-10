@@ -40,6 +40,7 @@ export const dismissPasswordResetBanner = () => ({
 
 // Two Factor Auth
 export const TWO_FACTOR_AUTH_REQUIRED_ACTION = 'TWO_FACTOR_AUTH_REQUIRED';
+export const TWO_FACTOR_AUTH_PENDING_REQUEST = 'TWO_FACTOR_AUTH_PENDING_REQUEST';
 export const TWO_FACTOR_AUTH_VERIFY = new AsyncActionType('LOGIN', 'TWO_FACTOR_AUTH_VERIFY');
 export const TWO_FACTOR_AUTH_RESEND = new AsyncActionType('LOGIN', 'TWO_FACTOR_AUTH_RESEND');
 
@@ -47,6 +48,8 @@ export const twoFactorAuthRequired = (maskedEmail) => ({
   type: TWO_FACTOR_AUTH_REQUIRED_ACTION,
   payload: { maskedEmail },
 });
+
+export const twoFactorAuthPendingRequest = () => ({ type: TWO_FACTOR_AUTH_PENDING_REQUEST });
 
 export const twoFactorAuthVerifyRequest = (otp) => ({
   type: TWO_FACTOR_AUTH_VERIFY.BASE,

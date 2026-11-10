@@ -9,6 +9,7 @@ import {
   loginRequestBegin,
   loginRequestFailure,
   loginRequestSuccess,
+  TWO_FACTOR_AUTH_PENDING_REQUEST,
   TWO_FACTOR_AUTH_RESEND,
   TWO_FACTOR_AUTH_VERIFY,
   twoFactorAuthRequired,
@@ -29,6 +30,7 @@ import {
   TWO_FACTOR_AUTH_SESSION_EXPIRED,
 } from './constants';
 import {
+  getPendingTwoFactorAuth,
   loginRequest,
   resendOtp,
   verifyOtp,
@@ -62,6 +64,20 @@ export function* handleLoginRequest(action) {
         yield put(loginRequestFailure({ errorCode: INTERNAL_SERVER_ERROR }));
         logError(e);
       }
+    }
+  }
+}
+
+export function* handleTwoFactorAuthPending() {
+  try {
+    const { maskedEmail } = yield call(getPendingTwoFactorAuth);
+    yield put(twoFactorAuthRequired(maskedEmail));
+  } catch (e) {
+    // No pending login (expired, or 2FA disabled): show the normal login form.
+    if (e.response && [401, 403].includes(e.response.status)) {
+      logInfo(e);
+    } else {
+      logError(e);
     }
   }
 }
@@ -116,6 +132,7 @@ export function* handleTwoFactorAuthResend() {
 
 export default function* saga() {
   yield takeLeading(LOGIN_REQUEST.BASE, handleLoginRequest);
+  yield takeLeading(TWO_FACTOR_AUTH_PENDING_REQUEST, handleTwoFactorAuthPending);
   yield takeLeading(TWO_FACTOR_AUTH_VERIFY.BASE, handleTwoFactorAuthVerify);
   yield takeLeading(TWO_FACTOR_AUTH_RESEND.BASE, handleTwoFactorAuthResend);
 }

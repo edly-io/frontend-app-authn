@@ -4,7 +4,7 @@ import { runSaga } from 'redux-saga';
 import initializeMockLogging from '../../../setupTest';
 import * as actions from '../actions';
 import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from '../constants';
-import { handleLoginRequest } from '../sagas';
+import { handleLoginRequest, handleTwoFactorAuthPending } from '../sagas';
 import * as api from '../service';
 
 const { loggingService } = initializeMockLogging();
@@ -106,5 +106,57 @@ describe('handleLoginRequest', () => {
       actions.loginRequestBegin(),
       actions.loginRequestFailure(loginErrorResponse.response.data),
     ]);
+  });
+});
+
+describe('handleTwoFactorAuthPending', () => {
+  const runPending = async () => {
+    const dispatched = [];
+    await runSaga(
+      { dispatch: (action) => dispatched.push(action) },
+      handleTwoFactorAuthPending,
+    );
+    return dispatched;
+  };
+
+  beforeEach(() => {
+    loggingService.logError.mockReset();
+    loggingService.logInfo.mockReset();
+  });
+
+  it('should show the OTP screen for a pending login', async () => {
+    const getPending = jest.spyOn(api, 'getPendingTwoFactorAuth')
+      .mockImplementation(() => Promise.resolve({ maskedEmail: 'tr***@example.com' }));
+
+    const dispatched = await runPending();
+
+    expect(getPending).toHaveBeenCalledTimes(1);
+    expect(dispatched).toEqual([actions.twoFactorAuthRequired('tr***@example.com')]);
+    getPending.mockRestore();
+  });
+
+  it('should leave the login form in place when nothing is pending', async () => {
+    const errorResponse = { response: { status: 401 } };
+    const getPending = jest.spyOn(api, 'getPendingTwoFactorAuth')
+      .mockImplementation(() => Promise.reject(errorResponse));
+
+    const dispatched = await runPending();
+
+    expect(dispatched).toEqual([]);
+    expect(loggingService.logInfo).toHaveBeenCalled();
+    expect(loggingService.logError).not.toHaveBeenCalled();
+    getPending.mockRestore();
+  });
+
+  it('should log unexpected errors', async () => {
+    const errorResponse = { response: { status: 500 } };
+    const getPending = jest.spyOn(api, 'getPendingTwoFactorAuth')
+      .mockImplementation(() => Promise.reject(errorResponse));
+
+    const dispatched = await runPending();
+
+    expect(dispatched).toEqual([]);
+    expect(loggingService.logError).toHaveBeenCalled();
+    getPending.mockRestore();
   });
 });
