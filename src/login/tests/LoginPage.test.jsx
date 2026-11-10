@@ -231,7 +231,7 @@ describe('LoginPage', () => {
 
   it('should match default button state', () => {
     render(reduxWrapper(<LoginPage {...props} />));
-    expect(screen.getByText('Sign in')).toBeDefined();
+    expect(screen.getByRole('button', { name: 'Sign in' })).toBeDefined();
   });
 
   it('should match pending button state', () => {

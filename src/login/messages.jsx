@@ -27,6 +27,21 @@ const messages = defineMessages({
     defaultMessage: 'Forgot password',
     description: 'Button text for forgot password',
   },
+  'login.form.lede': {
+    id: 'login.form.lede',
+    defaultMessage: 'Use your {siteName} account to continue.',
+    description: 'Supporting text shown above the login form.',
+  },
+  'login.security.label': {
+    id: 'login.security.label',
+    defaultMessage: 'Government of Pakistan · Secure sign-in',
+    description: 'Security label shown below the login form.',
+  },
+  'login.security.notice': {
+    id: 'login.security.notice',
+    defaultMessage: 'Authorised use only. Activity on this platform is monitored and recorded.',
+    description: 'Authorised-use notice shown below the login form.',
+  },
   'institution.login.button': {
     id: 'institution.login.button',
     defaultMessage: 'Institution/campus credentials',

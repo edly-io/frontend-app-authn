@@ -129,13 +129,21 @@ describe('Logistration', () => {
     const { container } = render(reduxWrapper(<Logistration />));
 
     expect(container.querySelector('RegistrationPage')).toBeDefined();
+    expect(container.querySelector('.fbr-login-layout')).toBeNull();
   });
 
   it('should render login page', () => {
+    mergeConfig({
+      LOGO_URL: '/branding-logo.svg',
+      SITE_NAME: 'IRSA LMS',
+    });
     const props = { selectedPage: LOGIN_PAGE };
     const { container } = render(reduxWrapper(<Logistration {...props} />));
 
     expect(container.querySelector('LoginPage')).toBeDefined();
+    expect(container.querySelector('.fbr-login-layout')).not.toBeNull();
+    expect(screen.getByText('Federal Board of Revenue')).toBeDefined();
+    expect(screen.getByRole('img', { name: 'IRSA LMS' }).getAttribute('src')).toEqual('/branding-logo.svg');
   });
 
   it('should render login/register headings when show registration links is disabled', () => {
@@ -147,7 +155,7 @@ describe('Logistration', () => {
     const { rerender } = render(reduxWrapper(<Logistration {...props} />));
 
     // verifying sign in heading
-    expect(screen.getByRole('heading', { level: 3 }).textContent).toEqual('Sign in');
+    expect(screen.getByRole('heading', { level: 2 }).textContent).toEqual('Sign in');
 
     // register page is still accessible when SHOW_REGISTRATION_LINKS is false
     // but it needs to be accessed directly
@@ -182,10 +190,10 @@ describe('Logistration', () => {
     const { container } = render(reduxWrapper(<Logistration {...props} />));
 
     // verifying sign in heading for institution login false
-    expect(screen.getByRole('heading', { level: 3 }).textContent).toEqual('Sign in');
+    expect(screen.getByRole('heading', { level: 2 }).textContent).toEqual('Sign in');
 
     // verifying tabs heading for institution login true
-    fireEvent.click(screen.getByRole('link'));
+    fireEvent.click(screen.getByText('Institution/campus credentials'));
     expect(container.querySelector('#controlled-tab')).toBeDefined();
   });
 

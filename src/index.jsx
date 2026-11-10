@@ -6,6 +6,7 @@ import React, { StrictMode } from 'react';
 import {
   APP_INIT_ERROR, APP_READY, initialize, mergeConfig, subscribe,
 } from '@edx/frontend-platform';
+import { fetchAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { ErrorPage } from '@edx/frontend-platform/react';
 import { createRoot } from 'react-dom/client';
 
@@ -15,6 +16,20 @@ import messages from './i18n';
 import MainApp from './MainApp';
 
 markNativeWebView();
+
+const AUTH_CHECK_TIMEOUT_MS = 2000;
+
+const initializeAuthentication = async () => {
+  const authenticationRequest = fetchAuthenticatedUser().catch(() => null);
+  const timeout = new Promise((resolve) => {
+    setTimeout(resolve, AUTH_CHECK_TIMEOUT_MS);
+  });
+
+  // Authn contains public routes and must remain usable when a local token
+  // request is blocked or unavailable. A successful request still completes
+  // normally and lets authenticated-user guards redirect as expected.
+  await Promise.race([authenticationRequest, timeout]);
+};
 
 subscribe(APP_READY, () => {
   const root = createRoot(document.getElementById('root'));
@@ -38,6 +53,7 @@ subscribe(APP_INIT_ERROR, (error) => {
 
 initialize({
   handlers: {
+    auth: initializeAuthentication,
     config: () => {
       mergeConfig(configuration);
     },
