@@ -109,7 +109,7 @@ describe('LoginPage', () => {
 
     fireEvent.click(screen.getByText(
       '',
-      { selector: '.btn-brand' },
+      { selector: '.btn-primary' },
     ));
 
     expect(store.dispatch).toHaveBeenCalledWith(loginRequest({ email_or_username: 'test', password: 'test-password' }));
@@ -141,7 +141,7 @@ describe('LoginPage', () => {
 
     fireEvent.click(screen.getByText(
       '',
-      { selector: '.btn-brand' },
+      { selector: '.btn-primary' },
     ));
     expect(store.dispatch).not.toHaveBeenCalledWith(loginRequest({}));
   });
@@ -159,7 +159,7 @@ describe('LoginPage', () => {
     render(reduxWrapper(<LoginPage {...props} />));
     fireEvent.click(screen.getByText(
       '',
-      { selector: '.btn-brand' },
+      { selector: '.btn-primary' },
     ));
 
     expect(store.dispatch).toHaveBeenCalledWith(dismissPasswordResetBanner());
@@ -183,7 +183,7 @@ describe('LoginPage', () => {
 
     fireEvent.click(screen.getByText(
       '',
-      { selector: '.btn-brand' },
+      { selector: '.btn-primary' },
     ));
 
     expect(screen.getByText('Username or email must have at least 2 characters.')).toBeDefined();
@@ -193,7 +193,7 @@ describe('LoginPage', () => {
     const { container } = render(reduxWrapper(<LoginPage {...props} />));
     fireEvent.click(screen.getByText(
       '',
-      { selector: '.btn-brand' },
+      { selector: '.btn-primary' },
     ));
 
     expect(container.querySelector('div[feedback-for="emailOrUsername"]').textContent).toEqual(emptyFieldValidation.emailOrUsername);
@@ -213,7 +213,7 @@ describe('LoginPage', () => {
 
     fireEvent.click(screen.getByText(
       '',
-      { selector: '.btn-brand' },
+      { selector: '.btn-primary' },
     ));
 
     expect(container.querySelector('div[feedback-for="emailOrUsername"]').textContent).toEqual('Username or email must have at least 2 characters.');
@@ -229,7 +229,7 @@ describe('LoginPage', () => {
       // clicking submit button with empty fields to make the errors appear
       fireEvent.click(screen.getByText(
         '',
-        { selector: '.btn-brand' },
+        { selector: '.btn-primary' },
       ));
 
       // focusing the fields to verify that the errors are cleared

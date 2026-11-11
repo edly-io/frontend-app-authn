@@ -152,7 +152,7 @@ const TwoFactorAuth = () => {
           name="verify-otp"
           id="verify-otp"
           type="submit"
-          variant="brand"
+          variant="primary"
           className="login-button-width"
           state={submitState}
           labels={{
