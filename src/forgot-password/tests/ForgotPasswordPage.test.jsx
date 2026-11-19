@@ -10,7 +10,7 @@ import configureStore from 'redux-mock-store';
 
 import { INTERNAL_SERVER_ERROR, LOGIN_PAGE } from '../../data/constants';
 import { PASSWORD_RESET } from '../../reset-password/data/constants';
-import { setForgotPasswordFormData } from '../data/actions';
+import { forgotPassword, setForgotPasswordFormData } from '../data/actions';
 import ForgotPasswordPage from '../ForgotPasswordPage';
 
 const mockedNavigator = jest.fn();
@@ -104,6 +104,18 @@ describe('ForgotPasswordPage', () => {
     const alertElements = container.querySelectorAll('.alert-danger');
     const validationErrors = alertElements[0].textContent;
     expect(validationErrors).toBe(validationMessage);
+  });
+
+  it('should trim whitespace from the email before submitting', () => {
+    store.dispatch = jest.fn(store.dispatch);
+    render(reduxWrapper(<ForgotPasswordPage {...props} />));
+
+    const emailInput = screen.getByLabelText('Email');
+    // A trailing tab rides along when the email is pasted from a spreadsheet cell.
+    fireEvent.change(emailInput, { target: { value: ' test@example.com\t' } });
+    fireEvent.click(screen.getByText('Submit'));
+
+    expect(store.dispatch).toHaveBeenCalledWith(forgotPassword('test@example.com'));
   });
 
   it('should show alert on server error', () => {
