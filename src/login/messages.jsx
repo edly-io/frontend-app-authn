@@ -307,6 +307,17 @@ const messages = defineMessages({
     defaultMessage: 'Two-factor verification is disabled for this site. Please sign in again.',
     description: 'Error shown when 2FA is disabled while user is on the verification step',
   },
+  'signed.out.elsewhere.title': {
+    id: 'signed.out.elsewhere.title',
+    defaultMessage: 'You were signed out',
+    description: 'Heading shown on the sign-in page after a login on another device ended this session',
+  },
+  'signed.out.elsewhere.message': {
+    id: 'signed.out.elsewhere.message',
+    defaultMessage: 'Your account was signed in on another device or browser, so this session was ended. '
+      + 'Sign in again to continue here.',
+    description: 'Explains that only one active session is allowed and a newer login ended this one',
+  },
 });
 
 export default messages;

@@ -21,6 +21,7 @@ import {
   ThirdPartyAuthAlert,
 } from '../common-components';
 import AccountActivationMessage from './AccountActivationMessage';
+import SignedOutElsewhereMessage from './SignedOutElsewhereMessage';
 import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
@@ -305,6 +306,7 @@ const LoginPage = ({
           messageType={activationMsgType}
         />
         {showResetPasswordSuccessBanner && <ResetPasswordSuccess />}
+        <SignedOutElsewhereMessage />
         <Form id="sign-in-form" name="sign-in-form">
           <FormGroup
             name="emailOrUsername"

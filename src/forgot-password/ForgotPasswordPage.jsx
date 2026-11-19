@@ -75,15 +75,18 @@ const ForgotPasswordPage = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setBannerEmail(email);
+    // Pasted emails can carry hidden whitespace (e.g. a trailing tab from a spreadsheet
+    // cell), which the LMS user lookup does not strip and fails on with a 500.
+    const trimmedEmail = email.trim();
+    setBannerEmail(trimmedEmail);
 
-    const error = getValidationMessage(email);
+    const error = getValidationMessage(trimmedEmail);
     if (error) {
       setFormErrors(error);
-      props.setForgotPasswordFormData({ email, emailValidationError: error });
+      props.setForgotPasswordFormData({ email: trimmedEmail, emailValidationError: error });
       windowScrollTo({ left: 0, top: 0, behavior: 'smooth' });
     } else {
-      props.forgotPassword(email);
+      props.forgotPassword(trimmedEmail);
     }
   };
 
